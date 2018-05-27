@@ -4,9 +4,14 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+.top_container{
+    /* background-color:  rgb(255, 255, 200); */
+}
+
+
 .logo{
-    margin-bottom: 10px;
-    margin-top: 10px;
+    margin-bottom: 25px;
+    margin-top: 30px;
 }
 .ui container{
     
@@ -20,11 +25,14 @@
 
 .contactlogos{
 position: absolute;
-top:200px;
+top:350px;
 left: 46%;
-margin-bottom: 30px;
-margin-top: 10px;
+/* margin-bottom: 20px; */
+margin-top: 20px;
 
     
 }
 
+i{
+    color: #740001;
+}
