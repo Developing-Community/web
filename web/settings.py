@@ -54,7 +54,10 @@ ROOT_URLCONF = 'web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),  # If i leave both or just comment one one out I still get the same error
+            'tmws.tmws.templates'
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
