@@ -5,7 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<<<<<<< HEAD
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+=======
+    <link rel="stylesheet" href="../../static/css/style.css">
+>>>>>>> 99daf6eab39619c5f56395a157e2f4a3a547f8e6
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
 
 
@@ -18,12 +22,14 @@
         </div>
         <a class="item">Home</a>
         <a class="item">About</a>
-	<a class="item">Mahdyar</a>
+        <a class="item">Mahdyar</a>
     </div>   -->
-
-
     <div class="ui container">
-            <img class="ui centered small image logo" src="{% static 'img/logo4.jpg' %}" alt="Logo">
+<<<<<<< HEAD
+            <img class="ui centered small image logo" src="{% static 'img/logo2.jpg' %}" alt="Logo">
+=======
+            <img class="ui centered small image logo" src="../../static/img/logo4.jpg" alt="Logo">
+>>>>>>> 99daf6eab39619c5f56395a157e2f4a3a547f8e6
         <div class="top_container ">
            
             <p> Lorem ipsum dolor sit amet, altera maiorum voluptaria et usu. Movet eligendi an per, at autem 
