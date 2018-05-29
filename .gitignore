@@ -2,10 +2,10 @@
 nohup.out
 
 #IDE files
-.vscode
-.idea
-*.sublime-workspace
-*.sublime-project
+#.vscode
+#.idea
+#*.sublime-workspace
+#*.sublime-project
 
 # github python defaults
 # Byte-compiled / optimized / DLL files
