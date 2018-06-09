@@ -2,9 +2,11 @@ from django.urls import path, re_path
 from django.views.generic.base import RedirectView
 from . import views
 
+app_name = 'siteinfo'
 urlpatterns = [
     # ex: /polls/
     path('', views.index_view, name='index'),
+    path('groups/', views.groups_view, name='groups'),
     re_path(r'^favicon\.ico$',RedirectView.as_view(url='/static/img/favicon.ico',  permanent=True), name='icon'),
     re_path(r'^robots\.txt$',RedirectView.as_view(url='/static/robots.txt',  permanent=True), name='robots.txt'),
     path('trello/link', RedirectView.as_view(url='https://trello.com/invite/developingcommunity/0569c91ef09c6c05f437a75927640874', permanent=True), name='trello'),

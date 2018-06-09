@@ -1,0 +1,35 @@
+﻿{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+
+
+    <title>Developing Community</title>
+</head>
+<body>
+
+
+<div class="ui container">
+    <img class="ui centered small image logo" style = "width: 200px;" src="{% static 'img/logo4.jpg' %}" alt="Logo">
+    <div class="top_container ">
+        {% if request.user.is_authenticated %}
+        <p>باتشکر از عضویت شما</p>
+        <a href="https://t.me/joinchat/BzST0lBdHY8RD1aDPo0UVw"><h3>لینک گروه برنامه نویسی</h3></a>
+        <a href="https://t.me/joinchat/BzST0lBqx8xKXYztc4SS2A"><h3>لینک گروه هنر</h3></a>
+        <a href="https://t.me/joinchat/BzST0ksuVjJFWBhlnD7WyQ"><h3>لینک گروه علوم انسانی و پایه</h3></a>
+        {% else %}
+        <p>شما وارد سایت نشدید.</p>
+        {% endif %}
+        <br/><br/><br/>
+    </div>
+    
+</div>
+
+</body>
+</html>
