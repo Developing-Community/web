@@ -1,6 +1,6 @@
 ﻿{% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,8 @@
         <a href="https://t.me/joinchat/BzST0lBqx8xKXYztc4SS2A"><h3>لینک گروه هنر</h3></a>
         <a href="https://t.me/joinchat/BzST0ksuVjJFWBhlnD7WyQ"><h3>لینک گروه علوم انسانی و پایه</h3></a>
         {% else %}
-        <p>شما وارد سایت نشدید.</p>
+        <p>فقط اعضا قادر به مشاهده لینک گروه ها هستند.</p>
+        <a href="{% url 'users:register' %}"><h3>عضویت</h3></a>
         {% endif %}
         <br/><br/><br/>
     </div>

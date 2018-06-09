@@ -1,12 +1,48 @@
-h1 {
-    color: #777777;
+.bot_container{
+
+    
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.top_container{
+    /* background-color:  rgb(255, 255, 200); */
 }
 
-.wmd-panel{
-    margin-right: 0px !important;
-    margin-left: 0px !important;
+a {
+    padding:10px;
 }
 
-.comment-reply{
-    display:none;
+
+p ,li{
+    line-height: 30px !important;
+    font-size: 115%;
+}
+
+
+.logo{
+    margin-bottom: 25px;
+    margin-top: 30px;
+}
+.ui container{
+    
+}
+
+.footer{
+    position: relative;
+    
+    
+}
+
+.contactlogos{
+position: absolute;
+top:270px;
+left: 40%;
+margin-bottom: 30px;
+margin-top: 20px;
+
+    
+}
+
+i{
+    color: #740001;
 }
