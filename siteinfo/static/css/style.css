@@ -29,18 +29,14 @@ p ,li{
 
 .footer{
     position: relative;
-    
-    
 }
 
 .contactlogos{
-position: absolute;
-top:270px;
-left: 40%;
-margin-bottom: 30px;
-margin-top: 20px;
-
-    
+    position: absolute;
+    top:270px;
+    left: 40%;
+    margin-bottom: 30px;
+    margin-top: 20px;
 }
 
 i{

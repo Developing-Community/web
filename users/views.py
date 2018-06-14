@@ -1,18 +1,13 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import (
     authenticate,
-    get_user_model,
     login,
-    logout,
-
-    )
-
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+)
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse
 
 from .forms import UserRegisterForm
 
-from django.contrib import messages
 
 def register_view(request):
     title = "ثبت نام"

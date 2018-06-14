@@ -10,19 +10,19 @@ class UserRegisterForm(forms.ModelForm):
     class Meta:
         model = MyUser
         fields = [
-            'username',
             'email',
+            'username',
             'password',
-            'bio',
-            'learning_fields_desc',
+            'first_name',
+            'last_name',
         ]
 
         labels = {
             'username' : 'نام کاربری',
+            'first_name' : 'نام',
+            'last_name' : 'نام خانوادگی',
             'email' : 'ایمیل',
             'password' : 'کلمه عبور',
-            'bio' : 'معرفی',
-            'learning_fields_desc' : 'حوزه های یادگیری',
         }
 
 

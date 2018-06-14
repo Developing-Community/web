@@ -1,6 +1,9 @@
 #server
 nohup.out
 
+#media
+media
+
 #IDE files
 .vscode
 .idea
