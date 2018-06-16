@@ -1,15 +1,31 @@
 from django.contrib.auth import (
     authenticate,
+    get_user_model,
     login,
-)
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse
+    logout,
+    )
 
-from .forms import UserRegisterForm
+from django.shortcuts import render, redirect
+
+from .forms import UserLoginForm, UserRegisterForm
+
+def login_view(request):
+    next = request.GET.get('next')
+    title = "Login"
+    form = UserLoginForm(request.POST or None)
+    if form.is_valid():
+        username = form.cleaned_data.get("username")
+        password = form.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        if next:
+            return redirect(next)
+        return redirect("/")
+    return render(request, "users/form.html", {"form":form, "title": title})
 
 
 def register_view(request):
+    next = request.GET.get('next')
     title = "ثبت نام"
     form = UserRegisterForm(request.POST or None)
     if form.is_valid():
@@ -19,11 +35,17 @@ def register_view(request):
         user.save()
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
-        return HttpResponseRedirect(reverse("siteinfo:groups",  kwargs={}))
+        if next:
+            return redirect(next)
+        return redirect("/")
 
     context = {
         "form": form,
         "title": title
     }
     return render(request, "users/form.html", context)
-# Create your views here.
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("/")
