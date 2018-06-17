@@ -1,3 +1,6 @@
+#settings
+web/settings.py
+
 #server
 nohup.out
 
