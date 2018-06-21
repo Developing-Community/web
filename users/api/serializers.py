@@ -15,72 +15,75 @@ from rest_framework.serializers import (
 
 User = get_user_model()
 
-
-class UserDetailSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-        ]
+#
+# class UserDetailSerializer(ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = [
+#             'username',
+#             'email',
+#             'first_name',
+#             'last_name',
+#         ]
 
 
 
 
 class UserCreateSerializer(ModelSerializer):
     email = EmailField(label='Email Address')
-    email2 = EmailField(label='Confirm Email')
+
+    def __init__(self, *args, **kwargs):
+        super(UserCreateSerializer, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+
     class Meta:
         model = User
         fields = [
             'username',
             'email',
-            'email2',
             'password',
+            'first_name',
+            'last_name',
             
         ]
         extra_kwargs = {"password":
                             {"write_only": True}
                             }
-    def validate(self, data):
-        # email = data['email']
-        # user_qs = User.objects.filter(email=email)
-        # if user_qs.exists():
-        #     raise ValidationError("This user has already registered.")
-        return data
 
 
     def validate_email(self, value):
         data = self.get_initial()
-        email1 = data.get("email2")
-        email2 = value
-        if email1 != email2:
-            raise ValidationError("Emails must match.")
-        
-        user_qs = User.objects.filter(email=email2)
+        email = data.get("email")
+
+        user_qs = User.objects.filter(email=email)
         if user_qs.exists():
-            raise ValidationError("This user has already registered.")
+            raise ValidationError("A user with this email has already registered.")
 
         return value
 
-    def validate_email2(self, value):
+    def validate_username(self, value):
         data = self.get_initial()
-        email1 = data.get("email")
-        email2 = value
-        if email1 != email2:
-            raise ValidationError("Emails must match.")
+        username = data.get("username")
+
+        user_qs = User.objects.filter(username=username)
+        if user_qs.exists():
+            raise ValidationError("A user with this username has already registered.")
+
         return value
 
 
 
     def create(self, validated_data):
         username = validated_data['username']
+        first_name = validated_data['first_name']
+        last_name = validated_data['last_name']
         email = validated_data['email']
         password = validated_data['password']
         user_obj = User(
                 username = username,
+                first_name = first_name,
+                last_name = last_name,
                 email = email
             )
         user_obj.set_password(password)
@@ -89,27 +92,27 @@ class UserCreateSerializer(ModelSerializer):
 
 
 
-class UserLoginSerializer(ModelSerializer):
-    token = CharField(allow_blank=True, read_only=True)
-    username = CharField()
-    email = EmailField(label='Email Address')
-    class Meta:
-        model = User
-        fields = [
-            'username',
-            'email',
-            'password',
-            'token',
-            
-        ]
-        extra_kwargs = {"password":
-                            {"write_only": True}
-                            }
-    def validate(self, data):
-        # email = data['email']
-        # user_qs = User.objects.filter(email=email)
-        # if user_qs.exists():
-        #     raise ValidationError("This user has already registered.")
-        return data
+# class UserLoginSerializer(ModelSerializer):
+#     token = CharField(allow_blank=True, read_only=True)
+#     username = CharField()
+#     email = EmailField(label='Email Address')
+#     class Meta:
+#         model = User
+#         fields = [
+#             'username',
+#             'email',
+#             'password',
+#             'token',
+#
+#         ]
+#         extra_kwargs = {"password":
+#                             {"write_only": True}
+#                             }
+#     def validate(self, data):
+#         # email = data['email']
+#         # user_qs = User.objects.filter(email=email)
+#         # if user_qs.exists():
+#         #     raise ValidationError("This user has already registered.")
+#         return data
 
 

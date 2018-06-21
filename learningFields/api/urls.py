@@ -1,10 +1,9 @@
-from django.conf.urls import url
-from django.contrib import admin
+from django.urls import path
 
 from .views import (
     FieldListAPIView,
     )
 
 urlpatterns = [
-    url('', FieldListAPIView.as_view(), name='list'),
+    path('', FieldListAPIView.as_view(), name='list'),
 ]

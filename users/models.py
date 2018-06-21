@@ -1,13 +1,13 @@
-from django.conf import settings
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
 from learningFields.models import LearningField
 
 
 def profile_image_upload_location(instance, filename):
-    return "user/%s/profile/%s" %(instance.id, filename)
+    return "user/%s/profile/%s" %(instance.user.id, filename)
 
 # class MyUserManager(BaseUserManager):
 #     def create_user(self, email, firstname, lastname, username, password=None):
