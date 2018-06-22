@@ -49,7 +49,7 @@ class UserCreateSerializer(ModelSerializer):
         ]
         extra_kwargs = {"password":
                             {"write_only": True}
-                            }
+                        }
 
 
     def validate_email(self, value):
