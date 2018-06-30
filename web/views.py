@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication
@@ -10,9 +11,17 @@ from rest_framework.permissions import (
 
 )
 
-from django.shortcuts import render
-
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+from users.forms import UserRegisterForm
+from django.contrib.auth import (
+    authenticate,
+    get_user_model,
+    login,
+    logout,
+)
+
+from django.shortcuts import render, redirect
 
 
 class TelegramGroupsAPIView(APIView):
@@ -40,7 +49,24 @@ class TelegramGroupsAPIView(APIView):
 
 
 def index_view(request):
-    return render(request, 'index.html', {})
+
+    # # TODO: Bring register form here
+    # form = UserRegisterForm(request.POST or None)
+    # if form.is_valid():
+    #     user = form.save(commit=False)
+    #     password = form.cleaned_data.get('password')
+    #     user.set_password(password)
+    #     user.save()
+    #     new_user = authenticate(username=user.username, password=password)
+    #     login(request, new_user)
+    #     return reverse('telegramgroups', kwargs={})
+    #
+    # context = {
+    #     "form": form,
+    # }
+
+    context = {}
+    return render(request, "index.html", context)
 
 
 def groups_view(request):

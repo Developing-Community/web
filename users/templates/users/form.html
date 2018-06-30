@@ -1,16 +1,8 @@
-{% load staticfiles %}
+{% extends "base.html" %}
+{% load staticfiles%}
 {% load crispy_forms_tags %}
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
 
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+{% block head_extra %}
 
 <style>
 
@@ -24,26 +16,15 @@
 }
 
 </style>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
-<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' >
+{% endblock head_extra %}
 
-
-
-    <title>Developing Community</title>
-</head>
-<body>
-<style>
-</style>
-
-<div class="ui container" style="text-align: center; margin-bottom: 20px;">
-    <img class="ui centered small image logo" style = "width: 200px;" src="{% static 'img/logo4.jpg' %}" alt="Logo">
+{% block content %}
+        <div class="ui container" style="text-align: center; margin-bottom: 20px;">
     <div class="top_container ">
-<div class='col-sm-6 col-sm-offset-3'>
+<div class="col-sm-6 col-sm-offset-3" style="display:block; margin: auto;">
 <h1>{{ title }}</h1>
 <hr/>
 
@@ -55,9 +36,9 @@
     </div>
 
 </div>
+{% endblock content %}
 
-</body>
-</html>
+
 
 
 

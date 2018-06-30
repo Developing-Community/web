@@ -40,7 +40,7 @@ urlpatterns = [
          RedirectView.as_view(url='https://trello.com/invite/developingcommunity/0569c91ef09c6c05f437a75927640874',
                               permanent=True), name='trello'),
     path('slack/link', RedirectView.as_view(
-        url='https://join.slack.com/t/developing-community/shared_invite/enQtMzc1ODU0NTA5MzAzLTE0NmI1MmY4ZGM5NjhiODY2MDFjNmFjYjg1OWExNTBjZmViMjRkMWE4Y2U1NDk1ZjdjYzM5ODhlZmYwZWQ0MTA',
+        url=' ',
         permanent=True), name='slack'),
     re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/img/favicon.ico', permanent=True), name='icon'),
     re_path(r'^robots\.txt$', RedirectView.as_view(url='/static/robots.txt', permanent=True), name='robots.txt'),

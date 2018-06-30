@@ -1,28 +1,17 @@
-﻿{% load staticfiles %}
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+﻿{% extends "base.html" %}
+{% load staticfiles%}
 
 
-    <title>Developing Community</title>
-</head>
-<body>
+{% block about_link %}
+<a href = "#about">اطلاعات بیشتر</a>
+{% endblock about_link %}
 
-
-<div class="ui container">
-    <img class="ui centered small image logo" style = "width: 200px;" src="{% static 'img/logo4.jpg' %}" alt="Logo">
-    <div class="top_container ">
+{% block content %}
+        <div class="content" id="about">
 
         <p>با نام و یاد خداوندی که همه چیز به اذن اوست</p>
         <h1 class="header">هدف گروه</h1>
-        <p>هدف گروه ما این هست که تو یه محیط ساختار یافته یاد بگیرید و نهایتا تو این کامیونیتی تو فعالیت ها و تیم های مختلف شرکت کنید و با آدمای مختلف در حوزه های مختلف آشنا بشید و اگر سوال یا راهنمایی هم خواستید ازشون کمک بگیرید. <strong>منظور از فعالیت، هر فعالیتی تو هر حوزه ای هست. از یه تحقیق گروهی در علوم انسانی و پایه گرفته تا یک پروژه ی فیلم سازی یا برنامه نویسی</strong></p>
-
+        <p>هدف گروه ما این هست که تو یه محیط ساختار یافته یاد بگیرید و نهایتا تو این کامیونیتی تو فعالیت ها و تیم های مختلف شرکت کنید و با آدمای مختلف در حوزه های مختلف آشنا بشید و اگر سوال یا راهنمایی هم خواستید ازشون کمک بگیرید.<strong> منظور از فعالیت، هر فعالیتی تو هر حوزه ای هست. از یه تحقیق گروهی در علوم انسانی و پایه گرفته تا یک پروژه ی فیلم سازی یا برنامه نویسی</strong></p>
 
         <h1 class="header">گام اول</h1>
         <p>بعد از وارد شدن به گروه حوزه هایی رو برای یادگیری خودتون انتخاب می کنید و هر هفته از فعالیتی که برای یادگیری اون حوزه انجام دادید به بقیه اعضای تیم گزارش می دید. گزارش جزئیات خاصی نیاز نداره و میتونه در حد ۴-۵ جمله باشه. مثلا این که یه آموزش آنلاین درباره اون حوزه شروع کردید یا یک کتاب دربارش خوندید. البته گزارش دقیق تر برای انتقال تجربه یادگیریتون به دیگران بهتر هست</p>
@@ -45,11 +34,7 @@
             <li>حاضرید هفتگی دربارش گزارش بدید</li>
         </ol>
         <p>خوشحال میشیم توی جمع ما باشید :)</p>
-        <a href="{% url 'users:register' %}?next={% url 'telegramgroups' %}"><h3>عضویت و دریافت لینک گروه ها</h3></a>
-<br/><br/><br/>
-    </div>
-    
-</div>
+        <a href="{% url 'users:register' %}?next={% url 'telegramgroups' %}"><h3 style="text-align: center; color: #2900a8; padding-top: 10px">عضویت و دریافت لینک گروه ها</h3></a>
 
-</body>
-</html>
+</div>
+{% endblock content %}
