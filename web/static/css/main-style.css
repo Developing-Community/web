@@ -205,10 +205,15 @@ div.container {
 .content{
     text-align:right;
 }
+.content h1{
+    padding: 10px;
+    font-size: 27px;
+    font-weight: bold;
+}
 
 .content p, .content li{
-    font-size:20px;
-    line-height: 40px;
+    font-size:17px;
+    line-height: 30px;
 }
 
 @media screen and (min-width: 768px) {
