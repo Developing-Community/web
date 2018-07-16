@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
@@ -34,7 +35,9 @@ urlpatterns = [
     path('api/fields/', include('learningFields.api.urls')),
 
     #general urls
-    path('', views.index_view, name='index'),
+    url(r'^$', views.index_view, name='index'),
+    path('', include('users.api.urls')),
+
     path('groups/', views.groups_view, name='telegramgroups'),
     path('trello/link',
          RedirectView.as_view(url='https://trello.com/invite/developingcommunity/0569c91ef09c6c05f437a75927640874',
