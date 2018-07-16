@@ -23,7 +23,8 @@ padding:10px;text-align:center
         <a href="https://t.me/joinchat/BzST0lBqx8zMoRygUZyxvg"><h3>لینک گروه هنر</h3></a>
         <a href="https://t.me/joinchat/BzST0ksuVjIOB2NUSZTUhg"><h3>لینک گروه علوم انسانی و پایه</h3></a>
         {% else %}
-            {% include "restricted_url.html" %}
+        <p>فقط اعضا قادر به مشاهده لینک گروه ها هستند.</p>
+        <h3><a href="{% url 'users:register' %}?next={% url 'telegramgroups' %}">عضویت</a> <span style="font-size:80%;padding:1px;">-</span> <a href="{% url 'users:login' %}?next={% url 'telegramgroups' %}">ورود</a></h3>
         {% endif %}
         </div>
     </div>

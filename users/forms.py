@@ -10,8 +10,8 @@ User = get_user_model()
 
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(label='نام کاربری')
+    password = forms.CharField(widget=forms.PasswordInput,label='کلمه عبور')
 
     def clean(self, *args, **kwargs):
         username = self.cleaned_data.get("username")
@@ -23,11 +23,14 @@ class UserLoginForm(forms.Form):
         if username and password:
             user = authenticate(username=username, password=password)
             if not user:
-                raise forms.ValidationError("This user does not exist")
+                raise forms.ValidationError("نام کاربری وارد شده وجود ندارد")
+                # raise forms.ValidationError("This user does not exist")
             if not user.check_password(password):
-                raise forms.ValidationError("Incorrect passsword")
+                raise forms.ValidationError("کلمه عبور نادرست است")
+                # raise forms.ValidationError("Incorrect passsword")
             if not user.is_active:
-                raise forms.ValidationError("This user is not longer active.")
+                raise forms.ValidationError("نام کاربری غیرفعال است")
+                # raise forms.ValidationError("This user is not longer active.")
         return super(UserLoginForm, self).clean(*args, **kwargs)
 
 

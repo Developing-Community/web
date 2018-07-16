@@ -8,7 +8,12 @@
     src: url(fonts/IRANSans/IRANSans.ttf);
 }
 
+
 a {
+    color: #2900a8;
+}
+
+.navbar-nav mr-0 a {
     color:white;
 }
 
@@ -226,8 +231,4 @@ div.container {
     .content{
         padding: 0px 30px;
     }
-}
-
-h3 {
-    color: #2900a8;
 }
