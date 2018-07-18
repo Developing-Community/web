@@ -18,37 +18,42 @@ def upload_location(instance, filename):
     """
     return "%s/%s" %(new_id, filename)
 
-class Hashtag(models.Model):
-    title = models.CharField(max_length=255)
-
-
-# TODO: complete Hashtag, Comment and Content
-class Comment(models.Model):
-    content = models.TextField()
-
 class ContentType(Enum):   # A subclass of Enum
     ARTICLE = "article"
     REPORT = "report"
     PROBLEM = "problem"
+    COMMENT = "comment"
 
 class Content(models.Model): # We want comment to have a foreign key to all contents so we use all of them as one
     title = models.CharField(max_length=255)
     type = models.CharField(
-      max_length=15,
+      max_length=30,
       choices=[(tag, tag.value) for tag in ContentType]  # Choices is a list of Tuple
     )
-    # #author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
-    # slug = models.SlugField(unique=True)
-    # image = models.ImageField(upload_to=upload_location,
-    #                           null=True,
-    #                           blank=True,
-    #                           width_field="width_field",
-    #                           height_field="height_field")
-    # height_field = models.IntegerField(default=0)
-    # width_field = models.IntegerField(default=0)
-    # content = models.TextField()
-    # draft = models.BooleanField(default=False)
-    # publish = models.DateField(auto_now=False, auto_now_add=False)
-    # read_time = models.IntegerField(default=0)  # models.TimeField(null=True, blank=True) #assume minutes
-    # updated = models.DateTimeField(auto_now=True, auto_now_add=False)
-    # timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
+    slug = models.SlugField(unique=True)
+    image = models.ImageField(upload_to=upload_location,
+                              null=True,
+                              blank=True,
+                              width_field="width_field",
+                              height_field="height_field")
+    height_field = models.IntegerField(default=0)
+    width_field = models.IntegerField(default=0)
+    content = models.TextField()
+    draft = models.BooleanField(default=False)
+    publish = models.DateField(auto_now=False, auto_now_add=False)
+    read_time = models.IntegerField(default=0)  # models.TimeField(null=True, blank=True) #assume minutes
+    updated = models.DateTimeField(auto_now=True, auto_now_add=False)
+    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+
+class ContentRealtionType(Enum):   # A subclass of Enum
+    COMMENTED_ON = "commented_on"
+
+class ContentRelation(models.Model):
+    source = models.ForeignKey(Content, related_name='source')
+    destination = models.ForeignKey(Content, related_name='destination')
+    type = models.CharField(
+      max_length=30,
+      choices=[(tag, tag.value) for tag in ContentRealtionType]  # Choices is a list of Tuple
+    )
