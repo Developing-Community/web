@@ -32,7 +32,6 @@ urlpatterns = [
 
     #APP APIs
     path('api/user/', include('users.api.urls')),
-    path('api/fields/', include('learningFields.api.urls')),
 
     #general urls
     url(r'^$', views.index_view, name='index'),

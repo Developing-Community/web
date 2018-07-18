@@ -3,7 +3,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from learningFields.models import LearningField
 
 
 def profile_image_upload_location(instance, filename):
@@ -50,8 +49,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    learning_fields = models.ManyToManyField(LearningField, related_name='user_learning_fields')
-    guiding_fields = models.ManyToManyField(LearningField, related_name='user_guiding_fields')
     profile_image = models.ImageField(upload_to=profile_image_upload_location,
                                       null=True,
                                       blank=True,
