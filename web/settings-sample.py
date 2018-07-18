@@ -37,6 +37,8 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'auth.User'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'learningFields',
+    'learning',
     'taxonomy',
     #'content',
     'users',
