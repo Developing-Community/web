@@ -1,15 +1,13 @@
 from django import forms
 
-from pagedown.widgets import PagedownWidget
-
-from .models import Post
-
+from .models import MentoringInfo
 
 class MentoringInfoForm(forms.ModelForm):
-    mentoring_fields = forms.CharField()
+    # TODO: make fields Persian
+    mentoring_field_title = forms.CharField()
     class Meta:
-        model = Post
+        model = MentoringInfo
         fields = [
-            "title",
-            "mentoring_fields",
+            "mentoring_field_title",
+            "road_map"
         ]

@@ -28,3 +28,6 @@ class Term(models.Model):
         if self.parent is not None:
             return False
         return True
+
+    def __str__(self):
+        return self.title

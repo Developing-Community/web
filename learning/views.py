@@ -26,27 +26,36 @@ from .models import MentoringInfo
 def add_mentoring(request):
     form = MentoringInfoForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        instance = form.save(commit=False)
-        instance.user = request.user
-        mentoring_fields = form.cleaned_data.get('mentoring_fields').split("+")
-        for mentoring_field in mentoring_fields:
-            term = Term.objects.filter(title=mentoring_field)
-            if term.exists():
-                term = term[0]
-            else:
-                term = Term(
-                    title = mentoring_field,
-                    title_fa = mentoring_field,
-                    taxonomy_type = TaxonomyType.LEARNING_FIELD
-                )
-            if not term in request.user.mentoring_fields.all():
-                request.user.mentoring_fields.add(mentoring_field)
-        instance.save()
+        mentoring_field_title = form.cleaned_data.get('mentoring_field_title')
+        mentoring_field = Term.objects.filter(title=mentoring_field_title)
+        found = False
+        if mentoring_field.exists():
+            mentoring_field = mentoring_field.first()
+            for mentoring_info in MentoringInfo.objects.filter(mentor=request.user):
+                if mentoring_info.mentoring_field == mentoring_field:
+                    found = True
+                    mentoring_info.road_map = form.cleaned_data.get('road_map')
+                    mentoring_info.save()
+        else:
+            mentoring_field = Term(
+                title = mentoring_field_title,
+                title_fa = mentoring_field_title,
+                taxonomy_type = TaxonomyType.LEARNING_FIELD
+            )
+            mentoring_field.save()
+        if not found:
+            instance = MentoringInfo(
+                mentor = request.user,
+                mentoring_field = mentoring_field,
+                road_map = form.cleaned_data.get('road_map')
+            )
+            instance.save()
 
+    # TODO: add form description
     context = {
         "form": form,
     }
-    return render(request, "mentoring_form.html", context)
+    return render(request, "default_form.html", context)
 
 
 """

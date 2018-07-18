@@ -22,7 +22,7 @@ def login_view(request):
         if next:
             return redirect(next)
         return redirect("/")
-    return render(request, "users/form.html", {"form":form, "title": title})
+    return render(request, "default_form.html", {"form":form, "title": title})
 
 
 def register_view(request):
@@ -44,7 +44,7 @@ def register_view(request):
         "form": form,
         "title": title
     }
-    return render(request, "users/form.html", context)
+    return render(request, "default_form.html", context)
 
 
 def logout_view(request):
