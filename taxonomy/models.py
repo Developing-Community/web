@@ -8,7 +8,6 @@ class TaxonomyType(Enum):
 
 
 class Term(models.Model):
-    parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=255)
     title_fa = models.CharField(max_length=255)
     taxonomy_type = models.CharField(
@@ -31,3 +30,14 @@ class Term(models.Model):
 
     def __str__(self):
         return self.title
+
+class TermRealtionType(Enum):   # A subclass of Enum
+    CHILD_OF = "child_of"
+
+class TermRelation(models.Model):
+    source = models.ForeignKey(Term, related_name='source', on_delete=models.CASCADE)
+    destination = models.ForeignKey(Term, related_name='destination', on_delete=models.CASCADE)
+    type = models.CharField(
+        max_length=30,
+        choices=[(tag, tag.value) for tag in TermRealtionType]  # Choices is a list of Tuple
+    )
