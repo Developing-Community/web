@@ -59,7 +59,7 @@
 
             {% else %}
             <p class="form_description" style="text-align: center;">برای مشاهده این فرم ابتدا وارد شوید</p>
-            <h3><a href="{% url 'users:register' %}?next={% url 'telegramgroups' %}">عضویت</a> <span style="font-size:80%;padding:1px;">-</span> <a href="{% url 'users:login' %}?next={% url 'telegramgroups' %}">ورود</a></h3>
+            <h3><a href="{% url 'users:register' %}?next={{ request.get_full_path }}">عضویت</a> <span style="font-size:80%;padding:1px;">-</span> <a href="{% url 'users:login' %}?next={{ request.get_full_path }}">ورود</a></h3>
             {% endif %}
 
         </div>
