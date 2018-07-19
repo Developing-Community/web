@@ -1,22 +1,12 @@
 from enum import Enum
 from django.db import models
+from django.utils import timezone
 
 from web import settings
 
-#TODO: change upload location
-def upload_location(instance, filename):
-    #filebase, extension = filename.split(".")
-    #return "%s/%s.%s" %(instance.id, instance.id, extension)
-    PostModel = instance.__class__
-    new_id = PostModel.objects.order_by("id").last().id + 1
-    """
-    instance.__class__ gets the model Post. We must use this method because the model is defined below.
-    Then create a queryset ordered by the "id"s of each object,
-    Then we get the last object in the queryset with `.last()`
-    Which will give us the most recently created Model instance
-    We add 1 to it, so we get what should be the same id as the the post we are creating.
-    """
-    return "%s/%s" %(new_id, filename)
+def content_image_upload_location(instance, filename):
+    x = timezone.now()
+    return "%s/%s/%s" %(x.year, x.month, x.day)
 
 class ContentType(Enum):   # A subclass of Enum
     ARTICLE = "article"
@@ -30,9 +20,9 @@ class Content(models.Model): # We want comment to have a foreign key to all cont
       max_length=30,
       choices=[(tag, tag.value) for tag in ContentType]  # Choices is a list of Tuple
     )
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True)
-    image = models.ImageField(upload_to=upload_location,
+    image = models.ImageField(upload_to=content_image_upload_location,
                               null=True,
                               blank=True,
                               width_field="width_field",
@@ -51,8 +41,8 @@ class ContentRealtionType(Enum):   # A subclass of Enum
     COMMENTED_ON = "commented_on"
 
 class ContentRelation(models.Model):
-    source = models.ForeignKey(Content, related_name='source')
-    destination = models.ForeignKey(Content, related_name='destination')
+    source = models.ForeignKey(Content, related_name='source', on_delete=models.CASCADE)
+    destination = models.ForeignKey(Content, related_name='destination', on_delete=models.CASCADE)
     type = models.CharField(
       max_length=30,
       choices=[(tag, tag.value) for tag in ContentRealtionType]  # Choices is a list of Tuple

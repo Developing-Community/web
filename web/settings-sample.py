@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'learningFields',
     'learning',
     'taxonomy',
-    #'content',
+    'content',
     'users',
 ]
 
