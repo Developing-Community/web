@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load staticfiles%}
+{% load crispy_forms_tags %}
+
+{% block head_extra %}
+
+<style>
+
+.djform .btn-default {
+    margin: 10px;
+}
+
+.djform input[type=text], .djform input[type=email], .djform input[type=password]{
+     border: 1px solid #aaaaaa;
+     margin: 5px;
+
+    max-width:95%;
+}
+
+.djform .help-block {
+    text-align: center;
+    font-size: 90%;
+    padding: 10px;
+}
+
+.djform .textarea {
+    max-width:95%;
+}
+
+.form_description {
+    text-align: justify;
+    text-justify: auto;
+    padding: 10px;
+    line-height: 170%;
+}
+
+</style>
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+{% endblock head_extra %}
+
+{% block content %}
+
+<div class="ui container" style="text-align: center; margin-bottom: 20px;">
+    <div class="top_container ">
+        <div class="col-sm-10" style="display:block; margin: auto;">
+            <h2>{{ title }}</h2>
+            <hr/>
+            <p class="form_description">{{ form_description }}</p>
+
+
+            {% if request.user.is_authenticated %}
+            <form method='POST' action='' enctype='multipart/form-data' class="djform">{% csrf_token %}
+                {{ form|crispy }}
+                <input type='submit' class='btn btn-default' value='تایید'/>
+            </form>
+
+            {% else %}
+            <p class="form_description" style="text-align: center;">برای مشاهده این فرم ابتدا وارد شوید</p>
+            <h3><a href="{% url 'users:register' %}?next={% url 'telegramgroups' %}">عضویت</a> <span style="font-size:80%;padding:1px;">-</span> <a href="{% url 'users:login' %}?next={% url 'telegramgroups' %}">ورود</a></h3>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
