@@ -21,7 +21,7 @@ from django.urls import path
 
 from django.conf.urls.static import static
 
-from learning.views import add_mentoring
+import learning.views
 from web import views, settings
 from .views import (
 TelegramGroupsAPIView
@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^$', views.index_view, name='index'),
     path('', include('users.api.urls')),
 
-    path('mentoring/add/', add_mentoring, name='add_mentoring'),
+    path('mentoring/add/', learning.views.add_mentoring, name='add_mentoring'),
 
     path('groups/', views.groups_view, name='telegramgroups'),
     path('trello/link',

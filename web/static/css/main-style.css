@@ -113,6 +113,7 @@ p.blue:hover{
 }
 
 @media screen and (max-width: 768px) {
+
     #nav-ul {
         margin-top: 30px;
     }
@@ -201,7 +202,6 @@ div.container {
 
 
 .logo{
-    display:block;
     margin: 70px auto 20px auto;
     height: 200px;
     width: 200px;
@@ -222,12 +222,21 @@ div.container {
 }
 
 @media screen and (min-width: 768px) {
+    #top_logo {
+        display: block;
+    }
     .content{
         padding: 0px 100px;
     }
 }
 
 @media screen and (max-width: 768px) {
+    #top_logo {
+        display: none;
+    }
+    #base_container {
+        margin-top:100px;
+    }
     .content{
         padding: 0px 30px;
     }
