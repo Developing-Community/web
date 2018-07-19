@@ -34,6 +34,8 @@
     line-height: 170%;
 }
 
+
+
 </style>
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
@@ -49,17 +51,33 @@
             <h2>{{ title }}</h2>
             <hr/>
             <p class="form_description">{{ form_description }}</p>
-
-
             {% if request.user.is_authenticated %}
+
+            {% if messages %}
+            <div class='messages'>
+
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li
+                    {% if message.tags %} class="{{ message.tags }}"{% endif %}>{% if "html_safe" in message.tags %}{{
+                    message|safe }}{% else %}{{ message }}{% endif %}</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            {% endif %}
+
             <form method='POST' action='' enctype='multipart/form-data' class="djform">{% csrf_token %}
                 {{ form|crispy }}
                 <input type='submit' class='btn btn-default' value='تایید'/>
             </form>
-
             {% else %}
             <p class="form_description" style="text-align: center;">برای مشاهده این فرم ابتدا وارد شوید</p>
-            <h3><a href="{% url 'users:register' %}?next={{ request.get_full_path }}">عضویت</a> <span style="font-size:80%;padding:1px;">-</span> <a href="{% url 'users:login' %}?next={{ request.get_full_path }}">ورود</a></h3>
+            <h3>
+                <a href="{% url 'users:register' %}?next={{ request.get_full_path }}">عضویت</a>
+                <span style="font-size:80%;padding:1px;">-</span>
+                <a href="{% url 'users:login' %}?next={{ request.get_full_path }}">ورود</a>
+            </h3>
             {% endif %}
 
         </div>

@@ -1,4 +1,5 @@
 from taxonomy.models import Term, TaxonomyType
+from django.contrib import messages
 
 try:
     from urllib import quote_plus  # python 2
@@ -50,8 +51,8 @@ def add_mentoring(request):
                 road_map = form.cleaned_data.get('road_map')
             )
             instance.save()
+        messages.success(request, "فرم با موفقیت ثبت شد", extra_tags='html_safe')
 
-    # TODO: add form description
     context = {
         "form": form,
         "title" : 'ثبت منتورینگ',
