@@ -2,6 +2,7 @@ from enum import Enum
 from django.db import models
 from django.utils import timezone
 
+from taxonomy.models import Term
 from web import settings
 
 
@@ -39,6 +40,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     read_time = models.IntegerField(default=0)  # models.TimeField(null=True, blank=True) #assume minutes
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+    terms = models.ManyToManyField(Term, related_name="terms", blank=True)
 
 
 class ContentRealtionType(Enum):  # A subclass of Enum
