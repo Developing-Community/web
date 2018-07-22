@@ -1,7 +1,6 @@
 from enum import Enum
 from django.db import models
 from django.utils import timezone
-
 from taxonomy.models import Term
 from web import settings
 
@@ -25,7 +24,8 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
         choices=[(tag, tag.value) for tag in ContentType]  # Choices is a list of Tuple
     )
     author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+    subject = models.ForeignKey(Term, related_name="subject", blank=True, null=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to=content_image_upload_location,
                               null=True,
                               blank=True,
@@ -41,7 +41,8 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     terms = models.ManyToManyField(Term, related_name="terms", blank=True)
-
+    def __str__(self):
+        return self.title
 
 class ContentRealtionType(Enum):  # A subclass of Enum
     COMMENTED_ON = "commented_on"
