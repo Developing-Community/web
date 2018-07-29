@@ -45,6 +45,7 @@ urlpatterns = [
     path('mentoring/add/', learning.views.add_mentoring, name='add_mentoring'),
 
     path('articles/new/', content.views.add_article, name='add_article'),
+    path('reports/new/', content.views.add_report, name='add_report'),
 
     path('groups/', views.groups_view, name='telegramgroups'),
     path('trello/link',

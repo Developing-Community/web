@@ -12,7 +12,7 @@ class Term(models.Model):
     title_fa = models.CharField(max_length=255)
     taxonomy_type = models.CharField(
         max_length=30,
-        choices=[(tag, tag.value) for tag in TaxonomyType],
+        choices=[(tag.value, tag.name) for tag in TaxonomyType],
         default=TaxonomyType.SUBJECT
     )
 
@@ -39,5 +39,5 @@ class TermRelation(models.Model):
     destination = models.ForeignKey(Term, related_name='destination', on_delete=models.CASCADE)
     type = models.CharField(
         max_length=30,
-        choices=[(tag, tag.value) for tag in TermRealtionType]  # Choices is a list of Tuple
+        choices=[(tag.value, tag.name) for tag in TermRealtionType]
     )

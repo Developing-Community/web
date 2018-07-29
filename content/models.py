@@ -14,14 +14,17 @@ class ContentType(Enum):  # A subclass of Enum
     ARTICLE = "article"
     REPORT = "report"
     PROBLEM = "problem"
+    SOLUTION = "solution"
+    QUESTION = "question"
+    ANSWER = "answer"
     COMMENT = "comment"
 
 
 class Content(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=1000)
     type = models.CharField(
         max_length=30,
-        choices=[(tag, tag.value) for tag in ContentType]  # Choices is a list of Tuple
+        choices=[(tag.value, tag.name) for tag in ContentType]
     )
     author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -34,7 +37,6 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     height_field = models.IntegerField(default=0)
     width_field = models.IntegerField(default=0)
     content = models.TextField()
-    note = models.TextField(null=True, blank=True)
     draft = models.BooleanField(default=False)
     publish = models.DateField(auto_now=False, auto_now_add=False)
     read_time = models.IntegerField(default=0)  # models.TimeField(null=True, blank=True) #assume minutes
@@ -53,5 +55,5 @@ class ContentRelation(models.Model):
     destination = models.ForeignKey(Content, related_name='destination', on_delete=models.CASCADE)
     type = models.CharField(
         max_length=30,
-        choices=[(tag, tag.value) for tag in ContentRealtionType]  # Choices is a list of Tuple
+        choices=[(tag.value, tag.name) for tag in ContentRealtionType]
     )
