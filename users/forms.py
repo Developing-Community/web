@@ -69,17 +69,27 @@ class UserRegisterForm(forms.ModelForm):
 
 class UserProfileForm(forms.ModelForm):
 
+    telegram_id = forms.CharField(label='آیدی تلگرام')
+
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.fields['telegram_id'].required = False
+
     class Meta:
         model = Profile
         fields = [
             'profile_image',
             'bio',
+            'telegram_id',
+            'email_publicity',
             'subscribe_to_newsletter',
         ]
 
         labels = {
             'profile_image' : 'تصویر پروفایل',
             'bio' : 'بیوگرافی',
+            'email_publicity' : 'نمایش ایمیل در پروفایل',
             'subscribe_to_newsletter' : 'عضویت در خبرنامه',
         }
 

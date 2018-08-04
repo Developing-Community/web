@@ -8,6 +8,7 @@ from django.contrib.auth import (
 
 from django.shortcuts import render, redirect
 
+from users.models import ContactInfo
 from .forms import UserLoginForm, UserRegisterForm, UserProfileForm
 
 
@@ -61,6 +62,14 @@ def edit_profile(request):
     if form.is_valid():
         instance = form.save(commit=False)
         instance.save()
+        tg = ContactInfo.objects.filter(user = instance)
+        if tg.exists():
+            tg = tg.first()
+        else:
+            tg = ContactInfo()
+            tg.user = instance
+        tg.info = form.cleaned_data.get('telegram_id')
+        tg.save()
         messages.success(request, "فرم با موفقیت ثبت شد", extra_tags='html_safe')
     context = {
         "instance": instance,

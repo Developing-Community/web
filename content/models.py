@@ -19,6 +19,10 @@ class ContentType(Enum):  # A subclass of Enum
     ANSWER = "answer"
     COMMENT = "comment"
 
+# TODO: add this to content
+# class ContentVisibility(Enum):  # A subclass of Enum
+#     PUBLIC = "PUBLIC"
+#     PRIVATE = "PRIVATE"
 
 class Content(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
     title = models.CharField(max_length=1000)
