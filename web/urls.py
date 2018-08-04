@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 
 import content.views
 import learning.views
+import users.views
 from web import views, settings
 from .views import (
 TelegramGroupsAPIView
@@ -34,6 +35,7 @@ urlpatterns = [
     #APPs
     path('admin/', admin.site.urls),
     path('user/', include('users.urls')),
+    path('profile/edit/', users.views.edit_profile , name='edit_profile'),
 
     #APP APIs
     path('api/user/', include('users.api.urls')),

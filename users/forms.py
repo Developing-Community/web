@@ -6,6 +6,8 @@ from django.contrib.auth import (
     logout,
 )
 
+from users.models import Profile
+
 User = get_user_model()
 
 
@@ -63,6 +65,22 @@ class UserRegisterForm(forms.ModelForm):
 
         help_texts = {
             'username': None,
+        }
+
+class UserProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = Profile
+        fields = [
+            'profile_image',
+            'bio',
+            'subscribe_to_newsletter',
+        ]
+
+        labels = {
+            'profile_image' : 'تصویر پروفایل',
+            'bio' : 'بیوگرافی',
+            'subscribe_to_newsletter' : 'عضویت در خبرنامه',
         }
 
 

@@ -241,3 +241,7 @@ div.container {
         padding: 0px 30px;
     }
 }
+
+#about #join-us p, #about #join-us {
+    text-align: center;
+}
