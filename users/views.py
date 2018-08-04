@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import (
     authenticate,
     get_user_model,
@@ -7,7 +8,8 @@ from django.contrib.auth import (
 
 from django.shortcuts import render, redirect
 
-from .forms import UserLoginForm, UserRegisterForm
+from .forms import UserLoginForm, UserRegisterForm, UserProfileForm
+
 
 def login_view(request):
     next = request.GET.get('next')
@@ -50,3 +52,18 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     return redirect("/")
+
+def edit_profile(request):
+    instance = None
+    if request.user.is_authenticated:
+        instance = request.user.profile
+    form = UserProfileForm(request.POST or None, request.FILES or None, instance=instance)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        messages.success(request, "فرم با موفقیت ثبت شد", extra_tags='html_safe')
+    context = {
+        "instance": instance,
+        "form": form,
+    }
+    return render(request, "default_restricted_form.html", context)
