@@ -3,10 +3,12 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from companions.models import Application
 
 
 def profile_image_upload_location(instance, filename):
-    return "user/%s/profile/%s" %(instance.user.id, filename)
+    return "user/%s/profile/%s" % (instance.user.id, filename)
+
 
 # class MyUserManager(BaseUserManager):
 #     def create_user(self, email, firstname, lastname, username, password=None):
@@ -57,11 +59,14 @@ class Profile(models.Model):
     height_field = models.IntegerField(default=0, null=True)
     width_field = models.IntegerField(default=0, null=True)
     subscribe_to_newsletter = models.BooleanField(default=True)
+    applications = models.ManyToManyField(Application, blank=True)
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
