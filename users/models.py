@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from companions.models import Application
 
 def profile_image_upload_location(instance, filename):
     return "user/%s/profile/%s" % (instance.user.id, filename)
@@ -68,6 +69,8 @@ class ContactInfo(models.Model):
 
     def __str__(self):
         return str(self.user) + " | " + self.info
+
+    applications = models.ManyToManyField(Application, blank=True)
 
 
 @receiver(post_save, sender=User)
