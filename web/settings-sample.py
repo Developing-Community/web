@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'learning',
     'taxonomy',
     'content',
+    'companions',
     'users',
 ]
 
