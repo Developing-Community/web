@@ -59,6 +59,7 @@ class Profile(models.Model):
     width_field = models.IntegerField(default=0, null=True)
     subscribe_to_newsletter = models.BooleanField(default=True)
     email_publicity = models.BooleanField(default=True)
+    applications = models.ManyToManyField(Application, blank=True)
     def __str__(self):
         return str(self.user)
 
@@ -70,7 +71,6 @@ class ContactInfo(models.Model):
     def __str__(self):
         return str(self.user) + " | " + self.info
 
-    applications = models.ManyToManyField(Application, blank=True)
 
 
 @receiver(post_save, sender=User)
