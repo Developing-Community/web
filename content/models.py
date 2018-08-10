@@ -50,6 +50,10 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     terms = models.ManyToManyField(Term, related_name="terms", blank=True)
+    #TODO: Voting System
+    up_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="up_voters", blank=True)
+    down_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="down_voters", blank=True)
+
     def __str__(self):
         return self.title
 
