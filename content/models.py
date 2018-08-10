@@ -21,17 +21,25 @@ class ContentType(Enum):  # A subclass of Enum
     ANSWER = "answer"
     COMMENT = "comment"
 
-# TODO: add this to content
-# class ContentVisibility(Enum):  # A subclass of Enum
-#     PUBLIC = "PUBLIC"
-#     PRIVATE = "PRIVATE"
+
+class ContentVisibility(Enum):  # A subclass of Enum
+    PUBLIC = "PUBLIC"
+    PRIVATE = "PRIVATE"
 
 class Content(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
     title = models.CharField(max_length=1000)
+
     type = models.CharField(
         max_length=30,
         choices=[(tag.value, tag.name) for tag in ContentType]
     )
+
+    visibility = models.CharField(
+        max_length=30,
+        choices=[(tag.value, tag.name) for tag in ContentVisibility],
+        default=ContentVisibility.PUBLIC
+    )
+
     application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -50,7 +58,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     terms = models.ManyToManyField(Term, related_name="terms", blank=True)
-    #TODO: Voting System
+    # TODO: Voting System
     up_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="up_voters", blank=True)
     down_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="down_voters", blank=True)
 
