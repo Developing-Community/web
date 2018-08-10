@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'rest_framework',
 
-    'learningFields',
     'learning',
     'taxonomy',
     'content',
