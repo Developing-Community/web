@@ -20,6 +20,7 @@ class ContentType(Enum):  # A subclass of Enum
     QUESTION = "question"
     ANSWER = "answer"
     COMMENT = "comment"
+    STORY = "story"
 
 
 class ContentVisibility(Enum):  # A subclass of Enum
