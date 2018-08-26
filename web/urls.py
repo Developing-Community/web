@@ -15,16 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import include, path, re_path
-from django.views.generic import RedirectView
+from django.urls import include, re_path
 from django.urls import path
-
-from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
 import content.views
 import learning.views
 import users.views
-from web import views, settings
+from web import views
+
 urlpatterns = [
     #APPs
     path('admin/', admin.site.urls),
@@ -35,7 +34,8 @@ urlpatterns = [
     path('api/user/', include('users.api.urls')),
 
     #general urls
-    url(r'^$', views.index_view, name='index'),
+    url(r'^$', RedirectView.as_view(url='/learn/', permanent=True), name='index'),
+    url('learn/', views.index_view, name='learn'),
     path('', include('users.api.urls')),
 
     path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
@@ -59,9 +59,6 @@ urlpatterns = [
     #general APIs
     path('tgroups/', views.TelegramGroupsAPIView.as_view(), name='telegramgps'),
 ]
-from .views import (
-TelegramGroupsAPIView
-    )
 
 
 
