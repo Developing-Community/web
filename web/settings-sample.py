@@ -51,6 +51,8 @@ INSTALLED_APPS = [
 
     'crispy_forms',
     'rest_framework',
+    'material',
+    'material.frontend',
 
     'learning',
     'taxonomy',

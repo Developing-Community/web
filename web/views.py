@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.urls import reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -22,6 +23,8 @@ from django.contrib.auth import (
 )
 
 from django.shortcuts import render, redirect
+
+from web.forms import SharifSummerMarketProfileTempForm
 
 
 class TelegramGroupsAPIView(APIView):
@@ -68,6 +71,19 @@ def index_view(request):
     context = {}
     return render(request, "index.html", context)
 
-
 def groups_view(request):
     return render(request, 'groups.html', {})
+
+
+
+
+def sharif_summer_market_temp_view(request):
+    form = SharifSummerMarketProfileTempForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "فرم با موفقیت ثبت شد", extra_tags='html_safe')
+    context = {
+        "form": form,
+    }
+
+    return render(request, "landing.html", context)

@@ -48,6 +48,17 @@ def profile_image_upload_location(instance, filename):
 
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="profile")
+
+    #for if profile wasn't still registered as user
+    first_name = models.CharField(blank=True, null=True, max_length=255)
+    last_name = models.CharField(blank=True, null=True, max_length=255)
+
+    #in case we enter compelete name
+    complete_name = models.CharField(blank=True, null=True, max_length=255)
+
+    #temp
+    phone = models.CharField(blank=True, null=True, max_length=20)
+
     bio = models.TextField(blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
     profile_image = models.ImageField(upload_to=profile_image_upload_location,

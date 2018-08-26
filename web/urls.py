@@ -25,12 +25,6 @@ import content.views
 import learning.views
 import users.views
 from web import views, settings
-from .views import (
-TelegramGroupsAPIView
-    )
-
-
-
 urlpatterns = [
     #APPs
     path('admin/', admin.site.urls),
@@ -43,6 +37,8 @@ urlpatterns = [
     #general urls
     url(r'^$', views.index_view, name='index'),
     path('', include('users.api.urls')),
+
+    path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
 
     path('mentoring/add/', learning.views.add_mentoring, name='add_mentoring'),
 
@@ -61,5 +57,11 @@ urlpatterns = [
 
 
     #general APIs
-    path('tgroups/', TelegramGroupsAPIView.as_view(), name='telegramgps'),
+    path('tgroups/', views.TelegramGroupsAPIView.as_view(), name='telegramgps'),
 ]
+from .views import (
+TelegramGroupsAPIView
+    )
+
+
+
