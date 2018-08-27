@@ -81,3 +81,9 @@ class ContactInfo(models.Model):
 
     def __str__(self):
         return str(self.user) + " | " + self.info
+
+# class User
+
+class Team(models.Model):
+    pass
+    # user = models.ManyToManyField(Profile, on_delete=models.CASCADE, related_name="")
