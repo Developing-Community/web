@@ -69,7 +69,7 @@ def index_view(request):
     # }
 
     context = {}
-    return render(request, "index.html", context)
+    return render(request, "learn-index.html", context)
 
 def groups_view(request):
     return render(request, 'groups.html', {})

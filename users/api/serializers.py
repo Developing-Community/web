@@ -58,7 +58,7 @@ class UserCreateSerializer(ModelSerializer):
 
         user_qs = User.objects.filter(email=email)
         if user_qs.exists():
-            raise ValidationError("A user with this email has already registered.")
+            raise ValidationError("ایمیل از قبل وجود دارد")
 
         return value
 
@@ -68,7 +68,7 @@ class UserCreateSerializer(ModelSerializer):
 
         user_qs = User.objects.filter(username=username)
         if user_qs.exists():
-            raise ValidationError("A user with this username has already registered.")
+            raise ValidationError("نام کاربری از قبل وجود دارد")
 
         return value
 

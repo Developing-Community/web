@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'material',
     'material.frontend',
+    'webpack_loader',
 
     'learning',
     'taxonomy',
@@ -60,6 +61,17 @@ INSTALLED_APPS = [
     'companions',
     'users',
 ]
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': '',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,6 +89,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            BASE_DIR,
             os.path.join(BASE_DIR, 'templates'),  # If i leave both or just comment one one out I still get the same error
             'tmws.tmws.templates'
         ],
@@ -138,6 +151,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "web/static"),
+    os.path.join(BASE_DIR, "dist/"),
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")

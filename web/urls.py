@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include, re_path
 from django.urls import path
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 
 import content.views
 import learning.views
@@ -36,10 +36,15 @@ urlpatterns = [
     #general urls
     url(r'^$', RedirectView.as_view(url='/learn/', permanent=True), name='index'),
     url('learn/', views.index_view, name='learn'),
+
     path('', include('users.api.urls')),
 
     path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
 
+    url('campaigns/sharifmarket/register/',
+        TemplateView.as_view(template_name='index.html'),
+        name='uHome'
+        ),
     path('mentoring/add/', learning.views.add_mentoring, name='add_mentoring'),
 
     path('articles/new/', content.views.add_article, name='add_article'),
