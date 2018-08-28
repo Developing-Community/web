@@ -25,45 +25,41 @@ import users.views
 from web import views
 
 urlpatterns = [
-    #APPs
-    path('admin/', admin.site.urls),
-    path('user/', include('users.urls')),
-    path('profile/edit/', users.views.edit_profile , name='edit_profile'),
+  path('admin/', admin.site.urls),
+  path('api/user/', include('users.api.urls')),
+  url(r'^$',
+      TemplateView.as_view(template_name='index.html'),
+      name='uHome'
+      ),
+  # path('user/', include('users.urls')),
+  # path('profile/edit/', users.views.edit_profile , name='edit_profile'),
+  #
+  # #APP APIs
+  #
+  # #general urls
+  # url(r'^$', RedirectView.as_view(url='/learn/', permanent=True), name='index'),
+  # url('learn/', views.index_view, name='learn'),
+  #
+  # path('', include('users.api.urls')),
+  #
+  # path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
 
-    #APP APIs
-    path('api/user/', include('users.api.urls')),
-
-    #general urls
-    url(r'^$', RedirectView.as_view(url='/learn/', permanent=True), name='index'),
-    url('learn/', views.index_view, name='learn'),
-
-    path('', include('users.api.urls')),
-
-    path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
-
-    url('campaigns/sharifmarket/register/',
-        TemplateView.as_view(template_name='index.html'),
-        name='uHome'
-        ),
-    path('mentoring/add/', learning.views.add_mentoring, name='add_mentoring'),
-
-    path('articles/new/', content.views.add_article, name='add_article'),
-    path('reports/new/', content.views.add_report, name='add_report'),
-
-    path('groups/', views.groups_view, name='telegramgroups'),
-    path('trello/link',
-         RedirectView.as_view(url='https://trello.com/invite/developingcommunity/0569c91ef09c6c05f437a75927640874',
-                              permanent=True), name='trello'),
-    path('slack/link', RedirectView.as_view(
-        url=' ',
-        permanent=True), name='slack'),
-    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/img/favicon.ico', permanent=True), name='icon'),
-    re_path(r'^robots\.txt$', RedirectView.as_view(url='/static/robots.txt', permanent=True), name='robots.txt'),
-
-
-    #general APIs
-    path('tgroups/', views.TelegramGroupsAPIView.as_view(), name='telegramgps'),
+  # path('mentoring/add/', learning.views.add_mentoring, name='add_mentoring'),
+  #
+  # path('articles/new/', content.views.add_article, name='add_article'),
+  # path('reports/new/', content.views.add_report, name='add_report'),
+  #
+  # path('groups/', views.groups_view, name='telegramgroups'),
+  # path('trello/link',
+  #      RedirectView.as_view(url='https://trello.com/invite/developingcommunity/0569c91ef09c6c05f437a75927640874',
+  #                           permanent=True), name='trello'),
+  # path('slack/link', RedirectView.as_view(
+  #     url=' ',
+  #     permanent=True), name='slack'),
+  # re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/img/favicon.ico', permanent=True), name='icon'),
+  # re_path(r'^robots\.txt$', RedirectView.as_view(url='/static/robots.txt', permanent=True), name='robots.txt'),
+  #
+  #
+  # #general APIs
+  # path('tgroups/', views.TelegramGroupsAPIView.as_view(), name='telegramgps'),
 ]
-
-
-

@@ -6,38 +6,40 @@ from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
 from rest_framework.filters import (
-    SearchFilter,
-    OrderingFilter,
+  SearchFilter,
+  OrderingFilter,
 )
 
 from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
 from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    ListAPIView,
-    UpdateAPIView,
-    RetrieveAPIView,
-    RetrieveUpdateAPIView
+  CreateAPIView,
+  DestroyAPIView,
+  ListAPIView,
+  UpdateAPIView,
+  RetrieveAPIView,
+  RetrieveUpdateAPIView
 )
 from rest_framework.permissions import (
-    AllowAny,
-    IsAuthenticated,
-    IsAdminUser,
-    IsAuthenticatedOrReadOnly,
+  AllowAny,
+  IsAuthenticated,
+  IsAdminUser,
+  IsAuthenticatedOrReadOnly,
 
 )
 
 User = get_user_model()
 
 from .serializers import (
-    UserCreateSerializer,
+  UserCreateSerializer,
+  SMPCreateProfileSerializer
 )
 
 
 class UserCreateAPIView(CreateAPIView):
-    serializer_class = UserCreateSerializer
-    queryset = User.objects.all()
-    permission_classes = [AllowAny]
+  serializer_class = UserCreateSerializer
+  queryset = User.objects.all()
+  permission_classes = [AllowAny]
+
 
 # class UserLoginAPIView(APIView):
 #     permission_classes = [AllowAny]
@@ -50,3 +52,9 @@ class UserCreateAPIView(CreateAPIView):
 #             new_data = serializer.data
 #             return Response(new_data, status=HTTP_200_OK)
 #         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
+class SMPCreateProfileAPIView(CreateAPIView):
+  serializer_class = SMPCreateProfileSerializer
+  queryset = User.objects.all()
+  permission_classes = [AllowAny]
