@@ -82,23 +82,3 @@ class ContactInfo(models.Model):
 
     def __str__(self):
         return str(self.user) + " | " + self.info
-
-
-
-class Team(models.Model):
-    name = models.CharField(max_length=255)
-    # user = models.ManyToManyField(Profile, on_delete=models.CASCADE, related_name="")
-
-class TeamPersonRealtionType(Enum):  # A subclass of Enum
-    CREATOR = "CREATOR"
-    MANAGER = "MANAGER"
-    MEMBER = "MEMBER"
-
-
-class TeamPersonRelation(models.Model):
-    source = models.ForeignKey(Team, on_delete=models.CASCADE)
-    destination = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    type = models.CharField(
-        max_length=30,
-        choices=[(tag.value, tag.name) for tag in TeamPersonRealtionType]
-    )
