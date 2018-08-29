@@ -28,6 +28,8 @@
 </template>
 
 <script>
+    import axios from 'axios';
+
     export default {
         data() {
             return {
@@ -38,33 +40,44 @@
                     first_name: '',
                     last_name: ''
                 },
-                resource: {},
             };
         },
         methods: {
             submit() {
-                this.resource.save({}, this.user)
-                        .then(response => {
+                var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
+                axios.post(host + '/api/user/register/', 
+                this.user, // the data to post
+                { headers: {
+                'Content-type': 'application/json',
+                }
+                }).then(response => {
                             console.log("good");
-                            console.log(response);
+                            console.log(response.data);
                             if(response.statusText == "Created"){
                                 alert("ثبت نام با موفقیت انجام شد");
                             }
+                            this.$store.dispatch('obtainToken', {username: this.user.username, password: this.user.password});
                         })
                         .catch(err => {
-                            return err.json();
-                        })
-                        .then(err => {
                             console.log("bad");
-                            console.log(err);
-                            if(err.username){
-                                alert("Username: " + err.username[0]);
+                            console.log(err.response);
+                            if(err.response.data.username){
+                                alert("Username: " + err.response.data.username[0]);
+                            }
+                            if(err.response.data.password){
+                                alert("Password: " + err.response.data.password[0]);
+                            }
+                            if(err.response.data.email){
+                                alert("Email: " + err.response.data.email[0]);
+                            }
+                            if(err.response.data.first_name){
+                                alert("First name: " + err.response.data.first_name[0]);
+                            }
+                            if(err.response.data.last_name){
+                                alert("Last name: " + err.response.data.last_name[0]);
                             }
                         });
             }
-        },
-        created() {
-            this.resource = this.$resource('user/register/', {}, customActions);
         }
     }
 </script>

@@ -12,7 +12,13 @@ output: {
 },
 plugins: [
   new BundleTracker({filename: 'webpack-stats.json'}),
-  new WriteFilePlugin()
+  new WriteFilePlugin(),
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    jquery: 'jquery',
+    'window.jQuery': 'jquery',
+    jQuery: 'jquery'
+  })
   ],
   module: {
     rules: [

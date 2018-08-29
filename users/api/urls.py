@@ -2,7 +2,6 @@ from django.urls import path
 
 from .views import (
     UserCreateAPIView,
-    SMPCreateProfileAPIView
     )
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
@@ -12,5 +11,4 @@ urlpatterns = [
     path('auth/verify_token/', verify_jwt_token),
     path('auth/obtain_token/', obtain_jwt_token),
     path('register/', UserCreateAPIView.as_view(), name='register'),
-    path('smp/', SMPCreateProfileAPIView.as_view(), name='smp-temp'),
 ]

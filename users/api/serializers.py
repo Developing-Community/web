@@ -1,6 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
-
+from web.utils import RequiredValidator
 from rest_framework.serializers import (
   CharField,
   EmailField,
@@ -46,7 +46,9 @@ class UserCreateSerializer(ModelSerializer):
 
     ]
     extra_kwargs = {"password":
-                      {"write_only": True}
+                      {
+                        "write_only": True
+                      }
                     }
 
   def validate_email(self, value):
@@ -56,6 +58,24 @@ class UserCreateSerializer(ModelSerializer):
     user_qs = User.objects.filter(email=email)
     if user_qs.exists():
       raise ValidationError("ایمیل از قبل وجود دارد")
+
+    return value
+
+  def validate_first_name(self, value):
+    data = self.get_initial()
+    first_name = data.get("first_name")
+
+    if not first_name:
+      raise ValidationError("This field may not be blank.")
+
+    return value
+
+  def validate_last_name(self, value):
+    data = self.get_initial()
+    last_name = data.get("last_name")
+
+    if not last_name:
+      raise ValidationError("This field may not be blank.")
 
     return value
 
@@ -84,13 +104,3 @@ class UserCreateSerializer(ModelSerializer):
     user_obj.set_password(password)
     user_obj.save()
     return validated_data
-
-
-class SMPCreateProfileSerializer(ModelSerializer):
-  class Meta:
-    model = Profile
-    fields = [
-      'complete_name',
-      'phone',
-    ]
-    extra_kwargs = {'complete_name': {'required': True}, 'phone': {'required': True}}
