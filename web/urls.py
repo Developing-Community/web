@@ -28,6 +28,7 @@ urlpatterns = [
   path('admin/', admin.site.urls),
   path('api/user/', include('users.api.urls')),
   path('api/team/', include('team.api.urls')),
+  path('api/campaign/', include('campaigns.api.urls')),
   path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
   url(r'^$', TemplateView.as_view(template_name="index.html")),
   url(r'^.*/$', TemplateView.as_view(template_name="index.html")),

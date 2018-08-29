@@ -8,3 +8,4 @@ djangorestframework-jwt==1.11.0
 Pillow==5.2.0
 PyJWT==1.6.4
 pytz==2018.5
+whitenoise==3.2.2
