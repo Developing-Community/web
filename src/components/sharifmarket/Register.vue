@@ -24,7 +24,7 @@
                 </div>
                 <div class="form-group">
                     <label>نام خانوادگی</label>
-                    <input class="form-control" type="text" v-model="user.last_name">
+                    <input class="form-control" @keyup.enter="submit" type="text" v-model="user.last_name">
                 </div>
                 <button class="btn btn-primary" @click="submit">ثبت نام</button>
             </div>

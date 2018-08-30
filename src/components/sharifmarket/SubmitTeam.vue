@@ -14,7 +14,7 @@
                 <hr/>
                 <div class="form-group">
                     <label>افزودن گروه جدید</label>
-                    <input class="form-control" type="text" v-model="group.name">
+                    <input class="form-control" @keyup.enter="submit" type="text" v-model="group.name">
                 </div>
                 <button class="btn btn-primary" @click="submit">تایید</button>
 
@@ -26,7 +26,7 @@
 
 <script>
     import axios from 'axios';
-    import { protectedUrlMixin } from '../../../protectedUrlMixin';
+    import { protectedUrlMixin } from '../../protectedUrlMixin';
     export default {
         data() {
             return {
@@ -60,7 +60,7 @@
                         alert("ثبت تیم با موفقیت انجام شد");
                     }
                     vinst.loading = false;
-                    this.$router.push({ name: 'sharif-submit-product' });
+                    this.$router.push({ name: 'sharif-dashboard' });
                 })
                 .catch(err => {
                     console.log("bad");
@@ -85,7 +85,7 @@
                         alert("ثبت تیم با موفقیت انجام شد");
                     }
                     vinst.loading = false;
-                    this.$router.push({ name: 'sharif-submit-product' });
+                    this.$router.push({ name: 'sharif-dashboard' });
                 })
                 .catch(err => {
                     console.log("bad");

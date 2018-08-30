@@ -12,9 +12,10 @@
                 </div>
                 <div class="form-group">
                     <label>کلمه عبور</label>
-                    <input class="form-control" type="password" v-model="user.password">
+                    <input class="form-control" @keyup.enter="submit" type="password" v-model="user.password">
                 </div>
-                <button class="btn btn-primary" @click="submit">ورود</button>
+                <button class="btn btn-primary" style="margin: 10px;" @click="submit">ورود</button>
+                <button class="btn btn-primary" style="margin: 10px;" @click="$router.push({name: 'sharif-register'})">ثبت نام</button>
             </div>
         </div>
     </div>

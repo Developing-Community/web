@@ -8,6 +8,10 @@ class TeamCreateAPIView(CreateAPIView):
   def perform_create(self, serializer):
       team = serializer.save()
       user = self.request.user
+
+      #TODO: IMPORTANT! remove after sharif market finished
+      TeamUserRelation.objects.filter(user = user).delete()
+      
       creator_relation = TeamUserRelation(
         team = team,
         user = user,
@@ -22,6 +26,10 @@ class TeamEnrollAPIView(CreateAPIView):
   permission_classes = [AllowAny]
   def perform_create(self, serializer):
       user = self.request.user
+
+      #TODO: IMPORTANT! remove after sharif market finished
+      TeamUserRelation.objects.filter(user = user).delete()
+
       serializer.save(
         team = Team.objects.filter(id=self.request.data['group'])[0],
         user = user,
@@ -33,3 +41,8 @@ class TeamListAPIView(ListAPIView):
     serializer_class = TeamListSerializer
     permission_classes = [AllowAny]
     queryset = Team.objects.all()
+
+class GetUserTeamAPIView(ListAPIView):
+    serializer_class = TeamListSerializer
+    def get_queryset(self, *args, **kwargs):
+        return [x.team for x in TeamUserRelation.objects.filter(user = self.request.user)]

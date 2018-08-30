@@ -12,12 +12,25 @@ from rest_framework.serializers import (
 
 from users.models import Profile
 from campaigns.models import Product
-
+from team.api.serializers import TeamListSerializer
 class ProductCreateSerializer(ModelSerializer):
 
   class Meta:
     model = Product
     fields = [
+      'name',
+      'description',
+      'price'
+    ]
+
+
+class ProductListSerializer(ModelSerializer):
+  seller = TeamListSerializer()
+  class Meta:
+    model = Product
+    fields = [
+      'seller',
+      'id',
       'name',
       'description',
       'price'
