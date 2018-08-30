@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group">
                     <label>کلمه عبور</label>
-                    <input class="form-control" type="text" v-model="user.password">
+                    <input class="form-control" type="password" v-model="user.password">
                 </div>
                 <div class="form-group">
                     <label>نام</label>
@@ -64,10 +64,10 @@
                             if(response.statusText == "Created"){
                                 alert("ثبت نام با موفقیت انجام شد");
                             }
-                            this.$store.dispatch('obtainToken', {username: this.user.username, password: this.user.password})
+                            vinst.$store.dispatch('obtainToken', {username: this.user.username, password: this.user.password})
                             .then( () => {
                                 vinst.loading = false;
-                                this.$router.push({ name: 'submit-team' });
+                                this.$router.push({ name: 'sharif-submit-team' });
                             });
                         })
                         .catch(err => {
