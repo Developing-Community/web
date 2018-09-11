@@ -1,9 +1,14 @@
 from django.urls import path
-from . import views
 
-app_name = 'users'
+from .views import (
+    UserCreateAPIView,
+    )
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+
 urlpatterns = [
-    path('register/', views.register_view, name='register'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
+    # url(r'^login/$', UserLoginAPIView.as_view(), name='login'),
+    path('auth/refresh_token/', refresh_jwt_token),
+    path('auth/verify_token/', verify_jwt_token),
+    path('auth/obtain_token/', obtain_jwt_token),
+    path('register/', UserCreateAPIView.as_view(), name='register'),
 ]

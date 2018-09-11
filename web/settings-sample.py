@@ -49,11 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'crispy_forms',
     'rest_framework',
-    'material',
-    'material.frontend',
-    'webpack_loader',
+    'corsheaders',
 
     'learning',
     'taxonomy',
@@ -64,20 +61,10 @@ INSTALLED_APPS = [
     'campaigns',
 ]
 
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': '',
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
-        'POLL_INTERVAL': 0.1,
-        'TIMEOUT': None,
-        'IGNORE': ['.+\.hot-update.js', '.+\.map']
-    }
-}
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -85,16 +72,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 ROOT_URLCONF = 'web.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR,
-            os.path.join(BASE_DIR, 'templates'),  # If i leave both or just comment one one out I still get the same error
-            'tmws.tmws.templates'
-        ],
+        # 'DIRS': [
+        #     BASE_DIR,
+        #     os.path.join(BASE_DIR, 'templates'),  # If i leave both or just comment one one out I still get the same error
+        #     'tmws.tmws.templates'
+        # ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,10 +140,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "web/static"),
-    os.path.join(BASE_DIR, "dist/"),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "web/static"),
+# ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
