@@ -1,7 +1,7 @@
-<template>
-    <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-            <h1 style="text-align: center; margin:30px;">ورود</h1>
+<template><div class="ui container" style="text-align: center; margin-bottom: 20px;">
+    <div class="top_container ">
+        <div class="col-sm-10" style="display:block; margin: auto;">
+<h1 style="text-align: center; margin:30px;">ورود</h1>
             <div v-if="loading" style="width: 100%; text-align: center;">
                 <img style="margin: auto;" src="/static/loading.gif" />
             </div>
@@ -15,7 +15,7 @@
                     <input class="form-control" @keyup.enter="submit" type="password" v-model="user.password">
                 </div>
                 <button class="btn btn-primary" style="margin: 10px;" @click="submit">ورود</button>
-                <button class="btn btn-primary" style="margin: 10px;" @click="$router.push({name: 'sharif-register'})">ثبت نام</button>
+                <button class="btn btn-primary" style="margin: 10px;" @click="$router.push({name: 'register'})">ثبت نام</button>
             </div>
         </div>
     </div>
@@ -42,10 +42,11 @@
                     .then((response) => {
                         alert('با موفقیت وارد شدید');
                         this.$store.commit('updateToken', response.data.token);
+                        this.$store.commit('setAuthentication', true);
                         if(this.$route.query.next){
                             this.$router.push(this.$route.query.next);
                         } else {
-                            this.$router.push({ name: 'sharif-home' });
+                            this.$router.push({ name: 'home' });
                         }
                         vinst.loading = false;
                     })
@@ -62,12 +63,16 @@
             console.log(to);
             const token = localStorage.getItem('t');
             if(token && ((Date.now()/1000) - jwt_decode(token).orig_iat < 604800)){
-                next({ name: 'sharif-home' });
+                next({ name: 'home' });
             }
             next();
         }
     }
 </script>
 
-<style>
+<style scoped>
+input {
+    max-width: 500px;
+    margin: auto;
+}
 </style>

@@ -1,7 +1,7 @@
-<template>
-    <div class="row">
-        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-            <h1 style="text-align: center; margin:30px;">ثبت نام</h1>
+<template><div class="ui container" style="text-align: center; margin-bottom: 20px;">
+    <div class="top_container ">
+        <div class="col-sm-10" style="display:block; margin: auto;">
+<h1 style="text-align: center; margin:30px;">ثبت نام</h1>
             <div  v-if="loading" style="width: 100%; text-align: center;">
                 <img style="margin: auto;" src="/static/loading.gif" />
             </div>
@@ -18,14 +18,15 @@
                     <label>کلمه عبور</label>
                     <input class="form-control" type="password" v-model="user.password">
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label>نام</label>
                     <input class="form-control" type="text" v-model="user.first_name">
                 </div>
                 <div class="form-group">
                     <label>نام خانوادگی</label>
                     <input class="form-control" @keyup.enter="submit" type="text" v-model="user.last_name">
-                </div>
+                </div> -->
+                <button class="btn btn-primary" style="margin: 10px;" @click="$router.push({name: 'login'})">ورود</button>
                 <button class="btn btn-primary" @click="submit">ثبت نام</button>
             </div>
         </div>
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+    //TODO: register should accept 'next' from url parameters
     import axios from 'axios';
 
     export default {
@@ -42,8 +44,8 @@
                     username: '',
                     email: '',
                     password: '',
-                    first_name: '',
-                    last_name: ''
+                    // first_name: '',
+                    // last_name: ''
                 },
                 loading: false
             };
@@ -67,7 +69,7 @@
                             vinst.$store.dispatch('obtainToken', {username: this.user.username, password: this.user.password})
                             .then( () => {
                                 vinst.loading = false;
-                                this.$router.push({ name: 'sharif-submit-team' });
+                                this.$router.push({ name: 'groups' });
                             });
                         })
                         .catch(err => {
@@ -82,12 +84,12 @@
                             if(err.response.data.email){
                                 alert("Email: " + err.response.data.email[0]);
                             }
-                            if(err.response.data.first_name){
-                                alert("First name: " + err.response.data.first_name[0]);
-                            }
-                            if(err.response.data.last_name){
-                                alert("Last name: " + err.response.data.last_name[0]);
-                            }
+                            // if(err.response.data.first_name){
+                            //     alert("First name: " + err.response.data.first_name[0]);
+                            // }
+                            // if(err.response.data.last_name){
+                            //     alert("Last name: " + err.response.data.last_name[0]);
+                            // }
                             vinst.loading = false;
                         });
             }
@@ -95,5 +97,9 @@
     }
 </script>
 
-<style>
+<style scoped>
+input {
+    max-width: 500px;
+    margin: auto;
+}
 </style>

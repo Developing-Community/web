@@ -11,7 +11,7 @@
         },
         created(){
             this.$store.commit('removeToken');
-            this.$router.push({ name: 'sharif-home'})
+            this.$router.push({ name: 'home'})
         }
     }
 </script>

@@ -4,7 +4,7 @@ export const protectedUrlMixin = {
     beforeRouteEnter(to, from, next){
         console.log(to);
         const token = localStorage.getItem('t');
-        const loginRoute = { name: 'sharif-login' }
+        const loginRoute = { name: 'login' }
         if(!token){
             next(loginRoute);
         }

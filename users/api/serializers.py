@@ -36,8 +36,6 @@ class UserCreateSerializer(ModelSerializer):
       'username',
       'email',
       'password',
-      'first_name',
-      'last_name',
 
     ]
     extra_kwargs = {"password":
@@ -56,24 +54,6 @@ class UserCreateSerializer(ModelSerializer):
 
     return value
 
-  def validate_first_name(self, value):
-    data = self.get_initial()
-    first_name = data.get("first_name")
-
-    if not first_name:
-      raise ValidationError("This field may not be blank.")
-
-    return value
-
-  def validate_last_name(self, value):
-    data = self.get_initial()
-    last_name = data.get("last_name")
-
-    if not last_name:
-      raise ValidationError("This field may not be blank.")
-
-    return value
-
   def validate_username(self, value):
     data = self.get_initial()
     username = data.get("username")
@@ -86,14 +66,10 @@ class UserCreateSerializer(ModelSerializer):
 
   def create(self, validated_data):
     username = validated_data['username']
-    first_name = validated_data['first_name']
-    last_name = validated_data['last_name']
     email = validated_data['email']
     password = validated_data['password']
     user_obj = User(
       username=username,
-      first_name=first_name,
-      last_name=last_name,
       email=email
     )
     user_obj.set_password(password)
