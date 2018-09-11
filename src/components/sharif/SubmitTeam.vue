@@ -44,8 +44,7 @@
             enroll(gp) {
                 this.loading = true;
                 var vinst = this;
-                var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
-                axios.post(host + '/api/team/enroll/', 
+                axios.post(this.$store.state.hostUrl + '/api/team/enroll/', 
                 {
                     'group': gp.id,
                 }, // the data to post
@@ -71,8 +70,7 @@
             submit() {
                 this.loading = true;
                 var vinst = this;
-                var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
-                axios.post(host + '/api/team/create/', 
+                axios.post(this.$store.state.hostUrl + '/api/team/create/', 
                 this.group, // the data to post
                 { headers: {
                 'Content-type': 'application/json',
@@ -99,8 +97,7 @@
         },
         created(){
             var vinst = this;
-            var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
-            axios.get(host + '/api/team/list/').then(response => {
+            axios.get(this.$store.state.hostUrl + '/api/team/list/').then(response => {
                     this.groups = response.data;
                     vinst.loading = false;
                 })

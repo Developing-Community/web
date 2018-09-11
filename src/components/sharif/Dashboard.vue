@@ -69,8 +69,7 @@
             getProducts(){
                 this.loading = true;
                 var vinst = this;
-                var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
-                axios.get(host + '/api/campaign/product/list/?group=' + vinst.group.id).then(response => {
+                axios.get(this.$store.state.hostUrl + '/api/campaign/product/list/?group=' + vinst.group.id).then(response => {
                     this.products = response.data;
                     vinst.loading = false;
                 }).catch(err => {
@@ -81,8 +80,7 @@
             submit() {
                 this.loading = true;
                 var vinst = this;
-                var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
-                axios.post(host + '/api/campaign/product/create/', 
+                axios.post(this.$store.state.hostUrl + '/api/campaign/product/create/', 
                 this.product, // the data to post
                 { headers: {
                 'Content-type': 'application/json',
@@ -117,8 +115,7 @@
         },
         created(){
             var vinst = this;
-            var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
-            axios.get(host + '/api/team/getuserteam/',
+            axios.get(this.$store.state.hostUrl + '/api/team/getuserteam/',
                 {
                     headers: {
                         'Authorization' : 'JWT ' + localStorage.getItem('t')

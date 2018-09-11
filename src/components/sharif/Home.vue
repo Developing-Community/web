@@ -46,9 +46,7 @@
             getProducts(){
                 this.loading = true;
                 var vinst = this;
-                var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
-                
-                axios.get(host + '/api/campaign/product/list/').then(response => {
+                axios.get(this.$store.state.hostUrl + '/api/campaign/product/list/').then(response => {
                     console.log(response.data);
                     vinst.products = response.data;
                     vinst.loading = false;

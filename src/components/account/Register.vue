@@ -54,8 +54,7 @@
             submit() {
                 this.loading = true;
                 var vinst = this;
-                var host =  window.location.href.split("/")[0] + "//" +  window.location.href.split("/")[2]
-                axios.post(host + '/api/user/register/', 
+                axios.post(this.$store.state.hostUrl + '/api/user/register/', 
                 this.user, // the data to post
                 { headers: {
                 'Content-type': 'application/json',

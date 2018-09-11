@@ -14,13 +14,12 @@ Vue.use(Vuex);
 Vue.use(VueAxios, axios);
 Vue.use(VueRouter);
 
-var arr = window.location.href.split("/");
-var host = arr[0] + "//" + arr[2]
+const host = window.location.href.split("/")[0] + "//" + window.location.href.split("/")[2]
 
 
 export const store = new Vuex.Store({
   state: {
-    hostUrl: window.location.href.split("/")[0] + "//" + window.location.href.split("/")[2],
+    hostUrl: host,
     jwt: localStorage.getItem('t'),
     endpoints: {
       obtainJWT: host + '/api/user/auth/obtain_token/',
