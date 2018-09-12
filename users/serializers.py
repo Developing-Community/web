@@ -75,3 +75,13 @@ class UserCreateSerializer(ModelSerializer):
     user_obj.set_password(password)
     user_obj.save()
     return validated_data
+
+class ProfileRetrieveUpdateSerializer(ModelSerializer):
+  class Meta:
+    model = Profile
+    fields = [
+      'id',
+      'first_name',
+      'last_name',
+      'bio',
+    ]

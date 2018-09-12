@@ -1,40 +1,38 @@
-from django.db.models import Q
-from django.contrib.auth import get_user_model
-
+from django.contrib.auth import (
+    get_user_model,
+)
+from rest_framework.generics import (
+    CreateAPIView,
+    UpdateAPIView)
+from rest_framework.permissions import (
+    AllowAny,
+)
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
-from rest_framework.filters import (
-  SearchFilter,
-  OrderingFilter,
-)
-
-from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
-from rest_framework.generics import (
-  CreateAPIView,
-  DestroyAPIView,
-  ListAPIView,
-  UpdateAPIView,
-  RetrieveAPIView,
-  RetrieveUpdateAPIView
-)
-from rest_framework.permissions import (
-  AllowAny,
-  IsAuthenticated,
-  IsAdminUser,
-  IsAuthenticatedOrReadOnly,
-
-)
+from .permissions import IsOwner
+from .models import Profile
+from .serializers import (
+    UserCreateSerializer,
+    ProfileRetrieveUpdateSerializer)
 
 User = get_user_model()
 
-from .serializers import (
-  UserCreateSerializer,
-)
-
 
 class UserCreateAPIView(CreateAPIView):
-  serializer_class = UserCreateSerializer
-  queryset = User.objects.all()
-  permission_classes = [AllowAny]
+    serializer_class = UserCreateSerializer
+    queryset = User.objects.all()
+    permission_classes = [AllowAny]
+
+
+class ProfileRetrieveAPIView(APIView):
+    def get(self, request, format=None):
+        profile = Profile.objects.filter(user=self.request.user).first()
+        return Response(ProfileRetrieveUpdateSerializer(profile).data)
+
+
+class ProfileUpdateAPIView(UpdateAPIView):
+    serializer_class = ProfileRetrieveUpdateSerializer
+    permission_classes = [IsOwner]
+    lookup_field = 'id'
+    queryset = Profile.objects.all()
