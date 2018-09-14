@@ -15,7 +15,7 @@ class TeamCreateAPIView(CreateAPIView):
       creator_relation = TeamUserRelation(
         team = team,
         user = user,
-        type = TeamUserRelationType.CREATOR
+        type = "CREATOR"
       )
       creator_relation.save()
       print(creator_relation.type)

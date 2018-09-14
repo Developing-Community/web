@@ -28,7 +28,7 @@ urlpatterns = [
   path('admin/', admin.site.urls),
   path('api/user/', include('users.urls')),
   path('api/team/', include('team.urls')),
-  path('api/campaign/', include('campaigns.urls')),
+  path('api/campaigns/', include('campaigns.urls')),
   # path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
   # path('user/', include('users.urls')),
   # path('profile/edit/', users.views.edit_profile , name='edit_profile'),

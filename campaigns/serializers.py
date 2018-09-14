@@ -1,37 +1,45 @@
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
-from web.utils import RequiredValidator
+from enumfields.drf import EnumField
 from rest_framework.serializers import (
-  CharField,
-  EmailField,
-  HyperlinkedIdentityField,
-  ModelSerializer,
-  SerializerMethodField,
-  ValidationError
+    ModelSerializer
 )
 
-from users.models import Profile
-from campaigns.models import Product
+from campaigns.models import Product, Campaign, CampaignType
 from team.serializers import TeamListSerializer
-class ProductCreateSerializer(ModelSerializer):
+from enumfields.drf.serializers import EnumSupportSerializerMixin
+User = get_user_model()
 
-  class Meta:
-    model = Product
-    fields = [
-      'name',
-      'description',
-      'price'
-    ]
+
+class CampaignSerializer(EnumSupportSerializerMixin, ModelSerializer):
+    class Meta:
+        model = Campaign
+        fields = [
+            'id',
+            'title',
+            'type',
+            'description',
+        ]
+
+
+class ProductCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'name',
+            'description',
+            'price'
+        ]
 
 
 class ProductListSerializer(ModelSerializer):
-  seller = TeamListSerializer()
-  class Meta:
-    model = Product
-    fields = [
-      'seller',
-      'id',
-      'name',
-      'description',
-      'price'
-    ]
+    seller = TeamListSerializer()
+
+    class Meta:
+        model = Product
+        fields = [
+            'seller',
+            'id',
+            'name',
+            'description',
+            'price'
+        ]
