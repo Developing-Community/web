@@ -35,31 +35,48 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
         choices=[(tag.value, tag.name) for tag in ContentType]
     )
 
+    # no api
     visibility = models.CharField(
         max_length=30,
         choices=[(tag.value, tag.name) for tag in ContentVisibility],
         default=ContentVisibility.PUBLIC
     )
 
+    # no api
     application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
+
+    # comes from logged in user
     author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+
+    # no api
     slug = models.SlugField(unique=True, blank=True, null=True)
+
+    # foriegn api
     subject = models.ForeignKey(Term, related_name="subject", blank=True, null=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to=content_image_upload_location,
                               null=True,
                               blank=True,
                               width_field="width_field",
                               height_field="height_field")
+
+    # no api
     height_field = models.IntegerField(default=0)
+    # no api
     width_field = models.IntegerField(default=0)
     content = models.TextField()
     draft = models.BooleanField(default=False)
     publish = models.DateField(auto_now=False, auto_now_add=False)
-    read_time = models.IntegerField(default=0)  # models.TimeField(null=True, blank=True) #assume minutes
+    #read_time = models.IntegerField(default=0)  # models.TimeField(null=True, blank=True) #assume minutes
+    # no api
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
+    # no api
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    # no api
     terms = models.ManyToManyField(Term, related_name="terms", blank=True)
     # TODO: Voting System
+
+    # external api
     up_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="up_voters", blank=True)
     down_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="down_voters", blank=True)
 
