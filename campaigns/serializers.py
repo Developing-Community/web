@@ -21,6 +21,25 @@ class CampaignSerializer(EnumSupportSerializerMixin, ModelSerializer):
         ]
 
 
+class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
+    class Meta:
+        model = Campaign
+        fields = [
+            'id',
+            'title',
+            'type',
+            'description',
+        ]
+
+
+class CampaignDeleteSerializer(EnumSupportSerializerMixin, ModelSerializer):
+    class Meta:
+        model = Campaign
+        fields = [
+            'id',
+        ]
+
+
 class ProductCreateSerializer(ModelSerializer):
     class Meta:
         model = Product
