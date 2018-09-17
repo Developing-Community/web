@@ -43,7 +43,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     )
 
     # no api
-    application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
+    #application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
 
     # comes from logged in user
     author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
