@@ -9,7 +9,7 @@ class TaxonomyType(Enum):
 
 class Term(models.Model):
     title = models.CharField(max_length=255)
-    title_fa = models.CharField(max_length=255)
+    title_fa = models.CharField(max_length=255,blank=True, null=True)
     taxonomy_type = models.CharField(
         max_length=30,
         choices=[(tag.value, tag.name) for tag in TaxonomyType],
