@@ -1,5 +1,19 @@
 from rest_framework import serializers
 from .models import Content
+class ContentCreateSerializer(serializers.ModelSerializer):
+    subject = serializers.CharField(max_length=255)
+    class Meta:
+        model = Content
+        fields = [
+            'title',
+            'type',
+            'visibility',
+            'subject',
+            'image',
+            'content',
+            'draft',
+            'publish',
+            ]
 class ContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Content
