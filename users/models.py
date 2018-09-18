@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 from companions.models import Application
 
+
 def profile_image_upload_location(instance, filename):
     return "user/%s/profile/%s" % (instance.user.id, filename)
 
@@ -50,14 +51,14 @@ def profile_image_upload_location(instance, filename):
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="profile")
 
-    #for if profile wasn't still registered as user
+    # for if profile wasn't still registered as user
     first_name = models.CharField(blank=True, null=True, max_length=255)
     last_name = models.CharField(blank=True, null=True, max_length=255)
 
-    #in case we enter compelete name
+    # in case we enter compelete name
     complete_name = models.CharField(blank=True, null=True, max_length=255)
 
-    #temp
+    # temp
     phone = models.CharField(blank=True, null=True, max_length=20)
 
     bio = models.TextField(blank=True, null=True)
@@ -72,6 +73,7 @@ class Profile(models.Model):
     subscribe_to_newsletter = models.BooleanField(default=True)
     email_publicity = models.BooleanField(default=True)
     applications = models.ManyToManyField(Application, blank=True)
+
     def __str__(self):
         return str(self.user)
 
@@ -87,5 +89,6 @@ class ContactInfo(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created and not Profile.objects.filter(user=instance).exists():
         Profile.objects.create(user=instance)
+
 
 post_save.connect(create_user_profile, sender=User, dispatch_uid="create_user_profile")

@@ -44,6 +44,9 @@ class Campaign(models.Model):  # We want comment to have a foreign key to all co
     width_field = models.IntegerField(default=0)
     description = models.TextField()
 
+    start_time = models.DateField(auto_now=False, auto_now_add=False)
+    end_time = models.DateField(auto_now=False, auto_now_add=False)
+
     def __str__(self):
         return self.title
 
