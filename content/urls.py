@@ -1,11 +1,12 @@
 from django.urls import path,include
 from rest_framework import routers
 
-from .views import ContentViewSet
+from .views import ContentListView,ContentCreateView,ContentUpdateView,ContentDelete
 
-router = routers.DefaultRouter()
-router.register("contents",ContentViewSet)
 
 urlpatterns = [
-    path('',include(router.urls)),
+    path('<int:pk>/',ContentUpdateView),
+    path('list/',ContentListView.as_view()),
+    path('create/',ContentCreateView.as_view()),
+    path('<int:pk>/delete/',ContentDelete),
 ]
