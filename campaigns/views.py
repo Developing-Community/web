@@ -13,7 +13,8 @@ from rest_framework.generics import (
 from rest_framework.permissions import (
     AllowAny,
 )
-
+from django.http import Http404
+from django.contrib.contenttypes.models import ContentType
 from campaigns.models import Campaign, CampaignPartyRelation, CampaignPartyRelationType, Product, CampaignType
 from team.models import Team, TeamUserRelation
 from .pagination import CampaignPageNumberPagination
@@ -24,29 +25,14 @@ from .serializers import (
     CampaignDetailSerializer,
     CampaignDeleteSerializer,
     CampaignUpdateSerializer,
-    ProductListSerializer, ProductCreateSerializer)
+    ProductListSerializer, ProductCreateSerializer, CampaignEnrollSerializer)
 
 
-class CampaignCreateStudyAPIView(CreateAPIView):
+class CampaignCreateAPIView(CreateAPIView):
     serializer_class = CampaignCreateSerializer
 
     def perform_create(self, serializer):
-        campaign = serializer.save(type=CampaignType.STUDY)
-        user = self.request.user
-
-        creator_relation = CampaignPartyRelation(
-            campaign=campaign,
-            content_object=user,
-            type=CampaignPartyRelationType.CREATOR
-        )
-        creator_relation.save()
-
-
-class CampaignCreateMentoringAPIView(CreateAPIView):
-    serializer_class = CampaignCreateSerializer
-
-    def perform_create(self, serializer):
-        campaign = serializer.save(type=CampaignType.MENTORING)
+        campaign = serializer.save(type=self.kwargs['type'])
         user = self.request.user
 
         creator_relation = CampaignPartyRelation(
@@ -77,6 +63,29 @@ class CampaignDeleteAPIView(DestroyAPIView):
     serializer_class = CampaignDeleteSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
+class CampaignEnrollAPIView(CreateAPIView):
+  serializer_class = CampaignEnrollSerializer
+  permission_classes = [AllowAny]
+  def perform_create(self, serializer):
+      user = self.request.user
+
+      try:
+          obj = Campaign.objects.get(pk=self.kwargs['pk'])
+      except Campaign.DoesNotExist:
+          raise Http404
+
+
+      print(user.is_authenticated and CampaignPartyRelation.objects.filter(
+              campaign=obj,
+              type=CampaignPartyRelationType.MEMBER,
+              content_type=ContentType.objects.get(model="user"),
+              object_id=user.id
+      ).exists())
+          # serializer.save(
+          #   campaign = Campaign.objects.get(pk=self.request.query_params.pk),
+          #   content_object = user,
+          #   type = CampaignPartyRelationType.MEMBER
+          # )
 
 class CampaignListAPIView(ListAPIView):
     serializer_class = CampaignListSerializer
@@ -86,11 +95,12 @@ class CampaignListAPIView(ListAPIView):
         'title',
         'type'
     ]
-    pagination_class = CampaignPageNumberPagination  # PageNumberPagination
 
+    pagination_class = CampaignPageNumberPagination  # PageNumberPagination
+    ordering = ['-id']
     def get_queryset(self, *args, **kwargs):
         # queryset_list = super(CampaignListAPIView, self).get_queryset(*args, **kwargs)
-        queryset_list = Campaign.objects.all()  # filter(user=self.request.user)
+        queryset_list = Campaign.objects.filter(type=self.kwargs['type'])  # filter(user=self.request.user)
         query = self.request.GET.get("q")
         if query:
             queryset_list = queryset_list.filter(
@@ -98,6 +108,7 @@ class CampaignListAPIView(ListAPIView):
                 Q(type__icontains=query)
             ).distinct()
         return queryset_list
+
 
 
 class CreateProductAPIView(CreateAPIView):
