@@ -5,7 +5,7 @@ from companions.models import Application
 from taxonomy.models import Term
 from team.models import Team
 from django.utils import timezone
-
+from django.contrib.auth.models import User
 from enumfields import EnumField
 from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 
@@ -106,3 +106,20 @@ class Product(models.Model):
                                       height_field="height_field")
     height_field = models.IntegerField(default=0, null=True)
     width_field = models.IntegerField(default=0, null=True)
+
+
+###### WARNING #####
+## redundance data in Task Model
+## remember to add api properly
+##### WARNING #####
+
+class Report(models.Model):
+    task = models.ForeignKey("Task",on_delete=models.CASCADE,related_name="repots",blank=True, null=True)
+    author = models.ForeignKey(User,on_delete=models.CASCADE,related_name="reports")
+    rate = models.OneToOneField("content.Content",on_delete=models.CASCADE,blank=True, null=True)
+
+class Task(models.Model):
+    campaign = models.ForeignKey(Campaign,on_delete=models.CASCADE)
+    authors = models.ManyToManyField(User,related_name="tasks")
+    
+    
