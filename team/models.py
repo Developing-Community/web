@@ -1,4 +1,6 @@
-from enum import Enum
+from enumfields import EnumField
+from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
+
 from users.models import Profile
 from django.db import models
 
@@ -17,7 +19,4 @@ class TeamUserRelationType(Enum):  # A subclass of Enum
 class TeamUserRelation(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    type = models.CharField(
-        max_length=30,
-        choices=[(tag.value, tag.name) for tag in TeamUserRelationType]
-    )
+    type = EnumField(TeamUserRelationType, default=TeamUserRelationType.CREATOR, max_length=1)
