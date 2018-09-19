@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=255)),
                 ('title_fa', models.CharField(max_length=255)),
-                ('taxonomy_type', models.CharField(choices=[('learning_field', 'LEARNING_FIELD'), ('subject', 'SUBJECT')], default=taxonomy.models.TaxonomyType('subject'), max_length=30)),
+                ('taxonomy_type', models.CharField(choices=[('learning_field', 'LEARNING_FIELD'), ('subject', 'SUBJECT')], max_length=30)),
             ],
             options={
                 'ordering': ['title'],

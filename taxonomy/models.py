@@ -4,8 +4,8 @@ from django.db import models
 
 
 class TaxonomyType(Enum):
-    LEARNING_FIELD = "learning_field"
-    SUBJECT = "subject"  # content subject
+    LEARNING_FIELD = "LEARNING_FIELD"
+    SUBJECT = "SUBJECT"  # content subject
 
 
 class Term(models.Model):
@@ -29,7 +29,7 @@ class Term(models.Model):
         return self.title
 
 class TermRealtionType(Enum):   # A subclass of Enum
-    CHILD_OF = "child_of"
+    CHILD_OF = "CHILD_OF"
 
 class TermRelation(models.Model):
     source = models.ForeignKey(Term, related_name='source', on_delete=models.CASCADE)
