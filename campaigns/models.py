@@ -1,13 +1,15 @@
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.utils import timezone
+from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
+from enumfields import EnumField
+
 from companions.models import Application
 from taxonomy.models import Term
 from team.models import Team
-from django.utils import timezone
-from django.contrib.auth.models import User
-from enumfields import EnumField
-from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
+
 
 # Create your models here.
 
@@ -91,6 +93,9 @@ class CampaignTermRelation(models.Model):
     # )
 
     type = EnumField(CampaignTermRealtionType, max_length=100)
+
+class CampaignEnrollmentRequest(models.Model):
+    campaign = models.ForeignKey(Campaign, related_name='campaign', on_delete=models.CASCADE)
 
 
 # Sales Campaign
