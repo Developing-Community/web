@@ -41,11 +41,11 @@ class ContentVisibility(Enum):  # A subclass of Enum
 class Content(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
     title = models.CharField(max_length=1000)
 
-    type = EnumField(ContentType, default=ContentType.ARTICLE, max_length=1)
-    main_type = EnumField(MainContentType, default=MainContentType.TEXT, max_length=1)
+    type = EnumField(ContentType, default=ContentType.ARTICLE, max_length=10)
+    main_type = EnumField(MainContentType, default=MainContentType.TEXT, max_length=10)
 
     # no api
-    visibility = EnumField(ContentVisibility, default=ContentVisibility.PUBLIC, max_length=1)
+    visibility = EnumField(ContentVisibility, default=ContentVisibility.PUBLIC, max_length=10)
 
     # no api
     # application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
@@ -97,4 +97,4 @@ class ContentRealtionType(Enum):  # A subclass of Enum
 class ContentRelation(models.Model):
     source = models.ForeignKey(Content, related_name='source', on_delete=models.CASCADE)
     destination = models.ForeignKey(Content, related_name='destination', on_delete=models.CASCADE)
-    type = EnumField(ContentRealtionType, default=ContentRealtionType.COMMENTED_ON, max_length=1)
+    type = EnumField(ContentRealtionType, default=ContentRealtionType.COMMENTED_ON, max_length=10)

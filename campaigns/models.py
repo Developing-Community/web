@@ -32,7 +32,7 @@ class Campaign(models.Model):  # We want comment to have a foreign key to all co
     #     choices=[(tag.value, tag.name) for tag in CampaignType]
     # )
 
-    type = EnumField(CampaignType, max_length=1)
+    type = EnumField(CampaignType, max_length=10)
 
     application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=campaign_image_upload_location,
@@ -70,7 +70,7 @@ class CampaignPartyRelation(models.Model):
     #     choices=[(tag.value, tag.name) for tag in CampaignPartyRelationType]
     # )
 
-    type = EnumField(CampaignPartyRelationType, max_length=1)
+    type = EnumField(CampaignPartyRelationType, max_length=10)
 
     def __str__(self):
         return str(self.content_object) + " | " + self.campaign.title
@@ -90,7 +90,7 @@ class CampaignTermRelation(models.Model):
     #     choices=[(tag.value, tag.name) for tag in CampaignTermRealtionType]
     # )
 
-    type = EnumField(CampaignTermRealtionType, max_length=1)
+    type = EnumField(CampaignTermRealtionType, max_length=10)
 
 
 # Sales Campaign

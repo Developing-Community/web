@@ -15,11 +15,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='term',
             name='taxonomy_type',
-            field=enumfields.fields.EnumField(default='subject', enum=taxonomy.models.TaxonomyType, max_length=1),
+            field=enumfields.fields.EnumField(default='subject', enum=taxonomy.models.TaxonomyType, max_length=10),
         ),
         migrations.AddField(
             model_name='termrelation',
             name='type',
-            field=enumfields.fields.EnumField(default='child_of', enum=taxonomy.models.TermRealtionType, max_length=1),
+            field=enumfields.fields.EnumField(default='child_of', enum=taxonomy.models.TermRealtionType, max_length=10),
         ),
     ]

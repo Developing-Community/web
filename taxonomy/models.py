@@ -11,7 +11,7 @@ class TaxonomyType(Enum):
 class Term(models.Model):
     title = models.CharField(max_length=255)
     title_fa = models.CharField(max_length=255,blank=True, null=True)
-    taxonomy_type = EnumField(TaxonomyType, default=TaxonomyType.SUBJECT,max_length=1)
+    taxonomy_type = EnumField(TaxonomyType, default=TaxonomyType.SUBJECT,max_length=10)
 
     class Meta:
         ordering = ['title']
@@ -34,4 +34,4 @@ class TermRealtionType(Enum):   # A subclass of Enum
 class TermRelation(models.Model):
     source = models.ForeignKey(Term, related_name='source', on_delete=models.CASCADE)
     destination = models.ForeignKey(Term, related_name='destination', on_delete=models.CASCADE)
-    type = EnumField(TermRealtionType, default=TermRealtionType.CHILD_OF, max_length=1)
+    type = EnumField(TermRealtionType, default=TermRealtionType.CHILD_OF, max_length=10)

@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='teamuserrelation',
             name='type',
-            field=enumfields.fields.EnumField(default='CREATOR', enum=team.models.TeamUserRelationType, max_length=1),
+            field=enumfields.fields.EnumField(default='CREATOR', enum=team.models.TeamUserRelationType, max_length=10),
         ),
     ]
