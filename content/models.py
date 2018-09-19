@@ -97,4 +97,4 @@ class ContentRealtionType(Enum):  # A subclass of Enum
 class ContentRelation(models.Model):
     source = models.ForeignKey(Content, related_name='source', on_delete=models.CASCADE)
     destination = models.ForeignKey(Content, related_name='destination', on_delete=models.CASCADE)
-    type = EnumField(ContentRealtionType, max_length=1)
+    type = EnumField(ContentRealtionType, default=ContentRealtionType.COMMENTED_ON, max_length=1)
