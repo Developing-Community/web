@@ -15,21 +15,21 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='content',
             name='main_type',
-            field=enumfields.fields.EnumField(default='TEXT', enum=content.models.MainContentType, max_length=10),
+            field=enumfields.fields.EnumField(default='TEXT', enum=content.models.MainContentType, max_length=100),
         ),
         migrations.AddField(
             model_name='content',
             name='type',
-            field=enumfields.fields.EnumField(default='ARTICLE', enum=content.models.ContentType, max_length=10),
+            field=enumfields.fields.EnumField(default='ARTICLE', enum=content.models.ContentType, max_length=100),
         ),
         migrations.AddField(
             model_name='content',
             name='visibility',
-            field=enumfields.fields.EnumField(default='PUBLIC', enum=content.models.ContentVisibility, max_length=10),
+            field=enumfields.fields.EnumField(default='PUBLIC', enum=content.models.ContentVisibility, max_length=100),
         ),
         migrations.AddField(
             model_name='contentrelation',
             name='type',
-            field=enumfields.fields.EnumField(default='COMMENTED_ON', enum=content.models.ContentRealtionType, max_length=10),
+            field=enumfields.fields.EnumField(default='COMMENTED_ON', enum=content.models.ContentRealtionType, max_length=100),
         ),
     ]

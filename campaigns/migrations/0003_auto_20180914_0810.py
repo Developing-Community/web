@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='campaign',
             name='type',
-            field=enumfields.fields.EnumField(enum=campaigns.models.CampaignType, max_length=10),
+            field=enumfields.fields.EnumField(enum=campaigns.models.CampaignType, max_length=100),
         ),
     ]

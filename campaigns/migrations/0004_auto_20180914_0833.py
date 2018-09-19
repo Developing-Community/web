@@ -15,11 +15,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='campaignpartyrelation',
             name='type',
-            field=enumfields.fields.EnumField(enum=campaigns.models.CampaignPartyRelationType, max_length=10),
+            field=enumfields.fields.EnumField(enum=campaigns.models.CampaignPartyRelationType, max_length=100),
         ),
         migrations.AlterField(
             model_name='campaigntermrelation',
             name='type',
-            field=enumfields.fields.EnumField(enum=campaigns.models.CampaignTermRealtionType, max_length=10),
+            field=enumfields.fields.EnumField(enum=campaigns.models.CampaignTermRealtionType, max_length=100),
         ),
     ]
