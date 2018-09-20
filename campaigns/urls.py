@@ -2,13 +2,14 @@ from django.urls import path
 
 from campaigns.models import CampaignType
 from .views import CreateProductAPIView, ProductListAPIView, CampaignListAPIView, CampaignCreateAPIView, \
-    CampaignEnrollAPIView, CampaignDetailAPIView, CampaignDeleteAPIView, CampaignUpdateAPIView
+    CampaignRequestEnrollmentAPIView, CampaignCancelRequestEnrollmentAPIView, CampaignDetailAPIView, CampaignDeleteAPIView, CampaignUpdateAPIView
 
 urlpatterns = [
     path('<int:pk>/', CampaignDetailAPIView.as_view(), name='detail'),
     path('<int:pk>/edit/', CampaignUpdateAPIView.as_view(), name='update'),
     path('<int:pk>/delete/', CampaignDeleteAPIView.as_view(), name='delete'),
-    path('<int:pk>/enroll/', CampaignEnrollAPIView.as_view(), name='enroll'),
+    path('<int:pk>/request-enrollment/', CampaignRequestEnrollmentAPIView.as_view(), name='request-enrollment'),
+    path('<int:pk>/cancel-request/', CampaignCancelRequestEnrollmentAPIView.as_view(), name='cancel-request'),
     path('study/', CampaignListAPIView.as_view(), {'type': CampaignType.STUDY}, name='study-list'),
     path('mentoring/', CampaignListAPIView.as_view(), {'type': CampaignType.MENTORING}, name='mentoring-list'),
     path('study/create/', CampaignCreateAPIView.as_view(), {'type': CampaignType.STUDY}, name='create-study'),

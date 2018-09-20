@@ -5,7 +5,8 @@ from rest_framework.serializers import (
     ModelSerializer
 )
 
-from campaigns.models import Product, Campaign, CampaignPartyRelation, CampaignPartyRelationType
+from campaigns.models import Product, Campaign, CampaignPartyRelation, CampaignPartyRelationType, \
+    CampaignEnrollmentRequest
 from team.serializers import TeamListSerializer
 
 from django.contrib.auth import get_user_model
@@ -49,6 +50,7 @@ class CampaignUpdateSerializer(EnumSupportSerializerMixin, ModelSerializer):
 
 class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
     accessable = SerializerMethodField()
+    requested = SerializerMethodField()
     enrolled = SerializerMethodField()
     class Meta:
         model = Campaign
@@ -60,6 +62,7 @@ class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
             'start_time',
             'end_time',
             'accessable',
+            'requested',
             'enrolled',
         ]
 
@@ -70,6 +73,15 @@ class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
                 type = CampaignPartyRelationType.CREATOR,
                 content_type = ContentType.objects.get(model="user"),
                 object_id = user.id
+        ).exists():
+            return True
+        return False
+
+    def get_requested(self, obj):
+        user = self.context.get('request').user
+        if user.is_authenticated and CampaignEnrollmentRequest.objects.filter(
+                campaign = obj,
+                user = user
         ).exists():
             return True
         return False
@@ -94,10 +106,11 @@ class CampaignDeleteSerializer(EnumSupportSerializerMixin, ModelSerializer):
         ]
 
 
-class CampaignEnrollSerializer(ModelSerializer):
+class CampaignRequestEnrollmentSerializer(ModelSerializer):
   class Meta:
-    model = CampaignPartyRelation
+    model = CampaignEnrollmentRequest
     fields = [
+        'note'
     ]
 
 class ProductCreateSerializer(ModelSerializer):

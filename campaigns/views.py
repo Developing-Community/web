@@ -1,4 +1,6 @@
 from django.db.models import Q
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.filters import (
     SearchFilter,
     OrderingFilter,
@@ -15,7 +17,11 @@ from rest_framework.permissions import (
 )
 from django.http import Http404
 from django.contrib.contenttypes.models import ContentType
-from campaigns.models import Campaign, CampaignPartyRelation, CampaignPartyRelationType, Product, CampaignType
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from campaigns.models import Campaign, CampaignPartyRelation, CampaignPartyRelationType, Product, CampaignType, \
+    CampaignEnrollmentRequest
 from team.models import Team, TeamUserRelation
 from .pagination import CampaignPageNumberPagination
 from .permissions import IsOwnerOrReadOnly
@@ -25,7 +31,7 @@ from .serializers import (
     CampaignDetailSerializer,
     CampaignDeleteSerializer,
     CampaignUpdateSerializer,
-    ProductListSerializer, ProductCreateSerializer, CampaignEnrollSerializer)
+    ProductListSerializer, ProductCreateSerializer, CampaignRequestEnrollmentSerializer)
 
 
 class CampaignCreateAPIView(CreateAPIView):
@@ -63,29 +69,43 @@ class CampaignDeleteAPIView(DestroyAPIView):
     serializer_class = CampaignDeleteSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
-class CampaignEnrollAPIView(CreateAPIView):
-  serializer_class = CampaignEnrollSerializer
-  permission_classes = [AllowAny]
-  def perform_create(self, serializer):
-      user = self.request.user
 
-      try:
-          obj = Campaign.objects.get(pk=self.kwargs['pk'])
-      except Campaign.DoesNotExist:
-          raise Http404
+class CampaignRequestEnrollmentAPIView(CreateAPIView):
+    serializer_class = CampaignRequestEnrollmentSerializer
+
+    def perform_create(self, serializer):
+        user = self.request.user
+
+        try:
+            obj = Campaign.objects.get(pk=self.kwargs['pk'])
+        except Campaign.DoesNotExist:
+            raise Http404
+
+        if (CampaignPartyRelation.objects.filter(
+                campaign=obj,
+                content_type=ContentType.objects.get(model="user"),
+                object_id=user.id
+        ).exists()):
+            raise ValidationError("Already a member")
+        if(CampaignEnrollmentRequest.objects.filter(
+            campaign=Campaign.objects.get(pk=self.kwargs['pk']),
+            user=user,
+        ).exists()):
+            raise ValidationError("Already requested")
+        serializer.save(
+            campaign=Campaign.objects.get(pk=self.kwargs['pk']),
+            user=user,
+        )
 
 
-      print(user.is_authenticated and CampaignPartyRelation.objects.filter(
-              campaign=obj,
-              type=CampaignPartyRelationType.MEMBER,
-              content_type=ContentType.objects.get(model="user"),
-              object_id=user.id
-      ).exists())
-          # serializer.save(
-          #   campaign = Campaign.objects.get(pk=self.request.query_params.pk),
-          #   content_object = user,
-          #   type = CampaignPartyRelationType.MEMBER
-          # )
+
+class CampaignCancelRequestEnrollmentAPIView(APIView):
+    def get(self, request, pk):
+        CampaignEnrollmentRequest.objects.filter(
+            campaign=Campaign.objects.get(pk=pk),
+            user=request.user,
+        ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class CampaignListAPIView(ListAPIView):
     serializer_class = CampaignListSerializer
@@ -98,6 +118,7 @@ class CampaignListAPIView(ListAPIView):
 
     pagination_class = CampaignPageNumberPagination  # PageNumberPagination
     ordering = ['-id']
+
     def get_queryset(self, *args, **kwargs):
         # queryset_list = super(CampaignListAPIView, self).get_queryset(*args, **kwargs)
         queryset_list = Campaign.objects.filter(type=self.kwargs['type'])  # filter(user=self.request.user)
@@ -108,7 +129,6 @@ class CampaignListAPIView(ListAPIView):
                 Q(type__icontains=query)
             ).distinct()
         return queryset_list
-
 
 
 class CreateProductAPIView(CreateAPIView):

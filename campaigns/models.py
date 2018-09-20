@@ -12,6 +12,7 @@ from team.models import Team
 
 
 # Create your models here.
+from web import settings
 
 
 def campaign_image_upload_location(instance, filename):
@@ -36,7 +37,7 @@ class Campaign(models.Model):  # We want comment to have a foreign key to all co
 
     type = EnumField(CampaignType, max_length=100)
 
-    application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
+    # application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=campaign_image_upload_location,
                               null=True,
                               blank=True,
@@ -94,8 +95,12 @@ class CampaignTermRelation(models.Model):
 
     type = EnumField(CampaignTermRealtionType, max_length=100)
 
+
+
 class CampaignEnrollmentRequest(models.Model):
-    campaign = models.ForeignKey(Campaign, related_name='campaign', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+    campaign = models.ForeignKey(Campaign, related_name='request_campaign', on_delete=models.CASCADE)
+    note = models.TextField(blank=True, null=True)
 
 
 # Sales Campaign
