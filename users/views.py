@@ -8,16 +8,36 @@ from rest_framework.permissions import (
     AllowAny,
 )
 from rest_framework.response import Response
+
 from rest_framework.views import APIView
+from rest_framework.reverse import reverse,reverse_lazy
 
 from .permissions import IsOwner
 from .models import Profile
 from .serializers import (
     UserCreateSerializer,
-    ProfileRetrieveUpdateSerializer)
-
+    ProfileRetrieveUpdateSerializer,
+    ProfileImageUpdateRetriveSerializer)
+from django.http import HttpResponseRedirect
 User = get_user_model()
 
+class ProfileImageAPIView(APIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileImageUpdateRetriveSerializer
+    
+    def get(self, request, pk,format=None):
+        profile = Profile.objects.filter(user__pk=pk).first()
+        return Response(ProfileImageUpdateRetriveSerializer(profile).data)
+    
+    def put(self,request,pk,format=None):
+        profile = Profile.objects.filter(user=self.request.user).first()
+        profile.profile_image = request.data['profile_image']
+        profile.save()
+        return Response(ProfileImageUpdateRetriveSerializer(profile).data)
+    def delete(self,request,pk,format=None):
+        profile = Profile.objects.filter(user=self.request.user).first()
+        profile.delete()
+        return Response({"status":"Profile Image Removed"})
 
 class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
