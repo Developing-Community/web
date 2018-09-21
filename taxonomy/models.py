@@ -1,20 +1,17 @@
-from enum import Enum
+from enumfields import EnumField
+from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 from django.db import models
 
 
 class TaxonomyType(Enum):
-    LEARNING_FIELD = "learning_field"
-    SUBJECT = "subject"  # content subject
+    LEARNING_FIELD = "LEARNING_FIELD"
+    SUBJECT = "SUBJECT"  # content subject
 
 
 class Term(models.Model):
     title = models.CharField(max_length=255)
     title_fa = models.CharField(max_length=255,blank=True, null=True)
-    taxonomy_type = models.CharField(
-        max_length=30,
-        choices=[(tag.value, tag.name) for tag in TaxonomyType],
-        default=TaxonomyType.SUBJECT
-    )
+    taxonomy_type = EnumField(TaxonomyType, default=TaxonomyType.SUBJECT,max_length=1000)
 
     class Meta:
         ordering = ['title']
@@ -32,12 +29,9 @@ class Term(models.Model):
         return self.title
 
 class TermRealtionType(Enum):   # A subclass of Enum
-    CHILD_OF = "child_of"
+    CHILD_OF = "CHILD_OF"
 
 class TermRelation(models.Model):
     source = models.ForeignKey(Term, related_name='source', on_delete=models.CASCADE)
     destination = models.ForeignKey(Term, related_name='destination', on_delete=models.CASCADE)
-    type = models.CharField(
-        max_length=30,
-        choices=[(tag.value, tag.name) for tag in TermRealtionType]
-    )
+    type = EnumField(TermRealtionType, default=TermRealtionType.CHILD_OF, max_length=1000)

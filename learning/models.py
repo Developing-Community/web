@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
 from django.db import models
-from web import settings
 
 from taxonomy.models import Term
+from web import settings
+
 
 class MentoringInfo(models.Model):
     mentor = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)

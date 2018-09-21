@@ -19,12 +19,13 @@ from django.urls import include, re_path
 from django.urls import path
 from django.views.generic import RedirectView, TemplateView
 
+from django.conf.urls.static import static
 import content.views
 import learning.views
 import users.views
-from web import views
-from django_rest_passwordreset import urls as password_reset_urls
 
+from django_rest_passwordreset import urls as password_reset_urls
+from web import views, settings
 
 urlpatterns = [
   path('admin/', admin.site.urls),
@@ -72,3 +73,8 @@ urlpatterns = [
   #   url(r'^$', TemplateView.as_view(template_name="index.html")),
   #   url(r'^.*/$', TemplateView.as_view(template_name="index.html")),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

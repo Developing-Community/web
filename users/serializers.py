@@ -84,4 +84,26 @@ class ProfileRetrieveUpdateSerializer(ModelSerializer):
       'first_name',
       'last_name',
       'bio',
+      'profile_image',
+      'width_field',
+      'height_field',
     ]
+    read_only_fields = [
+      'profile_image',
+      'width_field',
+      'height_field',
+      ]
+
+
+class ProfileImageUpdateRetriveSerializer(ModelSerializer):
+  class Meta:
+    model = Profile
+    fields = [
+      'profile_image',
+      'width_field',
+      'height_field',
+    ]
+    read_only_fields = [
+      'width_field',
+      'height_field',
+      ]

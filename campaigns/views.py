@@ -1,4 +1,6 @@
 from django.db.models import Q
+from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.filters import (
     SearchFilter,
     OrderingFilter,
@@ -13,8 +15,13 @@ from rest_framework.generics import (
 from rest_framework.permissions import (
     AllowAny,
 )
+from django.http import Http404
+from django.contrib.contenttypes.models import ContentType
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from campaigns.models import Campaign, CampaignPartyRelation, CampaignPartyRelationType, Product, CampaignType
+from campaigns.models import Campaign, CampaignPartyRelation, CampaignPartyRelationType, Product, CampaignType, \
+    CampaignEnrollmentRequest
 from team.models import Team, TeamUserRelation
 from .pagination import CampaignPageNumberPagination
 from .permissions import IsOwnerOrReadOnly
@@ -24,29 +31,14 @@ from .serializers import (
     CampaignDetailSerializer,
     CampaignDeleteSerializer,
     CampaignUpdateSerializer,
-    ProductListSerializer, ProductCreateSerializer)
+    ProductListSerializer, ProductCreateSerializer, CampaignRequestEnrollmentSerializer)
 
 
-class CampaignCreateStudyAPIView(CreateAPIView):
+class CampaignCreateAPIView(CreateAPIView):
     serializer_class = CampaignCreateSerializer
 
     def perform_create(self, serializer):
-        campaign = serializer.save(type=CampaignType.STUDY)
-        user = self.request.user
-
-        creator_relation = CampaignPartyRelation(
-            campaign=campaign,
-            content_object=user,
-            type=CampaignPartyRelationType.CREATOR
-        )
-        creator_relation.save()
-
-
-class CampaignCreateMentoringAPIView(CreateAPIView):
-    serializer_class = CampaignCreateSerializer
-
-    def perform_create(self, serializer):
-        campaign = serializer.save(type=CampaignType.MENTORING)
+        campaign = serializer.save(type=self.kwargs['type'])
         user = self.request.user
 
         creator_relation = CampaignPartyRelation(
@@ -78,6 +70,43 @@ class CampaignDeleteAPIView(DestroyAPIView):
     permission_classes = [IsOwnerOrReadOnly]
 
 
+class CampaignRequestEnrollmentAPIView(CreateAPIView):
+    serializer_class = CampaignRequestEnrollmentSerializer
+
+    def perform_create(self, serializer):
+        user = self.request.user
+
+        try:
+            obj = Campaign.objects.get(pk=self.kwargs['pk'])
+        except Campaign.DoesNotExist:
+            raise Http404
+
+        if (CampaignPartyRelation.objects.filter(
+                campaign=obj,
+                content_type=ContentType.objects.get(model="user"),
+                object_id=user.id
+        ).exists()):
+            raise ValidationError("Already a member")
+        if(CampaignEnrollmentRequest.objects.filter(
+            campaign=Campaign.objects.get(pk=self.kwargs['pk']),
+            user=user,
+        ).exists()):
+            raise ValidationError("Already requested")
+        serializer.save(
+            campaign=Campaign.objects.get(pk=self.kwargs['pk']),
+            user=user,
+        )
+
+
+
+class CampaignCancelRequestEnrollmentAPIView(APIView):
+    def get(self, request, pk):
+        CampaignEnrollmentRequest.objects.filter(
+            campaign=Campaign.objects.get(pk=pk),
+            user=request.user,
+        ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 class CampaignListAPIView(ListAPIView):
     serializer_class = CampaignListSerializer
     filter_backends = [SearchFilter, OrderingFilter]
@@ -86,11 +115,13 @@ class CampaignListAPIView(ListAPIView):
         'title',
         'type'
     ]
+
     pagination_class = CampaignPageNumberPagination  # PageNumberPagination
+    ordering = ['-id']
 
     def get_queryset(self, *args, **kwargs):
         # queryset_list = super(CampaignListAPIView, self).get_queryset(*args, **kwargs)
-        queryset_list = Campaign.objects.all()  # filter(user=self.request.user)
+        queryset_list = Campaign.objects.filter(type=self.kwargs['type'])  # filter(user=self.request.user)
         query = self.request.GET.get("q")
         if query:
             queryset_list = queryset_list.filter(

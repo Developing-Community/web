@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Content
-class ContentCreateSerializer(serializers.ModelSerializer):
+from enumfields.drf.serializers import EnumSupportSerializerMixin
+
+class ContentCreateSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer):
     subject = serializers.CharField(max_length=255)
     class Meta:
         model = Content
@@ -14,7 +16,7 @@ class ContentCreateSerializer(serializers.ModelSerializer):
             'draft',
             'publish',
             ]
-class ContentSerializer(serializers.ModelSerializer):
+class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Content
         fields = [

@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from enumfields.drf.serializers import EnumSupportSerializerMixin
 from rest_framework.fields import SerializerMethodField
@@ -6,9 +5,11 @@ from rest_framework.serializers import (
     ModelSerializer
 )
 
-from campaigns.models import Product, Campaign, CampaignPartyRelation, CampaignPartyRelationType
+from campaigns.models import Product, Campaign, CampaignPartyRelation, CampaignPartyRelationType, \
+    CampaignEnrollmentRequest
 from team.serializers import TeamListSerializer
 
+from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
@@ -18,6 +19,8 @@ class CampaignCreateSerializer(EnumSupportSerializerMixin, ModelSerializer):
         fields = [
             'id',
             'title',
+            'start_time',
+            'end_time',
             'description',
         ]
 
@@ -27,9 +30,9 @@ class CampaignListSerializer(EnumSupportSerializerMixin, ModelSerializer):
         model = Campaign
         fields = [
             'id',
+            'title',
             'start_time',
             'end_time',
-            'title',
             'description',
         ]
 
@@ -39,13 +42,16 @@ class CampaignUpdateSerializer(EnumSupportSerializerMixin, ModelSerializer):
         fields = [
             'id',
             'title',
-            'type',
+            'start_time',
+            'end_time',
             'description',
         ]
 
 
 class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
     accessable = SerializerMethodField()
+    requested = SerializerMethodField()
+    enrolled = SerializerMethodField()
     class Meta:
         model = Campaign
         fields = [
@@ -55,7 +61,9 @@ class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
             'description',
             'start_time',
             'end_time',
-            'accessable'
+            'accessable',
+            'requested',
+            'enrolled',
         ]
 
     def get_accessable(self, obj):
@@ -63,6 +71,26 @@ class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
         if user.is_authenticated and CampaignPartyRelation.objects.filter(
                 campaign = obj,
                 type = CampaignPartyRelationType.CREATOR,
+                content_type = ContentType.objects.get(model="user"),
+                object_id = user.id
+        ).exists():
+            return True
+        return False
+
+    def get_requested(self, obj):
+        user = self.context.get('request').user
+        if user.is_authenticated and CampaignEnrollmentRequest.objects.filter(
+                campaign = obj,
+                user = user
+        ).exists():
+            return True
+        return False
+
+    def get_enrolled(self, obj):
+        user = self.context.get('request').user
+        if user.is_authenticated and CampaignPartyRelation.objects.filter(
+                campaign = obj,
+                type = CampaignPartyRelationType.MEMBER,
                 content_type = ContentType.objects.get(model="user"),
                 object_id = user.id
         ).exists():
@@ -77,6 +105,13 @@ class CampaignDeleteSerializer(EnumSupportSerializerMixin, ModelSerializer):
             'id',
         ]
 
+
+class CampaignRequestEnrollmentSerializer(ModelSerializer):
+  class Meta:
+    model = CampaignEnrollmentRequest
+    fields = [
+        'note'
+    ]
 
 class ProductCreateSerializer(ModelSerializer):
     class Meta:

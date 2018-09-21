@@ -1,15 +1,18 @@
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.utils import timezone
+from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
+from enumfields import EnumField
+
 from companions.models import Application
 from taxonomy.models import Term
 from team.models import Team
-from django.utils import timezone
 
-from enumfields import EnumField
-from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 
 # Create your models here.
+from web import settings
 
 
 def campaign_image_upload_location(instance, filename):
@@ -25,16 +28,16 @@ class CampaignType(Enum):
 
 
 class Campaign(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
-    title = models.CharField(max_length=1000)
+    title = models.CharField(max_length=10000)
 
     # type = models.CharField(
     #     max_length=30,
     #     choices=[(tag.value, tag.name) for tag in CampaignType]
     # )
 
-    type = EnumField(CampaignType, max_length=1)
+    type = EnumField(CampaignType, max_length=1000)
 
-    application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
+    # application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=campaign_image_upload_location,
                               null=True,
                               blank=True,
@@ -70,7 +73,7 @@ class CampaignPartyRelation(models.Model):
     #     choices=[(tag.value, tag.name) for tag in CampaignPartyRelationType]
     # )
 
-    type = EnumField(CampaignPartyRelationType, max_length=1)
+    type = EnumField(CampaignPartyRelationType, max_length=100)
 
     def __str__(self):
         return str(self.content_object) + " | " + self.campaign.title
@@ -90,7 +93,14 @@ class CampaignTermRelation(models.Model):
     #     choices=[(tag.value, tag.name) for tag in CampaignTermRealtionType]
     # )
 
-    type = EnumField(CampaignTermRealtionType, max_length=1)
+    type = EnumField(CampaignTermRealtionType, max_length=100)
+
+
+
+class CampaignEnrollmentRequest(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+    campaign = models.ForeignKey(Campaign, related_name='request_campaign', on_delete=models.CASCADE)
+    note = models.TextField(blank=True, null=True)
 
 
 # Sales Campaign
