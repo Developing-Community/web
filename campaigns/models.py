@@ -35,7 +35,7 @@ class Campaign(models.Model):  # We want comment to have a foreign key to all co
     #     choices=[(tag.value, tag.name) for tag in CampaignType]
     # )
 
-    type = EnumField(CampaignType, max_length=100)
+    type = EnumField(CampaignType, max_length=1000)
 
     # application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=campaign_image_upload_location,
