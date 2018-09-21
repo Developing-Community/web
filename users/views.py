@@ -1,39 +1,59 @@
 from django.http import HttpResponse
+
+import requests
 from django.contrib.auth import get_user_model
+from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.html import strip_tags
 from django_rest_passwordreset.signals import reset_password_token_created
 from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.shortcuts import render
 from .models import Profile
 from .permissions import IsOwner
 from .serializers import ProfileRetrieveUpdateSerializer, UserCreateSerializer
 
+from django.conf import settings
+#`current_user`, `username`, `email`, `reset_password_url`
 
-from django.urls import reverse
-# from django.template.loader import render_to_string
-
-from django.core.mail import send_mail
+def get_http_host(request):
+    return HttpResponse("{}".format(request.META['HTTP_HOST']))
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
-    rest_url = reverse("user:reset_password",kwargs={'key':reset_password_token.key})
-    print("INFO:" + rest_url)
+    reset_url = reverse("user:reset_password",kwargs={'key':reset_password_token.key})
+    reset_link = settings.HTTP_HOST + reset_url
+    print("INFO:" + reset_link)
+    context = {
+    'current_user': reset_password_token.user,
+    'username': reset_password_token.user.username,
+    'email': reset_password_token.user.email,
+    'reset_link': reset_link
+    }
     title = "Password Reset Request For " + "\"" + reset_password_token.user.username +"\""
-    content = rest_url
-    mail_data = {
-        
-        
-        "from" : "noreplay@dev-community.ir",
-        "to": ['snparvizi75@gmail.com']
-        }
-    send_mail(**mail_data,fail_silently=False)
-    return HttpResponse("cuker")
+    content_html = render_to_string("email/reset_password_email.html",context)
+    content_text = strip_tags(content_html)
+    mail_from = "noreply@dev-community.ir"
+    to = ['snparvizi75@gmail.com']
+
+    email = EmailMultiAlternatives(
+        title,
+        content_text,
+        mail_from,
+        to)
+    email.attach_alternative(content_html,"text/html")
+    email.send()
 
 def reset_password_change(request,key):
-    return HttpResponse(request.get_full_path())
+    context = {
+        'key': key,
+
+    }
+    return render(request,"email/reset_password.html",context)
 
 # from django.core.mail import get_connection, EmailMultiAlternatives
 
