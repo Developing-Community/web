@@ -23,13 +23,16 @@ import content.views
 import learning.views
 import users.views
 from web import views
+from django_rest_passwordreset import urls as password_reset_urls
+
 
 urlpatterns = [
   path('admin/', admin.site.urls),
   path('api/user/', include('users.urls')),
   path('api/team/', include('team.urls')),
   path('api/campaigns/', include('campaigns.urls')),
-  path('api/content/',include('content.urls')),
+  path('api/content/',include('content.urls'),name="content_api"),
+  path('api/reset-password/',include(password_reset_urls,namespace="web")),
   # path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
   # path('user/', include('users.urls')),
   # path('profile/edit/', users.views.edit_profile , name='edit_profile'),
