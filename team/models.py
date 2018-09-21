@@ -18,4 +18,4 @@ class TeamUserRelationType(Enum):  # A subclass of Enum
 class TeamUserRelation(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    type = EnumField(TeamUserRelationType, default=TeamUserRelationType.CREATOR, max_length=100)
+    type = EnumField(TeamUserRelationType, default=TeamUserRelationType.CREATOR, max_length=1000)

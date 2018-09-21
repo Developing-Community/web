@@ -28,7 +28,7 @@ class CampaignType(Enum):
 
 
 class Campaign(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
-    title = models.CharField(max_length=1000)
+    title = models.CharField(max_length=10000)
 
     # type = models.CharField(
     #     max_length=30,
@@ -73,7 +73,7 @@ class CampaignPartyRelation(models.Model):
     #     choices=[(tag.value, tag.name) for tag in CampaignPartyRelationType]
     # )
 
-    type = EnumField(CampaignPartyRelationType, max_length=100)
+    type = EnumField(CampaignPartyRelationType, max_length=1000)
 
     def __str__(self):
         return str(self.content_object) + " | " + self.campaign.title
@@ -93,7 +93,7 @@ class CampaignTermRelation(models.Model):
     #     choices=[(tag.value, tag.name) for tag in CampaignTermRealtionType]
     # )
 
-    type = EnumField(CampaignTermRealtionType, max_length=100)
+    type = EnumField(CampaignTermRealtionType, max_length=1000)
 
 
 
