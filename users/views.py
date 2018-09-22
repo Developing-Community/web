@@ -4,6 +4,7 @@ from django.contrib.auth import (
 from rest_framework.generics import (
     CreateAPIView,
     UpdateAPIView)
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import (
     AllowAny,
 )
@@ -24,6 +25,7 @@ User = get_user_model()
 class ProfileImageAPIView(APIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileImageUpdateRetriveSerializer
+    parser_classes = [MultiPartParser]
     
     def get(self, request, pk,format=None):
         profile = Profile.objects.filter(user__pk=pk).first()
