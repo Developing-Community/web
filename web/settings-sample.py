@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'django_rest_passwordreset',
     'corsheaders',
 
     'learning',
@@ -176,3 +177,5 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': timedelta(hours=1),
     'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
 }
+
+# add SMTP server info here
