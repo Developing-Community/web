@@ -4,7 +4,7 @@ from .views import (
     UserCreateAPIView,
     ProfileUpdateAPIView,
     ProfileRetrieveAPIView,
-    profile-password-reset,
+    # profile-password-reset,
     reset_password_change,get_http_host,
     ProfileImageAPIView)
 

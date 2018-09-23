@@ -50,8 +50,8 @@ def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
     title = "Password Reset Request For " + "\"" + reset_password_token.user.username +"\""
     content_html = render_to_string("email/reset_password_email.html",context)
     content_text = strip_tags(content_html)
-    mail_from = "noreply@dev-community.ir"
-    to = ['snparvizi75@gmail.com']
+    mail_from = "info@dev-community.ir"
+    to = [reset_password_token.user.email]
 
     email = EmailMultiAlternatives(
         title,
