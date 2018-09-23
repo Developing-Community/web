@@ -39,7 +39,7 @@ def get_http_host(request):
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
     reset_url = reverse("user:reset_password",kwargs={'key':reset_password_token.key})
-    reset_link = settings.HTTP_HOST + reset_url
+    reset_link = "https://dev-community.ir" + reset_url
     print("INFO:" + reset_link)
     context = {
     'current_user': reset_password_token.user,
@@ -60,6 +60,7 @@ def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
         to)
     email.attach_alternative(content_html,"text/html")
     email.send()
+    print(email)
 
 def reset_password_change(request,key):
     context = {
