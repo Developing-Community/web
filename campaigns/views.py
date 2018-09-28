@@ -12,6 +12,7 @@ from rest_framework.generics import (
     RetrieveAPIView,
     RetrieveUpdateAPIView
 )
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import (
     AllowAny,
 )
@@ -31,7 +32,8 @@ from .serializers import (
     CampaignDetailSerializer,
     CampaignDeleteSerializer,
     CampaignUpdateSerializer,
-    ProductListSerializer, ProductCreateSerializer, CampaignRequestEnrollmentSerializer)
+    ProductListSerializer, ProductCreateSerializer, CampaignRequestEnrollmentSerializer,
+    CampaignImageUpdateRetriveSerializer)
 
 
 class CampaignCreateAPIView(CreateAPIView):
@@ -129,6 +131,28 @@ class CampaignListAPIView(ListAPIView):
                 Q(type__icontains=query)
             ).distinct()
         return queryset_list
+
+
+class CampaignImageAPIView(APIView):
+    queryset = Campaign.objects.all()
+    serializer_class = CampaignImageUpdateRetriveSerializer
+    parser_classes = [MultiPartParser]
+
+    def get(self, request, pk, format=None):
+        campaign = Campaign.objects.filter(pk=pk).first()
+        return Response(CampaignImageUpdateRetriveSerializer(campaign).data)
+
+    def put(self, request, pk, format=None):
+        campaign = Campaign.objects.filter(pk=pk).first()
+        campaign.profile_image = request.data['profile_image']
+        campaign.save()
+        return Response(CampaignImageUpdateRetriveSerializer(campaign).data)
+
+    def delete(self, request, pk, format=None):
+        campaign = Campaign.objects.filter(pk=pk).first()
+        campaign.image = None
+        campaign.save()
+        return Response({"status": "Campaign Image Removed"})
 
 
 class CreateProductAPIView(CreateAPIView):

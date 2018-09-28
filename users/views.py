@@ -129,7 +129,7 @@ class ProfileImageAPIView(APIView):
     parser_classes = [MultiPartParser]
     
     def get(self, request, pk,format=None):
-        profile = Profile.objects.filter(user__pk=pk).first()
+        profile = Profile.objects.filter(pk=pk).first()
         return Response(ProfileImageUpdateRetriveSerializer(profile).data)
     
     def put(self,request,pk,format=None):
@@ -139,7 +139,8 @@ class ProfileImageAPIView(APIView):
         return Response(ProfileImageUpdateRetriveSerializer(profile).data)
     def delete(self,request,pk,format=None):
         profile = Profile.objects.filter(user=self.request.user).first()
-        profile.delete()
+        profile.profile_image = None
+        profile.save()
         return Response({"status":"Profile Image Removed"})
 
 class UserCreateAPIView(CreateAPIView):

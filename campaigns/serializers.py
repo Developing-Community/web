@@ -34,7 +34,15 @@ class CampaignListSerializer(EnumSupportSerializerMixin, ModelSerializer):
             'start_time',
             'end_time',
             'description',
+            'image',
+            'width_field',
+            'height_field',
         ]
+    read_only_fields = [
+      'image',
+      'width_field',
+      'height_field',
+      ]
 
 class CampaignUpdateSerializer(EnumSupportSerializerMixin, ModelSerializer):
     class Meta:
@@ -64,7 +72,15 @@ class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
             'accessable',
             'requested',
             'enrolled',
+             'image',
+             'width_field',
+             'height_field',
         ]
+    read_only_fields = [
+      'image',
+      'width_field',
+      'height_field',
+      ]
 
     def get_accessable(self, obj):
         user = self.context.get('request').user
@@ -97,6 +113,19 @@ class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
             return True
         return False
 
+
+class CampaignImageUpdateRetriveSerializer(ModelSerializer):
+  class Meta:
+    model = Campaign
+    fields = [
+      'image',
+      'width_field',
+      'height_field',
+    ]
+    read_only_fields = [
+      'width_field',
+      'height_field',
+      ]
 
 class CampaignDeleteSerializer(EnumSupportSerializerMixin, ModelSerializer):
     class Meta:
