@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'companions',
     'users',
     'campaigns',
+    'bot'
 ]
 
 MIDDLEWARE = [
