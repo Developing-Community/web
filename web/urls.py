@@ -30,6 +30,7 @@ from web import views, settings
 urlpatterns = [
   path('admin/', admin.site.urls),
   path('api/user/', include('users.urls')),
+  path('api/bot/', include('bot.urls')),
   path('api/team/', include('team.urls')),
   path('api/campaigns/', include('campaigns.urls')),
   path('api/content/',include('content.urls'),name="content_api"),
