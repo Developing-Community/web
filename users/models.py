@@ -74,6 +74,8 @@ class Profile(models.Model):
     email_publicity = models.BooleanField(default=True)
     applications = models.ManyToManyField(Application, blank=True)
 
+    telegram_user_id = models.IntegerField(blank=True, null=True, unique=True)
+
     def __str__(self):
         return str(self.user)
 

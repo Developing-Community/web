@@ -1,19 +1,14 @@
-from django.http import HttpResponse
-
-import requests
-from django.contrib.auth import get_user_model
+from django.contrib.auth import (
+    get_user_model,
+)
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
+from django.http import HttpResponse
+from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django_rest_passwordreset.signals import reset_password_token_created
-from rest_framework.generics import CreateAPIView, UpdateAPIView
-from rest_framework.permissions import AllowAny
-
-from django.contrib.auth import (
-    get_user_model,
-)
 from rest_framework.generics import (
     CreateAPIView,
     UpdateAPIView)
@@ -21,16 +16,14 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import (
     AllowAny,
 )
-
 from rest_framework.response import Response
-
 from rest_framework.views import APIView
-from django.shortcuts import render
-from .models import Profile
-from .permissions import IsOwner
-from .serializers import ProfileRetrieveUpdateSerializer, UserCreateSerializer
 
-from django.conf import settings
+from bot.models import TelegramToken
+from bot.serializers import (
+    TelegramTokenSerializer)
+
+
 #`current_user`, `username`, `email`, `reset_password_url`
 
 def get_http_host(request):
@@ -112,7 +105,7 @@ def reset_password_change(request,key):
 
 
 
-from rest_framework.reverse import reverse,reverse_lazy
+from rest_framework.reverse import reverse
 
 from .permissions import IsOwner
 from .models import Profile
@@ -120,7 +113,7 @@ from .serializers import (
     UserCreateSerializer,
     ProfileRetrieveUpdateSerializer,
     ProfileImageUpdateRetriveSerializer)
-from django.http import HttpResponseRedirect
+
 User = get_user_model()
 
 class ProfileImageAPIView(APIView):
@@ -160,3 +153,19 @@ class ProfileUpdateAPIView(UpdateAPIView):
     permission_classes = [IsOwner]
     lookup_field = 'id'
     queryset = Profile.objects.all()
+
+
+class TelegramTokenVerificationAPIView(APIView):
+    queryset = TelegramToken.objects.all()
+    serializer_class = TelegramTokenSerializer
+
+    def post(self, request, format=None):
+        telegram_user_id = request.data['telegram_user_id']
+        x = TelegramToken.objects.filter(
+            telegram_user_id = telegram_user_id)
+        if x.exists():
+            x = x.first()
+        else:
+            x = TelegramToken.objects.create(
+            telegram_user_id = telegram_user_id)
+        return Response(TelegramTokenSerializer(x).data)

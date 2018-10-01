@@ -11,6 +11,6 @@ class TelegramTokenSerializer(EnumSupportSerializerMixin, ModelSerializer):
     class Meta:
         model = TelegramToken
         fields = [
-            'user_token',
+            'verify_token',
             'telegram_user_id'
         ]

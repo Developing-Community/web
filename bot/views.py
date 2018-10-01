@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 from bot.models import TelegramToken
-from .serializers import (
+from bot.serializers import (
     TelegramTokenSerializer)
 
 class TelegramTokenCreateAPIView(APIView):
