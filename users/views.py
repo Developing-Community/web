@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django_rest_passwordreset.signals import reset_password_token_created
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     CreateAPIView,
     UpdateAPIView)
@@ -160,12 +161,18 @@ class TelegramTokenVerificationAPIView(APIView):
     serializer_class = TelegramTokenSerializer
 
     def post(self, request, format=None):
-        telegram_user_id = request.data['telegram_user_id']
+        verify_token = request.data['verify_token']
+
+        raise ValidationError("ایمیل از قبل وجود دارد")
+
         x = TelegramToken.objects.filter(
-            telegram_user_id = telegram_user_id)
+            verify_token = verify_token)
         if x.exists():
             x = x.first()
+            y = Profile.objects.get(user = self.request.user)
+            y.telegram_user_id = x.telegram_user_id
+            y.save()
+            x.delete()
+            return Response({'result': True})
         else:
-            x = TelegramToken.objects.create(
-            telegram_user_id = telegram_user_id)
-        return Response(TelegramTokenSerializer(x).data)
+            return Response({'result': False})

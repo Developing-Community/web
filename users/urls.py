@@ -5,8 +5,8 @@ from .views import (
     ProfileUpdateAPIView,
     ProfileRetrieveAPIView,
     # profile-password-reset,
-    reset_password_change,get_http_host,
-    ProfileImageAPIView)
+    reset_password_change, get_http_host,
+    ProfileImageAPIView, TelegramTokenVerificationAPIView)
 
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 app_name = "user"
@@ -14,6 +14,7 @@ urlpatterns = [
     path('auth/refresh_token/', refresh_jwt_token),
     path('auth/verify_token/', verify_jwt_token),
     path('auth/obtain_token/', obtain_jwt_token),
+    path('auth/verify-telegram-token/', TelegramTokenVerificationAPIView.as_view(), name="verify-telegram-token"),
     path('profile/<int:pk>/profile-image/',ProfileImageAPIView.as_view()),
     path('register/', UserCreateAPIView.as_view(), name='register'),
     path('profile/', ProfileRetrieveAPIView.as_view(), name='view-profile'),
