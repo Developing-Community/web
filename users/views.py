@@ -24,6 +24,8 @@ from bot.models import TelegramToken
 from bot.serializers import (
     TelegramTokenSerializer)
 
+from rest_framework import status
+import uuid
 
 #`current_user`, `username`, `email`, `reset_password_url`
 
@@ -162,8 +164,10 @@ class TelegramTokenVerificationAPIView(APIView):
 
     def post(self, request, format=None):
         verify_token = request.data['verify_token']
-
-        raise ValidationError("ایمیل از قبل وجود دارد")
+        try:
+            uuid.UUID(verify_token)
+        except:
+            raise ValidationError("Invalid Code")
 
         x = TelegramToken.objects.filter(
             verify_token = verify_token)
@@ -173,6 +177,6 @@ class TelegramTokenVerificationAPIView(APIView):
             y.telegram_user_id = x.telegram_user_id
             y.save()
             x.delete()
-            return Response({'result': True})
+            return Response(status=status.HTTP_200_OK)
         else:
-            return Response({'result': False})
+            raise ValidationError("Invalid Code")
