@@ -175,6 +175,13 @@ class TelegramTokenVerificationAPIView(APIView):
             verify_token = verify_token)
         if x.exists():
             x = x.first()
+
+            k = Profile.objects.filter(telegram_user_id=x.telegram_user_id)
+            if k.exists():
+                k = k.first()
+                k.telegram_user_id = None
+                k.save()
+
             y = Profile.objects.get(user = self.request.user)
             y.telegram_user_id = x.telegram_user_id
             y.save()
