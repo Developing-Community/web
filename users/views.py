@@ -26,8 +26,10 @@ from bot.serializers import (
 
 from rest_framework import status
 import uuid
-
+import requests
 #`current_user`, `username`, `email`, `reset_password_url`
+from web import settings
+
 
 def get_http_host(request):
     return HttpResponse("{}".format(request.META['HTTP_HOST']))
@@ -167,7 +169,7 @@ class TelegramTokenVerificationAPIView(APIView):
         try:
             uuid.UUID(verify_token)
         except:
-            raise ValidationError("Invalid Code")
+            raise ValidationError("Invalid code")
 
         x = TelegramToken.objects.filter(
             verify_token = verify_token)
@@ -177,6 +179,10 @@ class TelegramTokenVerificationAPIView(APIView):
             y.telegram_user_id = x.telegram_user_id
             y.save()
             x.delete()
+            try:
+                requests.get(settings.BOT_API_URL + '/%d/confirmed' % y.telegram_user_id)
+            except Exception as e:
+                print(str(e))
             return Response(status=status.HTTP_200_OK)
         else:
-            raise ValidationError("Invalid Code")
+            raise ValidationError("Verification code doesn't exist")
