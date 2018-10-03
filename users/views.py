@@ -12,7 +12,7 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     CreateAPIView,
-    UpdateAPIView)
+    UpdateAPIView, RetrieveAPIView)
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import (
     AllowAny,
@@ -147,11 +147,17 @@ class UserCreateAPIView(CreateAPIView):
     permission_classes = [AllowAny]
 
 
-class ProfileRetrieveAPIView(APIView):
+class UserProfileRetrieveAPIView(APIView):
     def get(self, request, format=None):
         profile = Profile.objects.filter(user=self.request.user).first()
         return Response(ProfileRetrieveUpdateSerializer(profile).data)
 
+
+class ProfileRetrieveAPIView(RetrieveAPIView):
+    serializer_class = ProfileRetrieveUpdateSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'id'
+    queryset = Profile.objects.all()
 
 class ProfileUpdateAPIView(UpdateAPIView):
     serializer_class = ProfileRetrieveUpdateSerializer

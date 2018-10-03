@@ -29,11 +29,11 @@ from web import views, settings
 
 urlpatterns = [
   path('admin/', admin.site.urls),
-  path('api/user/', include('users.urls')),
+  path('api/user/', include('users.urls',namespace="users")),
   path('api/bot/', include('bot.urls')),
   path('api/team/', include('team.urls')),
   path('api/campaigns/', include('campaigns.urls')),
-  path('api/content/',include('content.urls'),name="content_api"),
+  path('api/content/',include('content.urls',namespace="content")),
   path('api/reset-password/',include(password_reset_urls,namespace="web")),
   # path('campaigns/sharifmarket/', views.sharif_summer_market_temp_view, name='sharif_summer_market_temp_view'),
   # path('user/', include('users.urls')),

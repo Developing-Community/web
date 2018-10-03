@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from .views import ContentListView,ContentCreateView,ContentUpdateView,ContentDelete
 
-
+app_name = 'content'
 urlpatterns = [
     path('<int:pk>/',ContentUpdateView),
     path('list/',ContentListView.as_view()),
