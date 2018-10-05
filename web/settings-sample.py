@@ -49,7 +49,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 BOT_API_URL = "http://localhost:5000"
 
-HOST_URL = "https;//dev-community.ir"
+HOST_URL = "https://dev-community.ir"
 
 AUTH_USER_MODEL = 'auth.User'
 
@@ -78,6 +78,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'web.middlewares.XForwardedForMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
