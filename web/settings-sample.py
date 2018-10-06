@@ -78,7 +78,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'web.middlewares.XForwardedForMiddleware',.
+    'web.middlewares.XForwardedForMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
