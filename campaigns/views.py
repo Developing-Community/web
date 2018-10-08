@@ -1,6 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, ParseError
 from rest_framework.filters import (
     SearchFilter,
     OrderingFilter,
@@ -22,7 +23,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from campaigns.models import Campaign, CampaignPartyRelation, CampaignPartyRelationType, Product, CampaignType, \
-    CampaignEnrollmentRequest
+    CampaignEnrollmentRequest, CampaignContentRelation
+from content.models import Content
+from content.serializers import ContentCreateSerializer, ContentSerializer
+from taxonomy.models import Term
 from team.models import Team, TeamUserRelation
 from .pagination import CampaignPageNumberPagination
 from .permissions import IsOwnerOrReadOnly
@@ -35,6 +39,7 @@ from .serializers import (
     ProductListSerializer, ProductCreateSerializer, CampaignRequestEnrollmentSerializer,
     CampaignImageUpdateRetriveSerializer)
 
+User = get_user_model()
 
 class CampaignCreateAPIView(CreateAPIView):
     serializer_class = CampaignCreateSerializer
@@ -89,16 +94,15 @@ class CampaignRequestEnrollmentAPIView(CreateAPIView):
                 object_id=user.id
         ).exists()):
             raise ValidationError("Already a member")
-        if(CampaignEnrollmentRequest.objects.filter(
-            campaign=Campaign.objects.get(pk=self.kwargs['pk']),
-            user=user,
+        if (CampaignEnrollmentRequest.objects.filter(
+                campaign=Campaign.objects.get(pk=self.kwargs['pk']),
+                user=user,
         ).exists()):
             raise ValidationError("Already requested")
         serializer.save(
             campaign=Campaign.objects.get(pk=self.kwargs['pk']),
             user=user,
         )
-
 
 
 class CampaignCancelRequestEnrollmentAPIView(APIView):
@@ -108,6 +112,7 @@ class CampaignCancelRequestEnrollmentAPIView(APIView):
             user=request.user,
         ).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class CampaignListAPIView(ListAPIView):
     serializer_class = CampaignListSerializer
@@ -174,3 +179,50 @@ class ProductListAPIView(ListAPIView):
             team = Team.objects.filter(id=team_id).first()
             queryset_list = queryset_list.filter(seller=team)
         return queryset_list
+
+
+class CampaignContentCreateAPIView(CreateAPIView):
+    serializer_class = ContentCreateSerializer
+    permission_classes = [AllowAny]
+    def perform_create(self, serializer):
+        current_user = User.objects.all().first() #self.request.user
+        subject_str = serializer.validated_data['subject']
+        campaign = Campaign.objects.filter(pk=self.kwargs['campaign_pk'])
+        if campaign.exists():
+            campaign = campaign.first()
+        else:
+            raise ParseError("Campaign not found")
+        # get subject
+        try:
+            subject = Term.objects.get(title=subject_str)
+        except Term.DoesNotExist:
+            subject = Term(title=subject_str)
+            subject.save()
+        content = serializer.save(author=current_user, subject=subject, type=self.kwargs['type'])
+        CampaignContentRelation.objects.create(content = content, campaign = campaign)
+
+class CampaignContentListAPIView(ListAPIView):
+    serializer_class = ContentSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    permission_classes = [AllowAny]
+    search_fields = [
+        'title',
+        'type'
+    ]
+
+    pagination_class = CampaignPageNumberPagination  # PageNumberPagination
+    ordering = ['-id']
+
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        campaign = Campaign.objects.filter(pk=self.kwargs['campaign_pk'])
+        if not campaign.exists():
+            raise ParseError("Campaign doesn't exist")
+        campaign = campaign.first()
+        list_of_ids =  [content.id for content in Content.objects.all() if CampaignContentRelation.objects.filter(campaign = campaign, content = content).exists()]
+        return Content.objects.filter(pk__in=list_of_ids)

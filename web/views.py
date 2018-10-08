@@ -26,7 +26,6 @@ from django.shortcuts import render, redirect
 
 from web.forms import SharifSummerMarketProfileTempForm
 
-
 class TelegramGroupsAPIView(APIView):
     """
     View to list all users in the system.

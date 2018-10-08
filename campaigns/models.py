@@ -7,6 +7,7 @@ from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 from enumfields import EnumField
 
 from companions.models import Application
+from content.models import Content
 from taxonomy.models import Term
 from team.models import Team
 
@@ -78,6 +79,17 @@ class CampaignPartyRelation(models.Model):
     def __str__(self):
         return str(self.content_object) + " | " + self.campaign.title
 
+
+class CampaignContentRelationType(Enum):  # A subclass of Enum
+    CREATED_ON = "CREATED_ON"
+
+class CampaignContentRelation(models.Model):
+    campaign = models.ForeignKey(Campaign, related_name='rel_campaign', on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, related_name='rel_content', on_delete=models.CASCADE)
+    type = EnumField(CampaignContentRelationType, default=CampaignContentRelationType.CREATED_ON ,max_length=100)
+
+    def __str__(self):
+        return self.content.title + " | " + self.campaign.title
 
 
 class CampaignTermRealtionType(Enum):
