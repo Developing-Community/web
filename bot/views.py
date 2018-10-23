@@ -25,7 +25,7 @@ class HandlePVAPIView(APIView):
     def post(self, request, format=None):
         msg = request.data['msg']
 
-        telegram_user_id = msg[['from']['id']]
+        telegram_user_id = msg['from']['id']
         x = TelegramProfile.objects.filter(
             telegram_user_id = telegram_user_id)
         if x.exists():

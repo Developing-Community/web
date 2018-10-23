@@ -6,6 +6,7 @@ from enumfields import Enum, EnumField
 
 
 # Create your models here.
+from users.models import Profile
 from web import settings
 
 class TelegramToken(models.Model):
@@ -19,6 +20,6 @@ class MenuState(Enum):
 
 class TelegramProfile(models.Model):
     telegram_user_id = models.IntegerField(primary_key=True, unique=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="telegram_profile", null=True, blank=True, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, related_name="telegram_profile", null=True, blank=True, on_delete=models.CASCADE)
     verify_token = models.UUIDField(default=uuid.uuid4, editable=False)
     menu_state = EnumField(MenuState, default= MenuState.START)
