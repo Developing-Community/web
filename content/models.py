@@ -19,7 +19,6 @@ def content_attachment_upload_location(instance, filename):
 
 class ContentType(Enum):  # A subclass of Enum
     ARTICLE = "ARTICLE"
-    article = "article"
     TASK = "TASK"
     REPORT = "REPORT"
     PROBLEM = "PROBLEM"
