@@ -12,6 +12,7 @@ def content_image_upload_location(instance, filename):
     x = timezone.now()
     return "%s/%s/%s/%s" % (x.year, x.month, x.day, filename)
 
+
 def content_attachment_upload_location(instance, filename):
     x = timezone.now()
     return "%s/%s/%s/%s" % (x.year, x.month, x.day, filename)
@@ -66,11 +67,9 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
                               blank=True,
                               width_field="width_field",
                               height_field="height_field")
-    attachment = models.ImageField(upload_to=content_attachment_upload_location,
-                              null=True,
-                              blank=True,
-                              width_field="width_field",
-                              height_field="height_field")
+    attachment = models.FileField(upload_to=content_attachment_upload_location,
+                                  null=True,
+                                  blank=True)
 
     # no api
     height_field = models.IntegerField(default=0)
