@@ -1,4 +1,5 @@
 from django.utils import timezone
+from rest_framework.permissions import AllowAny
 
 from taxonomy.models import Term, TaxonomyType
 from django.contrib import messages
@@ -21,6 +22,12 @@ from django.shortcuts import get_object_or_404
 
 class ContentListView(ListAPIView):
     serializer_class = ContentSerializer
+    permission_classes = [AllowAny]
+    queryset = Content.objects.all()
+
+class ContentRetrieveView(RetrieveAPIView):
+    serializer_class = ContentSerializer
+    permission_classes = [AllowAny]
     queryset = Content.objects.all()
 
 class ContentCreateView(CreateAPIView):
@@ -38,7 +45,7 @@ class ContentCreateView(CreateAPIView):
         serializer.save(author=current_user,subject=subject)
 
 
-@api_view(['GET','PUT'])
+@api_view(['PUT'])
 def ContentUpdateView(request,pk):
     instance = get_object_or_404(Content,pk=pk)
     data = ContentSerializer(instance=instance)

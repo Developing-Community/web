@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import TelegramTokenCreateAPIView, ProfileRetrieveAPIView
+from .views import HandlePVAPIView, ProfileRetrieveAPIView
 
 urlpatterns = [
-    path('create-token/', TelegramTokenCreateAPIView.as_view(), name='create-token'),
+    path('handle-pv/', HandlePVAPIView.as_view(), name='handle-pv'),
     path('<int:telegram_user_id>/get-profile/', ProfileRetrieveAPIView.as_view(), name='get-profile'),
 ]

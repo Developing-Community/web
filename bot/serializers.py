@@ -8,13 +8,13 @@ from rest_framework.serializers import (
     ModelSerializer
 )
 from web.settings import HOST_URL
-from bot.models import TelegramToken
+from bot.models import TelegramProfile
 from users.models import Profile
 
 
 class TelegramTokenSerializer(ModelSerializer):
     class Meta:
-        model = TelegramToken
+        model = TelegramProfile
         fields = [
             'verify_token',
             'telegram_user_id'

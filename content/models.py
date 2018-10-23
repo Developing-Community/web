@@ -12,6 +12,10 @@ def content_image_upload_location(instance, filename):
     x = timezone.now()
     return "%s/%s/%s/%s" % (x.year, x.month, x.day, filename)
 
+def content_attachment_upload_location(instance, filename):
+    x = timezone.now()
+    return "%s/%s/%s/%s" % (x.year, x.month, x.day, filename)
+
 
 class ContentType(Enum):  # A subclass of Enum
     ARTICLE = "ARTICLE"
@@ -59,6 +63,11 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     # foriegn api
     subject = models.ForeignKey(Term, related_name="subject", blank=True, null=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to=content_image_upload_location,
+                              null=True,
+                              blank=True,
+                              width_field="width_field",
+                              height_field="height_field")
+    attachment = models.ImageField(upload_to=content_attachment_upload_location,
                               null=True,
                               blank=True,
                               width_field="width_field",
