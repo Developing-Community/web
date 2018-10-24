@@ -9,10 +9,6 @@ from enumfields import Enum, EnumField
 from users.models import Profile
 from web import settings
 
-class TelegramToken(models.Model):
-    verify_token = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    telegram_user_id = models.IntegerField()
-
 class MenuState(Enum):
     START = "START"
     SET_FIRST_NAME = "SET_FIRST_NAME"

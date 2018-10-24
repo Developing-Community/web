@@ -19,20 +19,20 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from bot.models import TelegramToken
+from bot.models import TelegramProfile
 from bot.serializers import (
     TelegramTokenSerializer)
 
 from rest_framework import status
 import uuid
 import requests
-#`current_user`, `username`, `email`, `reset_password_url`
+# `current_user`, `username`, `email`, `reset_password_url`
 from web import settings
 
 
 def get_http_host(request):
     return HttpResponse("{}".format(request.META['HTTP_HOST']))
+
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
@@ -40,13 +40,13 @@ def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
     reset_link = "https://dev-community.ir" + reset_url
     print("INFO:" + reset_link)
     context = {
-    'current_user': reset_password_token.user,
-    'username': reset_password_token.user.username,
-    'email': reset_password_token.user.email,
-    'reset_link': reset_link
+        'current_user': reset_password_token.user,
+        'username': reset_password_token.user.username,
+        'email': reset_password_token.user.email,
+        'reset_link': reset_link
     }
-    title = "Password Reset Request For " + "\"" + reset_password_token.user.username +"\""
-    content_html = render_to_string("email/reset_password_email.html",context)
+    title = "Password Reset Request For " + "\"" + reset_password_token.user.username + "\""
+    content_html = render_to_string("email/reset_password_email.html", context)
     content_text = strip_tags(content_html)
     mail_from = "info@dev-community.ir"
     to = [reset_password_token.user.email]
@@ -56,16 +56,18 @@ def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
         content_text,
         mail_from,
         to)
-    email.attach_alternative(content_html,"text/html")
+    email.attach_alternative(content_html, "text/html")
     email.send()
     print(email)
 
-def reset_password_change(request,key):
+
+def reset_password_change(request, key):
     context = {
         'key': key,
 
     }
-    return render(request,"email/reset_password.html",context)
+    return render(request, "email/reset_password.html", context)
+
 
 # from django.core.mail import get_connection, EmailMultiAlternatives
 
@@ -107,9 +109,6 @@ def reset_password_change(request,key):
 #     msg.send()
 
 
-
-
-
 from rest_framework.reverse import reverse
 
 from .permissions import IsOwner
@@ -121,25 +120,28 @@ from .serializers import (
 
 User = get_user_model()
 
+
 class ProfileImageAPIView(APIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileImageUpdateRetriveSerializer
     parser_classes = [MultiPartParser]
-    
-    def get(self, request, pk,format=None):
+
+    def get(self, request, pk, format=None):
         profile = Profile.objects.filter(pk=pk).first()
         return Response(ProfileImageUpdateRetriveSerializer(profile).data)
-    
-    def put(self,request,pk,format=None):
+
+    def put(self, request, pk, format=None):
         profile = Profile.objects.filter(user=self.request.user).first()
         profile.profile_image = request.data['profile_image']
         profile.save()
         return Response(ProfileImageUpdateRetriveSerializer(profile).data)
-    def delete(self,request,pk,format=None):
+
+    def delete(self, request, pk, format=None):
         profile = Profile.objects.filter(user=self.request.user).first()
         profile.profile_image = None
         profile.save()
-        return Response({"status":"Profile Image Removed"})
+        return Response({"status": "Profile Image Removed"})
+
 
 class UserCreateAPIView(CreateAPIView):
     serializer_class = UserCreateSerializer
@@ -159,6 +161,7 @@ class ProfileRetrieveAPIView(RetrieveAPIView):
     lookup_field = 'id'
     queryset = Profile.objects.all()
 
+
 class ProfileUpdateAPIView(UpdateAPIView):
     serializer_class = ProfileRetrieveUpdateSerializer
     permission_classes = [IsOwner]
@@ -167,7 +170,7 @@ class ProfileUpdateAPIView(UpdateAPIView):
 
 
 class TelegramTokenVerificationAPIView(APIView):
-    queryset = TelegramToken.objects.all()
+    queryset = TelegramProfile.objects.all()
     serializer_class = TelegramTokenSerializer
 
     def post(self, request, format=None):
@@ -177,21 +180,14 @@ class TelegramTokenVerificationAPIView(APIView):
         except:
             raise ValidationError("Invalid code")
 
-        x = TelegramToken.objects.filter(
-            verify_token = verify_token)
+        x = TelegramProfile.objects.filter(
+            verify_token=verify_token)
         if x.exists():
             x = x.first()
 
-            k = Profile.objects.filter(telegram_user_id=x.telegram_user_id)
-            if k.exists():
-                k = k.first()
-                k.telegram_user_id = None
-                k.save()
-
-            y = Profile.objects.get(user = self.request.user)
-            y.telegram_user_id = x.telegram_user_id
-            y.save()
-            x.delete()
+            y = Profile.objects.get(user=self.request.user)
+            x.profile = y
+            x.save()
             try:
                 requests.get(settings.BOT_API_URL + '/%d/confirmed' % y.telegram_user_id)
             except Exception as e:
