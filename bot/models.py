@@ -11,6 +11,7 @@ from web import settings
 
 class MenuState(Enum):
     START = "START"
+    MAIN = "MAIN"
     SET_FIRST_NAME = "SET_FIRST_NAME"
     ADD_PROJECT_JOB = "ADD_PROJECT_JOB"
 

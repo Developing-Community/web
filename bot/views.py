@@ -8,16 +8,19 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-from bot.models import TelegramProfile
+from bot.models import TelegramProfile, MenuState
 from bot.serializers import (
     TelegramTokenSerializer, BotProfileSerializer)
 from users.models import Profile
-
+from web import settings
 
 start_msg = '''
 خوش آمدید 🙂✋️
-برای اتصال بات به پروفایلتان در سایت، دکمه زیر را فشار دهید. 👇
-'''
+برای اتصال بات به پروفایلتان در سایت، لینک زیر را باز کنید. 👇
+%s/verify-token?token=%s
+
+یا برای ورود از طریق بات، کلیدهای ثبت نام یا ورود را فشار دهید'''
+
 
 class HandlePVAPIView(APIView):
     permission_classes = [AllowAny]
@@ -27,20 +30,26 @@ class HandlePVAPIView(APIView):
 
         telegram_user_id = msg['from']['id']
         x = TelegramProfile.objects.filter(
-            telegram_user_id = telegram_user_id)
+            telegram_user_id=telegram_user_id)
         if x.exists():
             x = x.first()
         else:
             x = TelegramProfile.objects.create(
-            telegram_user_id = telegram_user_id)
-        message = start_msg
-        keyboard = [['awef'],['waef','qqq']]
+                telegram_user_id=telegram_user_id)
+
+        message = "Unknown app state"
+        keyboard = [[]]
+
+        if x.menu_state == MenuState.START:
+            message = start_msg % (settings.HOST_URL, x.verify_token)
+            keyboard = [['ثبت نام', 'ورود']]
+
+
         return Response({
-           "chat_id": msg['chat']['id'],
+            "chat_id": msg['chat']['id'],
             "message": message,
             "keyboard": keyboard,
         }, status=status.HTTP_200_OK)
-
 
 
 class ProfileRetrieveAPIView(RetrieveAPIView):
@@ -101,5 +110,3 @@ def handle_pv():
     # except KeyError :
     #     this_user = User()
     #     users.update({msg['from']['id'] : this_user})
-
-

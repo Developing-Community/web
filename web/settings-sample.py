@@ -49,7 +49,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 BOT_API_URL = "http://localhost:5000"
 
-HOST_URL = "https://dev-community.ir"
+HOST_URL = "http://localhost:8000"
 
 AUTH_USER_MODEL = 'auth.User'
 
