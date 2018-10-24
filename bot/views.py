@@ -21,7 +21,10 @@ start_msg = '''
 
 یا برای ورود از طریق بات، کلیدهای ثبت نام یا ورود را فشار دهید'''
 
-
+bot_commands = {
+    'login' : 'ورود',
+    'register': 'ثبت نام',
+}
 class HandlePVAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -42,7 +45,7 @@ class HandlePVAPIView(APIView):
 
         if x.menu_state == MenuState.START:
             message = start_msg % (settings.HOST_URL, x.verify_token)
-            keyboard = [['ثبت نام', 'ورود']]
+            keyboard = [[bot_commands['login'], bot_commands['register']]]
 
 
         return Response({
