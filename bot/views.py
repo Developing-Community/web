@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+from django.db.models import Q
 from rest_framework.generics import (
     CreateAPIView,
     RetrieveAPIView)
@@ -8,23 +10,38 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-from bot.models import TelegramProfile, MenuState
+from bot.models import TelegramProfile, MenuState, TelegramUserInput, TelegramUserInputKeys
 from bot.serializers import (
     TelegramTokenSerializer, BotProfileSerializer)
 from users.models import Profile
 from web import settings
 
-start_msg = '''
-خوش آمدید 🙂✋️
-برای اتصال بات به پروفایلتان در سایت، لینک زیر را باز کنید. 👇
-%s/verify-token?token=%s
-
-یا برای ورود از طریق بات، کلیدهای ثبت نام یا ورود را فشار دهید'''
+User = get_user_model()
 
 bot_commands = {
     'login' : 'ورود',
     'register': 'ثبت نام',
+    'return': 'بازگشت',
 }
+
+bot_messages = {
+
+    'start_msg' :'''
+خوش آمدید 🙂✋️
+برای اتصال بات به پروفایلتان در سایت، لینک زیر را باز کنید. 👇
+%s/verify-token?token=%s
+
+یا برای ورود از طریق بات، کلیدهای ثبت نام یا ورود را فشار دهید''',
+    'register_get_email': 'لطفا ایمیلتان را وارد کنید',
+    'register_get_username' : 'لطفا نام کاربری دلخواهتان را وارد کنید',
+    'register_get_password' : 'لطفا کلمه عبور دلخواهتان را وارد کنید (برای حفظ امنیت پیامتان را بعد از ارسال حتما پاک کنید)',
+    'login_get_username_or_email' : 'لطفا ایمیل یا نام کاربری خود را وارد کنید',
+    'login_get_username_or_email_err' : 'نام کاربری یا ایمیل وارد شده وجود ندارد. لطفا ایمیل یا نام کاربری خود را وارد کنید',
+    'login_get_password_err' : 'کلمه عبور اشتباه است. لطفا مجددا وارد کنید',
+    'login_get_password' : 'لطفا کلمه عبورتان را وارد کنید (برای حفظ امنیت پیامتان را بعد از ارسال حتما پاک کنید)',
+
+}
+
 class HandlePVAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -44,8 +61,56 @@ class HandlePVAPIView(APIView):
         keyboard = [[]]
 
         if x.menu_state == MenuState.START:
-            message = start_msg % (settings.HOST_URL, x.verify_token)
-            keyboard = [[bot_commands['login'], bot_commands['register']]]
+            if msg['text'] == bot_commands['login']:
+                message = bot_messages['login_get_username_or_email']
+                keyboard = [[bot_commands['return']]]
+                x.menu_state = MenuState.LOGIN
+
+            elif msg['text'] == bot_commands['register']:
+                message = bot_messages['register_get_email']
+                keyboard = [[bot_commands['return']]]
+                x.menu_state = MenuState.REGISTER
+
+            else:
+                message = bot_messages['start_msg'] % (settings.HOST_URL, x.verify_token)
+                keyboard = [[bot_commands['login'], bot_commands['register']]]
+
+        elif x.menu_state == MenuState.LOGIN:
+            if msg['text'] == bot_commands['return']:
+                message = bot_messages['start_msg'] % (settings.HOST_URL, x.verify_token)
+                keyboard = [[bot_commands['login'], bot_commands['register']]]
+                x.user_input.all().delete()
+                x.menu_state = MenuState.START
+                x.save()
+
+            else:
+                try:
+                    username_or_email = x.user_input.get(key = TelegramUserInputKeys.USERNAME_OR_EMAIL)
+
+                except TelegramUserInput.DoesNotExist:
+                    if(User.objects.filter(
+                        Q(username__exact = msg['text']) |
+                        Q(email__exact = msg['text']))
+                    ).distinct().exists():
+                        x.user_input.create(key = TelegramUserInputKeys.USERNAME_OR_EMAIL, value = msg['text'])
+                        message = bot_messages['login_get_password']
+                        keyboard = [[bot_commands['return']]]
+                    else:
+                        message = bot_messages['login_get_username_or_email_err']
+                        keyboard = [[bot_commands['return']]]
+                else:
+                    user = User.objects.get(
+                        Q(username__exact = username_or_email) |
+                        Q(email__exact = username_or_email))
+                    if user.check_password(msg['text']):
+                        x.user_input.all().delete()
+                        x.profile = user.profile
+                        x.save()
+                    else:
+                        message = bot_messages['login_get_password_err']
+                        keyboard = [[bot_commands['return']]]
+
+
 
 
         return Response({

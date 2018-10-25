@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='TelegramUserInput',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('key', enumfields.fields.EnumField(enum=bot.models.UserInputKeys, max_length=10)),
+                ('key', enumfields.fields.EnumField(enum=bot.models.TelegramUserInputKeys, max_length=10)),
                 ('value', models.TextField()),
             ],
         ),
