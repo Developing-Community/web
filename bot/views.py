@@ -53,6 +53,47 @@ bot_keyboards = {
 
 def handle_login_pv(telegram_profile, msg):
 
+    if msg['text'] == bot_commands['return']:
+        message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
+        keyboard = [[bot_commands['login'], bot_commands['register']]]
+        telegram_profile.user_input.all().delete()
+        telegram_profile.menu_state = MenuState.START
+        telegram_profile.save()
+
+    else:
+        try:
+            username_or_email = telegram_profile.user_input.get(key=TelegramUserInputKeys.USERNAME_OR_EMAIL).value
+
+        except TelegramUserInput.DoesNotExist:
+            if User.objects.filter(
+                    Q(username__exact=msg['text']) |
+                    Q(email__exact=msg['text'])
+            ).distinct().exists():
+                telegram_profile.user_input.create(key=TelegramUserInputKeys.USERNAME_OR_EMAIL, value=msg['text'])
+                message = bot_messages['login_get_password']
+                keyboard = [[bot_commands['return']]]
+            else:
+                message = bot_messages['login_get_username_or_email_err']
+                keyboard = [[bot_commands['return']]]
+        else:
+            user = User.objects.get(
+                Q(username__exact=username_or_email) |
+                Q(email__exact=username_or_email))
+            if user.check_password(msg['text']):
+                message = bot_messages['login_success']
+                keyboard = bot_keyboards['main_menu']
+                telegram_profile.user_input.all().delete()
+                telegram_profile.profile = user.profile.first()
+                telegram_profile.menu_state = MenuState.START
+                telegram_profile.save()
+            else:
+                message = bot_messages['login_get_password_err']
+                keyboard = [[bot_commands['return']]]
+    return message, keyboard
+
+
+def handle_start_pv(telegram_profile, msg):
+
     if telegram_profile.profile:
         message = "Logged in"
         keyboard = [[]]
@@ -61,63 +102,23 @@ def handle_login_pv(telegram_profile, msg):
         telegram_profile.profile = None
         telegram_profile.save()
     else:
-        if msg['text'] == bot_commands['return']:
-            message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
-            keyboard = [[bot_commands['login'], bot_commands['register']]]
-            telegram_profile.user_input.all().delete()
-            telegram_profile.menu_state = MenuState.START
+        if msg['text'] == bot_commands['login']:
+            message = bot_messages['login_get_username_or_email']
+            keyboard = [[bot_commands['return']]]
+            telegram_profile.menu_state = MenuState.LOGIN
+            telegram_profile.save()
+
+        elif msg['text'] == bot_commands['register']:
+            message = bot_messages['register_get_email']
+            keyboard = [[bot_commands['return']]]
+            telegram_profile.menu_state = MenuState.REGISTER
             telegram_profile.save()
 
         else:
-            try:
-                username_or_email = telegram_profile.user_input.get(key=TelegramUserInputKeys.USERNAME_OR_EMAIL).value
+            message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
+            keyboard = [[bot_commands['login'], bot_commands['register']]]
 
-            except TelegramUserInput.DoesNotExist:
-                if User.objects.filter(
-                        Q(username__exact=msg['text']) |
-                        Q(email__exact=msg['text'])
-                ).distinct().exists():
-                    telegram_profile.user_input.create(key=TelegramUserInputKeys.USERNAME_OR_EMAIL, value=msg['text'])
-                    message = bot_messages['login_get_password']
-                    keyboard = [[bot_commands['return']]]
-                else:
-                    message = bot_messages['login_get_username_or_email_err']
-                    keyboard = [[bot_commands['return']]]
-            else:
-                user = User.objects.get(
-                    Q(username__exact=username_or_email) |
-                    Q(email__exact=username_or_email))
-                if user.check_password(msg['text']):
-                    message = bot_messages['login_success']
-                    keyboard = bot_keyboards['main_menu']
-                    telegram_profile.user_input.all().delete()
-                    telegram_profile.profile = user.profile.first()
-                    telegram_profile.menu_state = MenuState.START
-                    telegram_profile.save()
-                else:
-                    message = bot_messages['login_get_password_err']
-                    keyboard = [[bot_commands['return']]]
-    return message, keyboard
-
-
-def handle_start_pv(telegram_profile, msg):
-    if msg['text'] == bot_commands['login']:
-        message = bot_messages['login_get_username_or_email']
-        keyboard = [[bot_commands['return']]]
-        telegram_profile.menu_state = MenuState.LOGIN
-        telegram_profile.save()
-
-    elif msg['text'] == bot_commands['register']:
-        message = bot_messages['register_get_email']
-        keyboard = [[bot_commands['return']]]
-        telegram_profile.menu_state = MenuState.REGISTER
-        telegram_profile.save()
-
-    else:
-        message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
-        keyboard = [[bot_commands['login'], bot_commands['register']]]
-
-    return message, keyboard
+        return message, keyboard
 
 
 def handle_register_pv(telegram_profile, msg):
