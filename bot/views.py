@@ -59,8 +59,9 @@ class HandlePVAPIView(APIView):
 
         message = "Unknown app state"
         keyboard = [[]]
+
         if x.profile:
-            message = "Unknown app state"
+            message = "Logged in"
             keyboard = [[]]
         else:
             if x.menu_state == MenuState.START:
