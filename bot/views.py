@@ -87,7 +87,7 @@ class HandlePVAPIView(APIView):
 
             else:
                 try:
-                    username_or_email = x.user_input.get(key = TelegramUserInputKeys.USERNAME_OR_EMAIL)
+                    username_or_email = x.user_input.get(key = TelegramUserInputKeys.USERNAME_OR_EMAIL).value
 
                 except TelegramUserInput.DoesNotExist:
                     if(User.objects.filter(
