@@ -65,11 +65,13 @@ class HandlePVAPIView(APIView):
                 message = bot_messages['login_get_username_or_email']
                 keyboard = [[bot_commands['return']]]
                 x.menu_state = MenuState.LOGIN
+                x.save()
 
             elif msg['text'] == bot_commands['register']:
                 message = bot_messages['register_get_email']
                 keyboard = [[bot_commands['return']]]
                 x.menu_state = MenuState.REGISTER
+                x.save()
 
             else:
                 message = bot_messages['start_msg'] % (settings.HOST_URL, x.verify_token)
