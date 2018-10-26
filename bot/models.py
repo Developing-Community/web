@@ -19,7 +19,9 @@ class MenuState(Enum):
 
 
 class TelegramUserInputKeys(Enum):
-    USERNAME_OR_EMAIL = 'USERNAME'
+    USERNAME_OR_EMAIL = 'USERNAME_OR_EMAIL'
+    USERNAME = 'USERNAME'
+    EMAIL = 'EMAIL'
 
 
 class TelegramUserInput(models.Model):
