@@ -22,6 +22,7 @@ class TelegramUserInputKeys(Enum):
     USERNAME_OR_EMAIL = 'USERNAME_OR_EMAIL'
     USERNAME = 'USERNAME'
     EMAIL = 'EMAIL'
+    PROJECT_CONTENT = 'PROJECT_CONTENT'
 
 
 class TelegramUserInput(models.Model):

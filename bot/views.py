@@ -22,10 +22,10 @@ bot_commands = {
     'login' : 'ورود',
     'register': 'ثبت نام',
     'return': 'بازگشت',
+    'add-project': 'دعوت به همکاری'
 }
 
 bot_messages = {
-
     'start_msg' :'''
 خوش آمدید 🙂✋️
 برای اتصال بات به پروفایلتان در سایت، لینک زیر را باز کنید. 👇
@@ -43,15 +43,19 @@ bot_messages = {
     'login_get_password' : 'لطفا کلمه عبورتان را وارد کنید (برای حفظ امنیت پیامتان را بعد از ارسال حتما پاک کنید)',
     'login_success': 'ورود با موفقیت انجام شد. لطفا گزینه مورد نظرتان را از منوی بات انتخاب کنید.',
     'register_success': 'ثبت نام با موفقیت انجام شد. لطفا گزینه مورد نظرتان را از منوی بات انتخاب کنید.',
+    'add_project_get_content': 'لطفا متن آگهی خود را وارد کنید',
+    'add_project_get_skills': 'لطفا مهارت های مورد نیازتان را وارد کنید. هر مهارت را در یک خط بنویسید.',
+    'add_project_success': 'آگهی شما با موفقیت ثبت شد',
+    'unknown_command': 'لطفا از منوی بات گزینه مورد نزرتان را انتخاب کنید.',
 }
 
 
 bot_keyboards = {
-    'main_menu': [['test']],
-
+    'main_menu': [[bot_commands['add-project']]],
+    'return': [[bot_commands['return']]]
 }
 
-def handle_login_pv(telegram_profile, msg):
+def handle_pv_login(telegram_profile, msg):
 
     if msg['text'] == bot_commands['return']:
         message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
@@ -92,19 +96,23 @@ def handle_login_pv(telegram_profile, msg):
     return message, keyboard
 
 
-def handle_start_pv(telegram_profile, msg):
+def handle_pv_start(telegram_profile, msg):
 
     if telegram_profile.profile:
-        message = "Logged in"
-        keyboard = [[]]
 
-        # for debug only
-        telegram_profile.profile = None
-        telegram_profile.save()
+        if msg['text'] == bot_commands['add-project']:
+            message = bot_messages['add_project_get_content']
+            keyboard = [[bot_commands['return']]]
+            telegram_profile.menu_state = MenuState.ADD_PROJECT_JOB
+            telegram_profile.save()
+        else:
+            message = bot_messages['unknown_command']
+            keyboard = bot_keyboards['main_menu']
+
     else:
         if msg['text'] == bot_commands['login']:
             message = bot_messages['login_get_username_or_email']
-            keyboard = [[bot_commands['return']]]
+            keyboard = [[bot_commands['login']]]
             telegram_profile.menu_state = MenuState.LOGIN
             telegram_profile.save()
 
@@ -118,10 +126,10 @@ def handle_start_pv(telegram_profile, msg):
             message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
             keyboard = [[bot_commands['login'], bot_commands['register']]]
 
-        return message, keyboard
+    return message, keyboard
 
 
-def handle_register_pv(telegram_profile, msg):
+def handle_pv_register(telegram_profile, msg):
 
     if msg['text'] == bot_commands['return']:
         message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
@@ -168,6 +176,27 @@ def handle_register_pv(telegram_profile, msg):
     return message, keyboard
 
 
+def handle_pv_add_project(telegram_profile, msg):
+
+    try:
+        content = telegram_profile.user_input.get(key=TelegramUserInputKeys.PROJECT_CONTENT)
+    except TelegramUserInput.DoesNotExist:
+        telegram_profile.user_input.create(key=TelegramUserInputKeys.PROJECT_CONTENT, value=msg['text'])
+        telegram_profile.save()
+        message = bot_messages['add_project_get_skills']
+        keyboard = bot_keyboards['return']
+    else:
+        #TODO: get skills and save project
+        telegram_profile.menu_state = MenuState.START
+        telegram_profile.user_input.all().delete()
+        telegram_profile.save()
+        message = bot_messages['add_project_success']
+        keyboard = bot_keyboards['main_menu']
+
+
+    return message, keyboard
+
+
 class HandlePVAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -183,18 +212,22 @@ class HandlePVAPIView(APIView):
             telegram_profile = TelegramProfile.objects.create(
                 telegram_user_id=telegram_user_id)
 
-        message = "Unknown app state"
-        keyboard = [[]]
 
         if telegram_profile.menu_state == MenuState.START:
-            message, keyboard = handle_start_pv(telegram_profile, msg)
+            message, keyboard = handle_pv_start(telegram_profile, msg)
 
         elif telegram_profile.menu_state == MenuState.LOGIN:
-            message, keyboard = handle_login_pv(telegram_profile, msg)
+            message, keyboard = handle_pv_login(telegram_profile, msg)
 
         elif telegram_profile.menu_state == MenuState.REGISTER:
-            message, keyboard = handle_register_pv(telegram_profile, msg)
+            message, keyboard = handle_pv_register(telegram_profile, msg)
 
+        elif telegram_profile.menu_state == MenuState.ADD_PROJECT_JOB:
+            message, keyboard = handle_pv_add_project(telegram_profile, msg)
+
+        else:
+            message = "Unknown app state"
+            keyboard = [[]]
 
 
 
@@ -223,43 +256,41 @@ class HandlePVAPIView(APIView):
 #     else :
 #         logadd('response.status_code == ' + str(response.status_code))
 
-def handle_pv():
-    pass
-    # if 'forward_from' in msg :
-    #     findProfile(chat_id, msg['forward_from']['id'])
-    # if msg['text'] in ['/start', '/start start'] :
-    #     try:
-    #         token = creatToken(msg['from']['id'])
-    #         url = HOST_URL + '/verify-token?token=' + token
-    #         bot.sendMessage(chat_id, start_msg, 'Markdown', reply_markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='✅ اتصال به سایت', url=url)]]))
-    #     except Exception as e:
-    #         logadd(str(e))
-    #         bot.sendMessage(chat_id, 'خطایی پیش آمده. لطفا دقایقی دیگر مجددا سعی کنید')
-    # elif msg['text'] == '/suchawow' :
-    #     if msg['from']['id'] not in users :
-    #         this_user = User()
-    #         users.update({msg['from']['id'] : this_user})
-    #     bot.sendMessage(chat_id, 'such a wow !!', reply_markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='set First Name'), KeyboardButton(text='set Last Name')],
-    #                                                                                            [KeyboardButton(text='set Bio')]]))
-    # elif msg['text'] == 'set First Name' :
-    #     users[msg['from']['id']].set_fn()
-    #     bot.sendMessage(chat_id, 'Enter your first name :')
-    # elif msg['text'] == 'set Last Name' :
-    #     users[msg['from']['id']].set_ln()
-    #     bot.sendMessage(chat_id, 'Enter your last name :')
-    # elif msg['text'] == 'set Bio' :
-    #     users[msg['from']['id']].set_b()
-    #     bot.sendMessage(chat_id, 'Add a few lines about yourself :')
-    # try :
-    #     if users[msg['from']['id']].set_what() == 'fn' :
-    #         logadd('%d -> fn : %s'%(msg['from']['id'], msg['text']))
-    #         users[msg['from']['id']].clr()
-    #     elif users[msg['from']['id']].set_what() == 'ln' :
-    #         logadd('%d -> ln : %s'%(msg['from']['id'], msg['text']))
-    #         users[msg['from']['id']].clr()
-    #     elif users[msg['from']['id']].set_what() == 'b' :
-    #         logadd('%d -> bio : %s'%(msg['from']['id'], msg['text']))
-    #         users[msg['from']['id']].clr()
-    # except KeyError :
-    #     this_user = User()
-    #     users.update({msg['from']['id'] : this_user})
+# if 'forward_from' in msg :
+#     findProfile(chat_id, msg['forward_from']['id'])
+# if msg['text'] in ['/start', '/start start'] :
+#     try:
+#         token = creatToken(msg['from']['id'])
+#         url = HOST_URL + '/verify-token?token=' + token
+#         bot.sendMessage(chat_id, start_msg, 'Markdown', reply_markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='✅ اتصال به سایت', url=url)]]))
+#     except Exception as e:
+#         logadd(str(e))
+#         bot.sendMessage(chat_id, 'خطایی پیش آمده. لطفا دقایقی دیگر مجددا سعی کنید')
+# elif msg['text'] == '/suchawow' :
+#     if msg['from']['id'] not in users :
+#         this_user = User()
+#         users.update({msg['from']['id'] : this_user})
+#     bot.sendMessage(chat_id, 'such a wow !!', reply_markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='set First Name'), KeyboardButton(text='set Last Name')],
+#                                                                                            [KeyboardButton(text='set Bio')]]))
+# elif msg['text'] == 'set First Name' :
+#     users[msg['from']['id']].set_fn()
+#     bot.sendMessage(chat_id, 'Enter your first name :')
+# elif msg['text'] == 'set Last Name' :
+#     users[msg['from']['id']].set_ln()
+#     bot.sendMessage(chat_id, 'Enter your last name :')
+# elif msg['text'] == 'set Bio' :
+#     users[msg['from']['id']].set_b()
+#     bot.sendMessage(chat_id, 'Add a few lines about yourself :')
+# try :
+#     if users[msg['from']['id']].set_what() == 'fn' :
+#         logadd('%d -> fn : %s'%(msg['from']['id'], msg['text']))
+#         users[msg['from']['id']].clr()
+#     elif users[msg['from']['id']].set_what() == 'ln' :
+#         logadd('%d -> ln : %s'%(msg['from']['id'], msg['text']))
+#         users[msg['from']['id']].clr()
+#     elif users[msg['from']['id']].set_what() == 'b' :
+#         logadd('%d -> bio : %s'%(msg['from']['id'], msg['text']))
+#         users[msg['from']['id']].clr()
+# except KeyError :
+#     this_user = User()
+#     users.update({msg['from']['id'] : this_user})
