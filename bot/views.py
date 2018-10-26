@@ -59,58 +59,61 @@ class HandlePVAPIView(APIView):
 
         message = "Unknown app state"
         keyboard = [[]]
+        if x.profile:
+            message = "Unknown app state"
+            keyboard = [[]]
+        else:
+            if x.menu_state == MenuState.START:
+                if msg['text'] == bot_commands['login']:
+                    message = bot_messages['login_get_username_or_email']
+                    keyboard = [[bot_commands['return']]]
+                    x.menu_state = MenuState.LOGIN
+                    x.save()
 
-        if x.menu_state == MenuState.START:
-            if msg['text'] == bot_commands['login']:
-                message = bot_messages['login_get_username_or_email']
-                keyboard = [[bot_commands['return']]]
-                x.menu_state = MenuState.LOGIN
-                x.save()
+                elif msg['text'] == bot_commands['register']:
+                    message = bot_messages['register_get_email']
+                    keyboard = [[bot_commands['return']]]
+                    x.menu_state = MenuState.REGISTER
+                    x.save()
 
-            elif msg['text'] == bot_commands['register']:
-                message = bot_messages['register_get_email']
-                keyboard = [[bot_commands['return']]]
-                x.menu_state = MenuState.REGISTER
-                x.save()
-
-            else:
-                message = bot_messages['start_msg'] % (settings.HOST_URL, x.verify_token)
-                keyboard = [[bot_commands['login'], bot_commands['register']]]
-
-        elif x.menu_state == MenuState.LOGIN:
-            if msg['text'] == bot_commands['return']:
-                message = bot_messages['start_msg'] % (settings.HOST_URL, x.verify_token)
-                keyboard = [[bot_commands['login'], bot_commands['register']]]
-                x.user_input.all().delete()
-                x.menu_state = MenuState.START
-                x.save()
-
-            else:
-                try:
-                    username_or_email = x.user_input.get(key = TelegramUserInputKeys.USERNAME_OR_EMAIL).value
-
-                except TelegramUserInput.DoesNotExist:
-                    if(User.objects.filter(
-                        Q(username__exact = msg['text']) |
-                        Q(email__exact = msg['text']))
-                    ).distinct().exists():
-                        x.user_input.create(key = TelegramUserInputKeys.USERNAME_OR_EMAIL, value = msg['text'])
-                        message = bot_messages['login_get_password']
-                        keyboard = [[bot_commands['return']]]
-                    else:
-                        message = bot_messages['login_get_username_or_email_err']
-                        keyboard = [[bot_commands['return']]]
                 else:
-                    user = User.objects.get(
-                        Q(username__exact = username_or_email) |
-                        Q(email__exact = username_or_email))
-                    if user.check_password(msg['text']):
-                        x.user_input.all().delete()
-                        x.profile = user.profile
-                        x.save()
+                    message = bot_messages['start_msg'] % (settings.HOST_URL, x.verify_token)
+                    keyboard = [[bot_commands['login'], bot_commands['register']]]
+
+            elif x.menu_state == MenuState.LOGIN:
+                if msg['text'] == bot_commands['return']:
+                    message = bot_messages['start_msg'] % (settings.HOST_URL, x.verify_token)
+                    keyboard = [[bot_commands['login'], bot_commands['register']]]
+                    x.user_input.all().delete()
+                    x.menu_state = MenuState.START
+                    x.save()
+
+                else:
+                    try:
+                        username_or_email = x.user_input.get(key = TelegramUserInputKeys.USERNAME_OR_EMAIL).value
+
+                    except TelegramUserInput.DoesNotExist:
+                        if(User.objects.filter(
+                            Q(username__exact = msg['text']) |
+                            Q(email__exact = msg['text']))
+                        ).distinct().exists():
+                            x.user_input.create(key = TelegramUserInputKeys.USERNAME_OR_EMAIL, value = msg['text'])
+                            message = bot_messages['login_get_password']
+                            keyboard = [[bot_commands['return']]]
+                        else:
+                            message = bot_messages['login_get_username_or_email_err']
+                            keyboard = [[bot_commands['return']]]
                     else:
-                        message = bot_messages['login_get_password_err']
-                        keyboard = [[bot_commands['return']]]
+                        user = User.objects.get(
+                            Q(username__exact = username_or_email) |
+                            Q(email__exact = username_or_email))
+                        if user.check_password(msg['text']):
+                            x.user_input.all().delete()
+                            x.profile = user.profile
+                            x.save()
+                        else:
+                            message = bot_messages['login_get_password_err']
+                            keyboard = [[bot_commands['return']]]
 
 
 
