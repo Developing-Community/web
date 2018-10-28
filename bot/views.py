@@ -22,7 +22,12 @@ bot_commands = {
     'login' : 'ورود',
     'register': 'ثبت نام',
     'return': 'بازگشت',
-    'add-project': 'دعوت به همکاری'
+    'add-project': 'دعوت به همکاری',
+    'edit-profile': 'ویرایش پروفایل',
+    'edit-name': 'ویرایش نام',
+    'edit-bio': 'ویرایش بیوگرافی',
+    'edit-skills': 'ویرایش مهارت ها'
+
 }
 
 bot_messages = {
@@ -46,13 +51,15 @@ bot_messages = {
     'add_project_get_content': 'لطفا متن آگهی خود را وارد کنید',
     'add_project_get_skills': 'لطفا مهارت های مورد نیازتان را وارد کنید. هر مهارت را در یک خط بنویسید.',
     'add_project_success': 'آگهی شما با موفقیت ثبت شد',
-    'unknown_command': 'لطفا از منوی بات گزینه مورد نزرتان را انتخاب کنید.',
+    'unknown_command': 'لطفا از منوی بات گزینه مورد نظرتان را انتخاب کنید.',
+    'edit_profile': 'لطفا یکی از گزینه ها را برای ویرایش انتخاب کنید.'
 }
 
 
 bot_keyboards = {
-    'main_menu': [[bot_commands['add-project']]],
-    'return': [[bot_commands['return']]]
+    'main_menu': [[bot_commands['add-project']], bot_commands['edit-profile']],
+    'return': [[bot_commands['return']]],
+    'edit_profile': [[bot_commands['edit-name']],[bot_commands['edit-bio']],[bot_commands['edit-skills']]]
 }
 
 def handle_pv_login(telegram_profile, msg):
@@ -130,7 +137,7 @@ def handle_pv_start(telegram_profile, msg):
 
 
 def handle_pv_register(telegram_profile, msg):
-
+    #TODO: validate email and password
     if msg['text'] == bot_commands['return']:
         message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
         keyboard = [[bot_commands['login'], bot_commands['register']]]
@@ -193,6 +200,93 @@ def handle_pv_add_project(telegram_profile, msg):
         message = bot_messages['add_project_success']
         keyboard = bot_keyboards['main_menu']
 
+
+    return message, keyboard
+
+
+
+def handle_pv_edit_profile(telegram_profile, msg) :
+
+    if msg['text'] == bot_commands['edit_name'] :
+        message = bot_messages['edit_profile_get_name']
+        keyboard = bot_keyboards['return']
+        telegram_profile.menu_state = MenuState.EDIT_PROFILE_NAME
+        telegram_profile.save()
+
+    elif msg['text'] == bot_commands['edit_bio'] :
+        message = bot_messages['edit_profile_get_bio']
+        keyboard = bot_keyboards['return']
+        telegram_profile.menu_state = MenuState.EDIT_PROFILE_BIO
+        telegram_profile.save()
+
+    elif msg['text'] == bot_commands['edit_skills'] :
+        message = bot_messages['edit_profile_get_skills']
+        keyboard = bot_keyboards['return']
+        telegram_profile.menu_state = MenuState.EDIT_PROFILE_SKILLS
+        telegram_profile.save()
+
+    else :
+        message = bot_messages['unknown_command']
+        keyboard = bot_keyboards['edit_profile']
+
+    return message, keyboard
+
+def handle_pv_edit_profile_name(telegram_profile, msg) :
+    if msg['text'] == bot_commands['return'] :
+        message = bot_messages['edit_profile']
+        keyboard = bot_keyboards['edit_profile']
+        return message, keyboard
+
+    p = telegram_profile.profile
+
+    p.first_name = msg['text']
+    p.save()
+
+    telegram_profile.menu_state = MenuState.EDIT_PROFILE
+    telegram_profile.save()
+
+    message = bot_messages['edit_profile']
+    keyboard = bot_keyboards['edit_profile']
+
+    return message, keyboard
+
+
+def handle_pv_edit_profile_bio(telegram_profile, msg) :
+    if msg['text'] == bot_commands['return']:
+        message = bot_messages['edit_profile']
+        keyboard = bot_keyboards['edit_profile']
+        return message, keyboard
+
+    p = telegram_profile.profile
+
+    p.bio = msg['text']
+    p.save()
+
+    telegram_profile.menu_state = MenuState.EDIT_PROFILE
+    telegram_profile.save()
+
+    message = bot_messages['edit_profile']
+    keyboard = bot_keyboards['edit_profile']
+
+    return message, keyboard
+
+
+def handle_pv_edit_profile_skills(telegram_profile, msg) :
+    if msg['text'] == bot_commands['return']:
+        message = bot_messages['edit_profile']
+        keyboard = bot_keyboards['edit_profile']
+        return message, keyboard
+
+    #p = telegram_profile.profile
+    #TODO: add skills to profile
+    #p.skills = msg['text']
+    #p.save()
+
+    telegram_profile.menu_state = MenuState.EDIT_PROFILE
+    telegram_profile.save()
+
+    message = bot_messages['edit_profile']
+    keyboard = bot_keyboards['edit_profile']
 
     return message, keyboard
 
