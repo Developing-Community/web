@@ -46,5 +46,5 @@ bot_keyboards = {
     'return_or_exit': [[bot_commands['return']], [bot_commands['exit']]],
     'login_or_register': [[bot_commands['login'], bot_commands['register']]],
     'main_menu': [[bot_commands['add_project']], [bot_commands['edit_profile']], [bot_commands['exit']]],
-    'edit_profile': [[bot_commands['edit_name'],bot_commands['edit_bio'],bot_commands['edit_skills']], [bot_commands['login'], bot_commands['register']]]
+    'edit_profile': [[bot_commands['edit_skills'],bot_commands['edit_bio'],bot_commands['edit_name']], [bot_commands['exit'], bot_commands['return']]]
 }
