@@ -79,7 +79,7 @@ def handle_pv_edit_profile_skills(telegram_profile, msg) :
                 continue
             lf = Term.objects.filter(title=skill)
             if lf.exists():
-                if not p.skills.filter(learningfield = lf).exists():
+                if not p.skills.filter(learning_field = lf).exists():
                     LearningInfo.objects.create(student = p, learning_field = lf)
             else:
                 LearningInfo.objects.create(student = p,
