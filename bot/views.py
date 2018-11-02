@@ -64,7 +64,8 @@ bot_messages = {
 
 bot_keyboards = {
     'main_menu': [[bot_commands['add-project']], bot_commands['edit-profile'], [bot_commands['exit']]],
-    'return': [[bot_commands['return']], [bot_commands['exit']]],
+    'return': [[bot_commands['return']]],
+    'return_or_exit': [[bot_commands['return']], [bot_commands['exit']]],
     'edit_profile': [[bot_commands['edit-name']],[bot_commands['edit-bio']],[bot_commands['edit-skills']], [bot_commands['exit']]]
 }
 
@@ -96,29 +97,37 @@ def handle_pv_login(telegram_profile, msg):
 
 
 def handle_pv_login_password(telegram_profile, msg):
-    try:
-        username_or_email = telegram_profile.user_input.get(key=TelegramUserInputKeys.USERNAME_OR_EMAIL).value
 
-    except TelegramUserInput.DoesNotExist:
+    if msg['text'] == bot_commands['return']:
+        telegram_profile.user_input.all().delete()
+        message = bot_messages['login_get_username_or_email']
+        keyboard = bot_keyboards['return']
+        telegram_profile.user_input.all().delete()
         telegram_profile.menu_state = MenuState.LOGIN
         telegram_profile.save()
-        return handle_pv_login(telegram_profile, msg)
-
     else:
-        user = User.objects.get(
-            Q(username__exact=username_or_email) |
-            Q(email__exact=username_or_email))
-        if user.check_password(msg['text']):
-            message = bot_messages['login_success']
-            keyboard = bot_keyboards['main_menu']
-            telegram_profile.user_input.all().delete()
-            telegram_profile.profile = user.profile.first()
-            telegram_profile.menu_state = MenuState.START
-            telegram_profile.save()
-        else:
-            message = bot_messages['login_get_password_err']
-            keyboard = [[bot_commands['return']]]
+        try:
+            username_or_email = telegram_profile.user_input.get(key=TelegramUserInputKeys.USERNAME_OR_EMAIL).value
 
+        except TelegramUserInput.DoesNotExist:
+            telegram_profile.menu_state = MenuState.LOGIN
+            telegram_profile.save()
+            return handle_pv_login(telegram_profile, msg)
+
+        else:
+            user = User.objects.get(
+                Q(username__exact=username_or_email) |
+                Q(email__exact=username_or_email))
+            if user.check_password(msg['text']):
+                message = bot_messages['login_success']
+                keyboard = bot_keyboards['main_menu']
+                telegram_profile.user_input.all().delete()
+                telegram_profile.profile = user.profile.first()
+                telegram_profile.menu_state = MenuState.START
+                telegram_profile.save()
+            else:
+                message = bot_messages['login_get_password_err']
+                keyboard = [[bot_commands['return']]]
     return message, keyboard
 
 def handle_pv_start(telegram_profile, msg):
@@ -274,7 +283,7 @@ def handle_pv_edit_profile_name(telegram_profile, msg) :
     return message, keyboard
 
 
-def handle_pv_edit_profile_bio(telegram_profile, msg) :
+def handle_pv_edit_profile_bio(telegram_profile, msg):
     if msg['text'] == bot_commands['return']:
         message = bot_messages['edit_profile']
         keyboard = bot_keyboards['edit_profile']
