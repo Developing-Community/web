@@ -43,6 +43,7 @@ def handle_pv_edit_profile_name(telegram_profile, msg) :
     else:
         p = telegram_profile.profile
         p.first_name = msg['text']
+        p.last_name = ''
         p.save()
 
         telegram_profile.menu_state = MenuState.EDIT_PROFILE

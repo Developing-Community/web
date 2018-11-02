@@ -28,7 +28,7 @@ def handle_pv_start(telegram_profile, msg):
             keyboard = [[bot_commands['return']]]
             telegram_profile.menu_state = MenuState.ADD_PROJECT_JOB
             telegram_profile.save()
-        if msg['text'] == bot_commands['edit_profile']:
+        elif msg['text'] == bot_commands['edit_profile']:
             message = bot_messages['edit_profile']
             keyboard = bot_keyboards['edit_profile']
             telegram_profile.menu_state = MenuState.EDIT_PROFILE
