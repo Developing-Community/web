@@ -19,7 +19,7 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from bot.models import TelegramProfile
+from bot.models import TelegramProfile, MenuState
 from bot.serializers import (
     TelegramTokenSerializer)
 
@@ -184,9 +184,10 @@ class TelegramTokenVerificationAPIView(APIView):
             verify_token=verify_token)
         if x.exists():
             x = x.first()
-
             y = Profile.objects.get(user=self.request.user)
             x.profile = y
+            x.menu_state = MenuState.START
+            x.user_input.all().delete()
             x.save()
             try:
                 requests.get(settings.BOT_API_URL + '/%d/confirmed' % y.telegram_user_id)
