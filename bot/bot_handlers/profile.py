@@ -77,8 +77,10 @@ def handle_pv_edit_profile_skills(telegram_profile, msg) :
         for skill in skills:
             if skill == '':
                 continue
+            skill = skill.replace(" ", "_")
             lf = Term.objects.filter(title=skill)
             if lf.exists():
+                lf = lf.first()
                 if not p.skills.filter(learning_field = lf).exists():
                     LearningInfo.objects.create(student = p, learning_field = lf)
             else:
