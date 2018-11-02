@@ -1,4 +1,8 @@
+import uuid
+
+import requests
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import (
     AllowAny,
 )
@@ -7,6 +11,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 
 from bot.bot_handlers.project import handle_pv_add_project, handle_pv_add_project_get_skills
+from bot.bot_utils import bot_send_message
 from bot.models import TelegramProfile, MenuState
 
 from bot.bot_handlers.login import handle_pv_login_get_password, handle_pv_login_get_username
@@ -15,12 +20,14 @@ from bot.bot_handlers.register import handle_pv_register_get_email, handle_pv_re
 from bot.bot_strings import bot_commands, bot_messages, bot_keyboards, bot_profile_to_string
 from bot.bot_handlers.profile import handle_pv_edit_profile_name, handle_pv_edit_profile_bio, \
     handle_pv_edit_profile_skills, handle_pv_edit_profile
+from bot.serializers import TelegramTokenSerializer
+from users.models import Profile
 from web import settings
 
 User = get_user_model()
 
-def handle_pv_start(telegram_profile, msg):
 
+def handle_pv_start(telegram_profile, msg):
     if telegram_profile.profile:
 
         if msg['text'] == bot_commands['add_project']:
@@ -56,6 +63,7 @@ def handle_pv_start(telegram_profile, msg):
 
     return message, keyboard
 
+
 class HandlePVAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -80,7 +88,6 @@ class HandlePVAPIView(APIView):
         if telegram_profile.profile == None:
             telegram_profile.menu_state = MenuState.START
             telegram_profile.save()
-
 
         if telegram_profile.menu_state == MenuState.START:
             message, keyboard = handle_pv_start(telegram_profile, msg)
@@ -122,14 +129,45 @@ class HandlePVAPIView(APIView):
             message = "Unknown app state"
             keyboard = [[]]
 
-
-
         return Response({
             "chat_id": msg['chat']['id'],
             "message": message,
             "keyboard": keyboard,
         }, status=status.HTTP_200_OK)
 
+
+class TelegramTokenVerificationAPIView(APIView):
+    queryset = TelegramProfile.objects.all()
+    serializer_class = TelegramTokenSerializer
+
+    def post(self, request, format=None):
+        verify_token = request.data['verify_token']
+        try:
+            uuid.UUID(verify_token)
+        except:
+            raise ValidationError("Invalid code")
+
+        telegram_profile = TelegramProfile.objects.filter(
+            verify_token=verify_token)
+        if telegram_profile.exists():
+            telegram_profile = telegram_profile.first()
+            y = Profile.objects.get(user=self.request.user)
+            telegram_profile.profile = y
+            telegram_profile.menu_state = MenuState.START
+            telegram_profile.user_input.all().delete()
+            telegram_profile.save()
+            try:
+                bot_send_message(
+                    [telegram_profile],
+                    bot_messages['verified'] + '\n\n' + bot_messages['main_menu'],
+                    bot_keyboards['main_menu']
+                )
+
+            except Exception as e:
+                print(str(e))
+            return Response(status=status.HTTP_200_OK)
+        else:
+            raise ValidationError("Verification code doesn't exist")
 
 # class ProfileRetrieveAPIView(RetrieveAPIView):
 #     serializer_class = BotProfileSerializer

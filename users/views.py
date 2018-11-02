@@ -6,10 +6,8 @@ from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.urls import reverse
 from django.utils.html import strip_tags
 from django_rest_passwordreset.signals import reset_password_token_created
-from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     CreateAPIView,
     UpdateAPIView, RetrieveAPIView)
@@ -19,15 +17,9 @@ from rest_framework.permissions import (
 )
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from bot.models import TelegramProfile, MenuState
-from bot.serializers import (
-    TelegramTokenSerializer)
 
-from rest_framework import status
-import uuid
-import requests
+
 # `current_user`, `username`, `email`, `reset_password_url`
-from web import settings
 
 
 def get_http_host(request):
@@ -109,8 +101,6 @@ def reset_password_change(request, key):
 #     msg.send()
 
 
-from rest_framework.reverse import reverse
-
 from .permissions import IsOwner
 from .models import Profile
 from .serializers import (
@@ -169,30 +159,4 @@ class ProfileUpdateAPIView(UpdateAPIView):
     queryset = Profile.objects.all()
 
 
-class TelegramTokenVerificationAPIView(APIView):
-    queryset = TelegramProfile.objects.all()
-    serializer_class = TelegramTokenSerializer
 
-    def post(self, request, format=None):
-        verify_token = request.data['verify_token']
-        try:
-            uuid.UUID(verify_token)
-        except:
-            raise ValidationError("Invalid code")
-
-        x = TelegramProfile.objects.filter(
-            verify_token=verify_token)
-        if x.exists():
-            x = x.first()
-            y = Profile.objects.get(user=self.request.user)
-            x.profile = y
-            x.menu_state = MenuState.START
-            x.user_input.all().delete()
-            x.save()
-            try:
-                requests.get(settings.BOT_API_URL + '/%d/confirmed' % y.telegram_user_id)
-            except Exception as e:
-                print(str(e))
-            return Response(status=status.HTTP_200_OK)
-        else:
-            raise ValidationError("Verification code doesn't exist")

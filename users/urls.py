@@ -1,12 +1,13 @@
 from django.urls import path
 
+from bot.views import TelegramTokenVerificationAPIView
 from .views import (
     UserCreateAPIView,
     ProfileUpdateAPIView,
     UserProfileRetrieveAPIView,
     # profile-password-reset,
     reset_password_change, get_http_host,
-    ProfileImageAPIView, TelegramTokenVerificationAPIView, ProfileRetrieveAPIView)
+    ProfileImageAPIView, ProfileRetrieveAPIView)
 
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 app_name = "users"
