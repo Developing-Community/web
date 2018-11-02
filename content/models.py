@@ -107,7 +107,7 @@ class ContentRelation(models.Model):
 
 
 class ContentTermRelationType(Enum):  # A subclass of Enum
-    SKILL_NEEDED = "SKILL_NEEDED"
+    SKILLS_NEEDED = "SKILLS_NEEDED"
 
 
 class ContentTermRelation(models.Model):
