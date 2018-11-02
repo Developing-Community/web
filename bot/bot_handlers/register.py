@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from bot.variables import bot_commands, bot_messages, bot_keyboards
+from bot.bot_strings import bot_commands, bot_messages, bot_keyboards
 from bot.models import TelegramUserInputKeys, TelegramUserInput, MenuState
 from web import settings
 

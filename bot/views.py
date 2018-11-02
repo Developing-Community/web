@@ -12,7 +12,7 @@ from bot.models import TelegramProfile, MenuState
 from bot.bot_handlers.login import handle_pv_login_get_password, handle_pv_login_get_username
 from bot.bot_handlers.register import handle_pv_register_get_email, handle_pv_register_get_password, \
     handle_pv_register_get_username
-from bot.variables import bot_commands, bot_messages, bot_keyboards
+from bot.bot_strings import bot_commands, bot_messages, bot_keyboards, bot_profile_to_string
 from bot.bot_handlers.profile import handle_pv_edit_profile_name, handle_pv_edit_profile_bio, \
     handle_pv_edit_profile_skills, handle_pv_edit_profile
 from web import settings
@@ -29,7 +29,7 @@ def handle_pv_start(telegram_profile, msg):
             telegram_profile.menu_state = MenuState.ADD_PROJECT_JOB
             telegram_profile.save()
         elif msg['text'] == bot_commands['edit_profile']:
-            message = bot_messages['edit_profile']
+            message = bot_profile_to_string(telegram_profile.profile) + '\n\n' + bot_messages['edit_profile']
             keyboard = bot_keyboards['edit_profile']
             telegram_profile.menu_state = MenuState.EDIT_PROFILE
             telegram_profile.save()

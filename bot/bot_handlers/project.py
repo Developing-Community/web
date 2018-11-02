@@ -1,4 +1,4 @@
-from bot.variables import bot_keyboards, bot_messages
+from bot.bot_strings import bot_keyboards, bot_messages
 from bot.models import TelegramUserInputKeys, TelegramUserInput, MenuState
 
 

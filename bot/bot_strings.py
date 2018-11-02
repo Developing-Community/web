@@ -48,3 +48,8 @@ bot_keyboards = {
     'main_menu': [[bot_commands['add_project']], [bot_commands['edit_profile']], [bot_commands['exit']]],
     'edit_profile': [[bot_commands['edit_skills'],bot_commands['edit_bio'],bot_commands['edit_name']], [bot_commands['exit'], bot_commands['return']]]
 }
+
+def bot_profile_to_string(profile):
+    profile_string = 'نام: ' + (profile.first_name or '') + ' ' + (profile.last_name or '') + '\nبیوگرافی:\n' + (profile.bio or '') + '\nمهارتها:\n'
+    ','.join(['#' + skill.learning_field.title for skill in profile.skills.all()])
+    return profile_string
