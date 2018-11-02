@@ -46,11 +46,12 @@ def handle_pv_edit_profile_name(telegram_profile, msg) :
         p.last_name = ''
         p.save()
 
-        telegram_profile.menu_state = MenuState.EDIT_PROFILE
-        telegram_profile.save()
 
         message = bot_messages['edit_profile']
         keyboard = bot_keyboards['edit_profile']
+
+    telegram_profile.menu_state = MenuState.EDIT_PROFILE
+    telegram_profile.save()
 
     return message, keyboard
 
@@ -64,11 +65,12 @@ def handle_pv_edit_profile_bio(telegram_profile, msg):
         p.bio = msg['text']
         p.save()
 
-        telegram_profile.menu_state = MenuState.EDIT_PROFILE
-        telegram_profile.save()
 
         message = bot_messages['edit_profile']
         keyboard = bot_keyboards['edit_profile']
+
+    telegram_profile.menu_state = MenuState.EDIT_PROFILE
+    telegram_profile.save()
 
     return message, keyboard
 
@@ -98,10 +100,11 @@ def handle_pv_edit_profile_skills(telegram_profile, msg) :
                                                 taxonomy_type = TaxonomyType.LEARNING_FIELD
                                             ))
 
-        telegram_profile.menu_state = MenuState.EDIT_PROFILE
-        telegram_profile.save()
 
         message = bot_messages['edit_profile']
         keyboard = bot_keyboards['edit_profile']
+
+    telegram_profile.menu_state = MenuState.EDIT_PROFILE
+    telegram_profile.save()
 
     return message, keyboard
