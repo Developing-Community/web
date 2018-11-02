@@ -1,12 +1,13 @@
 from django.db import models
 
 from taxonomy.models import Term
+from users.models import Profile
 from web import settings
 
 
 class MentoringInfo(models.Model):
-    mentor = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-    mentoring_field = models.ForeignKey(Term, on_delete=models.CASCADE, related_name='mentoring_field')
+    mentor = models.ForeignKey(Profile, default=1, on_delete=models.CASCADE)
+    mentoring_field = models.ForeignKey(Term, on_delete=models.CASCADE, related_name='mentoring_fields')
     road_map = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -14,8 +15,8 @@ class MentoringInfo(models.Model):
 
 
 class LearningInfo(models.Model):
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-    learning_field = models.ForeignKey(Term, on_delete=models.CASCADE, related_name='learning_field')
+    student = models.ForeignKey(Profile, default=1, related_name="skills", on_delete=models.CASCADE)
+    learning_field = models.ForeignKey(Term, on_delete=models.CASCADE, related_name='learning_fields')
 
     def __str__(self):
         return self.mentor.username + " | " + self.mentoring_field.title

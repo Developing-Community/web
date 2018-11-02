@@ -13,6 +13,8 @@ from rest_framework.views import APIView
 from bot.models import TelegramProfile, MenuState, TelegramUserInput, TelegramUserInputKeys
 from bot.serializers import (
     TelegramTokenSerializer, BotProfileSerializer)
+from learning.models import LearningInfo
+from taxonomy.models import Term, TaxonomyType
 from users.models import Profile
 from web import settings
 
@@ -51,7 +53,10 @@ bot_messages = {
     'add_project_get_content': 'لطفا متن آگهی خود را وارد کنید',
     'add_project_get_skills': 'لطفا مهارت های مورد نیازتان را وارد کنید. هر مهارت را در یک خط بنویسید.',
     'add_project_success': 'آگهی شما با موفقیت ثبت شد',
-    'unknown_command': 'لطفا از منوی بات گزینه مورد نظرتان را انتخاب کنید.',
+    'edit_profile_get_name': 'لطفا نامتان را وارد کنید',
+    'edit_profile_get_bio': 'لطفا بیوگرافیتان را وارد کنید',
+    'edit_profile_get_skills': 'لطفا مهارت های خود را وارد کنید. هر مهارت را در یک سطر بنویسید',
+    'unknown_command': 'لطفا از منوی بات گزینه مورد نظرتان را انتخاب, کنید.',
     'edit_profile': 'لطفا یکی از گزینه ها را برای ویرایش انتخاب کنید.'
 }
 
@@ -111,6 +116,11 @@ def handle_pv_start(telegram_profile, msg):
             message = bot_messages['add_project_get_content']
             keyboard = [[bot_commands['return']]]
             telegram_profile.menu_state = MenuState.ADD_PROJECT_JOB
+            telegram_profile.save()
+        if msg['text'] == bot_commands['edit-profile']:
+            message = bot_messages['edit_profile_get_name']
+            keyboard = [[bot_commands['return']]]
+            telegram_profile.menu_state = MenuState.EDIT_PROFILE
             telegram_profile.save()
         else:
             message = bot_messages['unknown_command']
@@ -277,10 +287,23 @@ def handle_pv_edit_profile_skills(telegram_profile, msg) :
         keyboard = bot_keyboards['edit_profile']
         return message, keyboard
 
-    #p = telegram_profile.profile
-    #TODO: add skills to profile
-    #p.skills = msg['text']
-    #p.save()
+    p = telegram_profile.profile
+
+    skills = msg['text'].split('\n')
+
+    for skill in skills:
+        if skill == '':
+            continue
+        lf = Term.objects.filter(title=skill)
+        if lf.exists():
+            if not p.skills.filter(learningfield = lf).exists():
+                LearningInfo.objects.create(student = p, learning_field = lf)
+        else:
+            LearningInfo.objects.create(student = p,
+                                        learning_field = Term.objects.create(
+                                            title = skill,
+                                            taxonomy_type = TaxonomyType.LEARNING_FIELD
+                                        ))
 
     telegram_profile.menu_state = MenuState.EDIT_PROFILE
     telegram_profile.save()
@@ -318,6 +341,18 @@ class HandlePVAPIView(APIView):
 
         elif telegram_profile.menu_state == MenuState.ADD_PROJECT_JOB:
             message, keyboard = handle_pv_add_project(telegram_profile, msg)
+
+        elif telegram_profile.menu_state == MenuState.EDIT_PROFILE:
+            message, keyboard = handle_pv_edit_profile(telegram_profile, msg)
+
+        elif telegram_profile.menu_state == MenuState.EDIT_PROFILE_NAME:
+            message, keyboard = handle_pv_edit_profile_name(telegram_profile, msg)
+
+        elif telegram_profile.menu_state == MenuState.EDIT_PROFILE_BIO:
+            message, keyboard = handle_pv_edit_profile_bio(telegram_profile, msg)
+
+        elif telegram_profile.menu_state == MenuState.EDIT_PROFILE_SKILLS:
+            message, keyboard = handle_pv_edit_profile_skills(telegram_profile, msg)
 
         else:
             message = "Unknown app state"
