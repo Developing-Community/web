@@ -39,7 +39,7 @@ class TelegramUserInput(models.Model):
 class TelegramProfile(models.Model):
     telegram_user_id = models.IntegerField(primary_key=True, unique=True)
     profile = models.ForeignKey(Profile, related_name="telegram_profile", null=True, blank=True,
-                                on_delete=models.CASCADE)
+                                on_delete=models.SET_NULL)
     verify_token = models.UUIDField(default=uuid.uuid4, editable=False)
     menu_state = EnumField(MenuState, default=MenuState.START, max_length=1000)
     user_input = models.ManyToManyField(to=TelegramUserInput, related_name='user_input', blank=False)

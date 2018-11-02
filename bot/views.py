@@ -29,8 +29,8 @@ def handle_pv_start(telegram_profile, msg):
             telegram_profile.menu_state = MenuState.ADD_PROJECT_JOB
             telegram_profile.save()
         if msg['text'] == bot_commands['edit-profile']:
-            message = bot_messages['edit_profile_get_name']
-            keyboard = [[bot_commands['return']]]
+            message = bot_messages['edit_profile']
+            keyboard = bot_keyboards['edit_profile']
             telegram_profile.menu_state = MenuState.EDIT_PROFILE
             telegram_profile.save()
         else:
@@ -76,6 +76,11 @@ class HandlePVAPIView(APIView):
             telegram_profile.user_input.all().delete()
             telegram_profile.menu_state = MenuState.START
             telegram_profile.save()
+
+        if telegram_profile.profile == None:
+            telegram_profile.menu_state = MenuState.START
+            telegram_profile.save()
+
 
         if telegram_profile.menu_state == MenuState.START:
             message, keyboard = handle_pv_start(telegram_profile, msg)
