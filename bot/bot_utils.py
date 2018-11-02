@@ -12,5 +12,4 @@ def bot_send_message(chat_ids, message, keyboard):
         'keyboard': keyboard
     })
     response = requests.post(url=settings.BOT_API_URL + '/send-message/',
-                             headers={"Content-type": "application/json"},
-                             data = data).json()
+                             json=data).json()
