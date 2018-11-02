@@ -151,14 +151,14 @@ class TelegramTokenVerificationAPIView(APIView):
             verify_token=verify_token)
         if telegram_profile.exists():
             telegram_profile = telegram_profile.first()
-            y = Profile.objects.get(user=self.request.user)
-            telegram_profile.profile = y
+            profile = Profile.objects.get(user=self.request.user)
+            telegram_profile.profile = profile
             telegram_profile.menu_state = MenuState.START
             telegram_profile.user_input.all().delete()
             telegram_profile.save()
             try:
                 bot_send_message(
-                    [telegram_profile],
+                    [profile.telegram_user_id],
                     bot_messages['verified'] + '\n\n' + bot_messages['main_menu'],
                     bot_keyboards['main_menu']
                 )
