@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-from bot.bot_handlers.project import handle_pv_add_project
+from bot.bot_handlers.project import handle_pv_add_project, handle_pv_add_project_get_skills
 from bot.models import TelegramProfile, MenuState
 
 from bot.bot_handlers.login import handle_pv_login_get_password, handle_pv_login_get_username
@@ -102,6 +102,9 @@ class HandlePVAPIView(APIView):
 
         elif telegram_profile.menu_state == MenuState.ADD_PROJECT_JOB:
             message, keyboard = handle_pv_add_project(telegram_profile, msg)
+
+        elif telegram_profile.menu_state == MenuState.ADD_PROJECT_JOB_GET_SKILLS:
+            message, keyboard = handle_pv_add_project_get_skills(telegram_profile, msg)
 
         elif telegram_profile.menu_state == MenuState.EDIT_PROFILE:
             message, keyboard = handle_pv_edit_profile(telegram_profile, msg)

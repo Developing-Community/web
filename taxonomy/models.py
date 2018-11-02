@@ -10,7 +10,6 @@ class TaxonomyType(Enum):
 
 class Term(models.Model):
     title = models.CharField(max_length=255, unique=True)
-    title_fa = models.CharField(max_length=255,blank=True, null=True)
     taxonomy_type = EnumField(TaxonomyType, default=TaxonomyType.SUBJECT,max_length=1000)
 
     class Meta:
@@ -32,6 +31,6 @@ class TermRealtionType(Enum):   # A subclass of Enum
     CHILD_OF = "CHILD_OF"
 
 class TermRelation(models.Model):
-    source = models.ForeignKey(Term, related_name='source', on_delete=models.CASCADE)
-    destination = models.ForeignKey(Term, related_name='destination', on_delete=models.CASCADE)
+    content = models.ForeignKey(Term, related_name='source', on_delete=models.CASCADE)
+    term = models.ForeignKey(Term, related_name='destination', on_delete=models.CASCADE)
     type = EnumField(TermRealtionType, default=TermRealtionType.CHILD_OF, max_length=1000)

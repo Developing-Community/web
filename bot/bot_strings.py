@@ -43,17 +43,16 @@ bot_messages = {
 
 bot_keyboards = {
     'return': [[bot_commands['return']]],
-    'return_or_exit': [[bot_commands['return']], [bot_commands['exit']]],
     'login_or_register': [[bot_commands['login'], bot_commands['register']]],
     'main_menu': [[bot_commands['add_project']], [bot_commands['edit_profile']], [bot_commands['exit']]],
-    'edit_profile': [[bot_commands['edit_skills'],bot_commands['edit_bio'],bot_commands['edit_name']], [bot_commands['exit'], bot_commands['return']]]
+    'edit_profile': [[bot_commands['edit_skills'],bot_commands['edit_bio'],bot_commands['edit_name']], [bot_commands['return']]]
 }
 
 def bot_profile_to_string(profile):
-    profile_string = 'نام: ' + (profile.first_name or '') + ' ' + (profile.last_name or '') + '\n\nبیوگرافی:\n' + (profile.bio or '') + '\n\nمهارتها:\n'
-    profile_string += '، '.join(['#' + skill.learning_field.title for skill in profile.skills.all()])
+    profile_string = 'نام: ' + markdown_safe(profile.first_name or '') + ' ' + markdown_safe(profile.last_name or '') + '\n\nبیوگرافی:\n' + markdown_safe(profile.bio or '') + '\n\nمهارتها:\n'
+    profile_string += '، '.join(['#' + markdown_safe(skill.learning_field.title) for skill in profile.skills.all()])
 
-    return markdown_safe(profile_string)
+    return profile_string
 
 def markdown_safe(string):
     return string.replace('_','\_').replace('*', '\*')

@@ -29,6 +29,7 @@ class ContentType(Enum):  # A subclass of Enum
     ANSWER = "ANSWER"
     COMMENT = "COMMENT"
     STORY = "STORY"
+    PROJECT = "PROJECT"
 
 
 class MainContentType(Enum):
@@ -62,7 +63,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     # foriegn api
-    subject = models.ForeignKey(Term, related_name="subject", blank=True, null=True, on_delete=models.SET_NULL)
+    # subject = models.ForeignKey(Term, related_name="subject", blank=True, null=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to=content_image_upload_location,
                               null=True,
                               blank=True,
@@ -79,15 +80,12 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     content = models.TextField()
     flash_note = models.TextField(blank=True, null=True)
     draft = models.BooleanField(default=False)
-    publish = models.DateField(auto_now=False, auto_now_add=False)
+    publish = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
     # read_time = models.IntegerField(default=0)  # models.TimeField(null=True, blank=True) #assume minutes
     # no api
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)
     # no api
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-
-    # no api
-    terms = models.ManyToManyField(Term, related_name="terms", blank=True)
 
     # TODO: Voting System
     # external api
@@ -106,3 +104,15 @@ class ContentRelation(models.Model):
     source = models.ForeignKey(Content, related_name='source', on_delete=models.CASCADE)
     destination = models.ForeignKey(Content, related_name='destination', on_delete=models.CASCADE)
     type = EnumField(ContentRealtionType, default=ContentRealtionType.COMMENTED_ON, max_length=1000)
+
+
+class ContentTermRelationType(Enum):  # A subclass of Enum
+    SKILL_NEEDED = "SKILL_NEEDED"
+
+
+class ContentTermRelation(models.Model):
+    content = models.ForeignKey(Content, related_name='contents', on_delete=models.CASCADE)
+    term = models.ForeignKey(Term, related_name= 'terms', on_delete=models.CASCADE)
+    type = EnumField(ContentTermRelationType, max_length=1000)
+
+
