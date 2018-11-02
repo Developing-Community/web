@@ -23,12 +23,12 @@ def handle_pv_start(telegram_profile, msg):
 
     if telegram_profile.profile:
 
-        if msg['text'] == bot_commands['add-project']:
+        if msg['text'] == bot_commands['add_project']:
             message = bot_messages['add_project_get_content']
             keyboard = [[bot_commands['return']]]
             telegram_profile.menu_state = MenuState.ADD_PROJECT_JOB
             telegram_profile.save()
-        if msg['text'] == bot_commands['edit-profile']:
+        if msg['text'] == bot_commands['edit_profile']:
             message = bot_messages['edit_profile']
             keyboard = bot_keyboards['edit_profile']
             telegram_profile.menu_state = MenuState.EDIT_PROFILE
