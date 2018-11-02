@@ -347,6 +347,7 @@ class HandlePVAPIView(APIView):
         if msg['text'] == 'خروج':
             telegram_profile.profile = None
             telegram_profile.user_input.all().delete()
+            telegram_profile.menu_state = MenuState.START
             telegram_profile.save()
 
         if telegram_profile.menu_state == MenuState.START:
