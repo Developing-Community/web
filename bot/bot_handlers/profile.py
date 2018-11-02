@@ -1,13 +1,18 @@
 from bot.variables import bot_commands, bot_messages, bot_keyboards
 from bot.models import MenuState
 from learning.models import LearningInfo
-from taxonomy.models import Term
-
+from taxonomy.models import Term, TaxonomyType
 
 
 def handle_pv_edit_profile(telegram_profile, msg) :
 
-    if msg['text'] == bot_commands['edit_name'] :
+    if msg['text'] == bot_commands['return']:
+        message = bot_messages['main_menu']
+        keyboard = bot_keyboards['main_menu']
+        telegram_profile.menu_state = MenuState.START
+        telegram_profile.save()
+
+    elif msg['text'] == bot_commands['edit_name'] :
         message = bot_messages['edit_profile_get_name']
         keyboard = bot_keyboards['return']
         telegram_profile.menu_state = MenuState.EDIT_PROFILE_NAME
@@ -35,18 +40,16 @@ def handle_pv_edit_profile_name(telegram_profile, msg) :
     if msg['text'] == bot_commands['return'] :
         message = bot_messages['edit_profile']
         keyboard = bot_keyboards['edit_profile']
-        return message, keyboard
+    else:
+        p = telegram_profile.profile
+        p.first_name = msg['text']
+        p.save()
 
-    p = telegram_profile.profile
+        telegram_profile.menu_state = MenuState.EDIT_PROFILE
+        telegram_profile.save()
 
-    p.first_name = msg['text']
-    p.save()
-
-    telegram_profile.menu_state = MenuState.EDIT_PROFILE
-    telegram_profile.save()
-
-    message = bot_messages['edit_profile']
-    keyboard = bot_keyboards['edit_profile']
+        message = bot_messages['edit_profile']
+        keyboard = bot_keyboards['edit_profile']
 
     return message, keyboard
 
@@ -55,18 +58,16 @@ def handle_pv_edit_profile_bio(telegram_profile, msg):
     if msg['text'] == bot_commands['return']:
         message = bot_messages['edit_profile']
         keyboard = bot_keyboards['edit_profile']
-        return message, keyboard
+    else:
+        p = telegram_profile.profile
+        p.bio = msg['text']
+        p.save()
 
-    p = telegram_profile.profile
+        telegram_profile.menu_state = MenuState.EDIT_PROFILE
+        telegram_profile.save()
 
-    p.bio = msg['text']
-    p.save()
-
-    telegram_profile.menu_state = MenuState.EDIT_PROFILE
-    telegram_profile.save()
-
-    message = bot_messages['edit_profile']
-    keyboard = bot_keyboards['edit_profile']
+        message = bot_messages['edit_profile']
+        keyboard = bot_keyboards['edit_profile']
 
     return message, keyboard
 
@@ -77,28 +78,29 @@ def handle_pv_edit_profile_skills(telegram_profile, msg) :
         keyboard = bot_keyboards['edit_profile']
         return message, keyboard
 
-    p = telegram_profile.profile
+    else:
+        p = telegram_profile.profile
 
-    skills = msg['text'].split('\n')
+        skills = msg['text'].split('\n')
 
-    for skill in skills:
-        if skill == '':
-            continue
-        lf = Term.objects.filter(title=skill)
-        if lf.exists():
-            if not p.skills.filter(learningfield = lf).exists():
-                LearningInfo.objects.create(student = p, learning_field = lf)
-        else:
-            LearningInfo.objects.create(student = p,
-                                        learning_field = Term.objects.create(
-                                            title = skill,
-                                            taxonomy_type = TaxonomyType.LEARNING_FIELD
-                                        ))
+        for skill in skills:
+            if skill == '':
+                continue
+            lf = Term.objects.filter(title=skill)
+            if lf.exists():
+                if not p.skills.filter(learningfield = lf).exists():
+                    LearningInfo.objects.create(student = p, learning_field = lf)
+            else:
+                LearningInfo.objects.create(student = p,
+                                            learning_field = Term.objects.create(
+                                                title = skill,
+                                                taxonomy_type = TaxonomyType.LEARNING_FIELD
+                                            ))
 
-    telegram_profile.menu_state = MenuState.EDIT_PROFILE
-    telegram_profile.save()
+        telegram_profile.menu_state = MenuState.EDIT_PROFILE
+        telegram_profile.save()
 
-    message = bot_messages['edit_profile']
-    keyboard = bot_keyboards['edit_profile']
+        message = bot_messages['edit_profile']
+        keyboard = bot_keyboards['edit_profile']
 
     return message, keyboard

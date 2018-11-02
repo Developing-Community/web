@@ -3,11 +3,11 @@ bot_commands = {
     'register': 'ثبت نام',
     'return': 'بازگشت',
     'exit': 'خروج',
-    'add-project': 'دعوت به همکاری',
-    'edit-profile': 'ویرایش پروفایل',
-    'edit-name': 'ویرایش نام',
-    'edit-bio': 'ویرایش بیوگرافی',
-    'edit-skills': 'ویرایش مهارت ها'
+    'add_project': 'ثبت آگهی دعوت به همکاری',
+    'edit_profile': 'ویرایش پروفایل',
+    'edit_name': 'ویرایش نام',
+    'edit_bio': 'ویرایش بیوگرافی',
+    'edit_skills': 'ویرایش مهارت ها'
 
 }
 
@@ -35,15 +35,16 @@ bot_messages = {
     'edit_profile_get_name': 'لطفا نامتان را وارد کنید',
     'edit_profile_get_bio': 'لطفا بیوگرافیتان را وارد کنید',
     'edit_profile_get_skills': 'لطفا مهارت های خود را وارد کنید. هر مهارت را در یک سطر بنویسید',
-    'unknown_command': 'لطفا از منوی بات گزینه مورد نظرتان را انتخاب, کنید.',
-    'edit_profile': 'لطفا یکی از گزینه ها را برای ویرایش انتخاب کنید.'
+    'unknown_command': 'لطفا از منوی بات گزینه مورد نظرتان را انتخاب کنید.',
+    'edit_profile': 'لطفا یکی از گزینه ها را برای ویرایش انتخاب کنید.',
+    'main_menu': 'لطفا از منوی بات گزینه مورد نظرتان را انتخاب کنید.'
 }
 
 
 bot_keyboards = {
-    'login_or_register': [[bot_commands['login'], bot_commands['register']]],
-    'main_menu': [[bot_commands['add-project']], [bot_commands['edit-profile']], [bot_commands['exit']]],
     'return': [[bot_commands['return']]],
     'return_or_exit': [[bot_commands['return']], [bot_commands['exit']]],
-    'edit_profile': [[bot_commands['edit-name']],[bot_commands['edit-bio']],[bot_commands['edit-skills']], [bot_commands['exit']]]
+    'login_or_register': [[bot_commands['login'], bot_commands['register']]],
+    'main_menu': [[bot_commands['add_project']], [bot_commands['edit_profile']], [bot_commands['exit']]],
+    'edit_profile': [[bot_commands['edit_name']],[bot_commands['edit_bio']],[bot_commands['edit_skills']], [[bot_commands['login'], bot_commands['register']]]]
 }
