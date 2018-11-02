@@ -29,7 +29,7 @@ class TelegramUserInputKeys(Enum):
 
 
 class TelegramUserInput(models.Model):
-    key = EnumField(TelegramUserInputKeys)
+    key = EnumField(TelegramUserInputKeys, max_length=1000)
     value = models.TextField()
 
 
@@ -38,5 +38,5 @@ class TelegramProfile(models.Model):
     profile = models.ForeignKey(Profile, related_name="telegram_profile", null=True, blank=True,
                                 on_delete=models.CASCADE)
     verify_token = models.UUIDField(default=uuid.uuid4, editable=False)
-    menu_state = EnumField(MenuState, default=MenuState.START)
+    menu_state = EnumField(MenuState, default=MenuState.START, max_length=1000)
     user_input = models.ManyToManyField(to=TelegramUserInput, related_name='user_input', blank=False)

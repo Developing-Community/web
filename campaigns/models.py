@@ -74,7 +74,7 @@ class CampaignPartyRelation(models.Model):
     #     choices=[(tag.value, tag.name) for tag in CampaignPartyRelationType]
     # )
 
-    type = EnumField(CampaignPartyRelationType, max_length=100)
+    type = EnumField(CampaignPartyRelationType, max_length=1000)
 
     def __str__(self):
         return str(self.content_object) + " | " + self.campaign.title
@@ -86,7 +86,7 @@ class CampaignContentRelationType(Enum):  # A subclass of Enum
 class CampaignContentRelation(models.Model):
     campaign = models.ForeignKey(Campaign, related_name='rel_campaign', on_delete=models.CASCADE)
     content = models.ForeignKey(Content, related_name='rel_content', on_delete=models.CASCADE)
-    type = EnumField(CampaignContentRelationType, default=CampaignContentRelationType.CREATED_ON ,max_length=100)
+    type = EnumField(CampaignContentRelationType, default=CampaignContentRelationType.CREATED_ON ,max_length=1000)
 
     def __str__(self):
         return self.content.title + " | " + self.campaign.title
@@ -105,7 +105,7 @@ class CampaignTermRelation(models.Model):
     #     choices=[(tag.value, tag.name) for tag in CampaignTermRealtionType]
     # )
 
-    type = EnumField(CampaignTermRealtionType, max_length=100)
+    type = EnumField(CampaignTermRealtionType, max_length=1000)
 
 
 
