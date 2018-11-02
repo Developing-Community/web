@@ -63,7 +63,7 @@ bot_messages = {
 
 
 bot_keyboards = {
-    'main_menu': [[bot_commands['add-project']], bot_commands['edit-profile'], [bot_commands['exit']]],
+    'main_menu': [[bot_commands['add-project']], [bot_commands['edit-profile']], [bot_commands['exit']]],
     'return': [[bot_commands['return']]],
     'return_or_exit': [[bot_commands['return']], [bot_commands['exit']]],
     'edit_profile': [[bot_commands['edit-name']],[bot_commands['edit-bio']],[bot_commands['edit-skills']], [bot_commands['exit']]]
@@ -151,13 +151,13 @@ def handle_pv_start(telegram_profile, msg):
     else:
         if msg['text'] == bot_commands['login']:
             message = bot_messages['login_get_username_or_email']
-            keyboard = [[bot_commands['login']]]
+            keyboard = bot_keyboards['return']
             telegram_profile.menu_state = MenuState.LOGIN
             telegram_profile.save()
 
         elif msg['text'] == bot_commands['register']:
             message = bot_messages['register_get_email']
-            keyboard = [[bot_commands['return']]]
+            keyboard = bot_keyboards['return']
             telegram_profile.menu_state = MenuState.REGISTER
             telegram_profile.save()
 
