@@ -51,6 +51,6 @@ bot_keyboards = {
 
 def bot_profile_to_string(profile):
     profile_string = 'نام: ' + (profile.first_name or '') + ' ' + (profile.last_name or '') + '\nبیوگرافی:\n' + (profile.bio or '') + '\nمهارتها:\n'
-    profile_string += '، '.join([skill.learning_field.title for skill in profile.skills.all()])
+    profile_string += '، '.join(['#' + skill.learning_field.title for skill in profile.skills.all()])
     print(profile_string)
     return profile_string
