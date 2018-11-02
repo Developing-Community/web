@@ -27,7 +27,7 @@ def handle_pv_register_get_email(telegram_profile, msg):
             telegram_profile.user_input.create(key=TelegramUserInputKeys.EMAIL, value=msg['text'])
             message = bot_messages['register_get_username']
             keyboard = bot_keyboards['return']
-        telegram_profile.menu_state = MenuState.REGISTER_GET_USERNAME
+            telegram_profile.menu_state = MenuState.REGISTER_GET_USERNAME
         telegram_profile.save()
 
     return message, keyboard
@@ -60,7 +60,7 @@ def handle_pv_register_get_username(telegram_profile, msg):
                 telegram_profile.user_input.create(key=TelegramUserInputKeys.USERNAME, value=msg['text'])
                 message = bot_messages['register_get_password']
                 keyboard = [[bot_commands['return']]]
-            telegram_profile.menu_state = MenuState.REGISTER_GET_PASSWORD
+                telegram_profile.menu_state = MenuState.REGISTER_GET_PASSWORD
             telegram_profile.save()
 
     return message, keyboard

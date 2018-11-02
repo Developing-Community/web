@@ -25,10 +25,10 @@ def handle_pv_login_get_username(telegram_profile, msg):
             telegram_profile.user_input.create(key=TelegramUserInputKeys.USERNAME_OR_EMAIL, value=msg['text'])
             message = bot_messages['login_get_password']
             keyboard = [[bot_commands['return']]]
+            telegram_profile.menu_state = MenuState.LOGIN_GET_PASSWORD
         else:
             message = bot_messages['login_get_username_or_email_err']
             keyboard = [[bot_commands['return']]]
-        telegram_profile.menu_state = MenuState.LOGIN_GET_PASSWORD
         telegram_profile.save()
 
     return message, keyboard
