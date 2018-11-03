@@ -73,8 +73,7 @@ def handle_pv_edit_profile_skills(telegram_profile, msg) :
         p = telegram_profile.profile
 
         skills = list(set(msg['text'].split('\n')))
-        for skill in p.skills.all():
-            p.skills.remove(skill)
+        p.skills.all().delete()
         for skill in skills:
             if skill == '':
                 continue

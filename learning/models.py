@@ -19,7 +19,7 @@ class LearningInfo(models.Model):
     learning_field = models.ForeignKey(Term, on_delete=models.CASCADE, related_name='learning_fields')
 
     def __str__(self):
-        return self.mentor.username + " | " + self.mentoring_field.title
+        return self.student.username + " | " + self.student.title
 
 class Mentoring(models.Model):
     student_info = models.ForeignKey(LearningInfo, null= False, blank= False, related_name="student_info", on_delete=models.CASCADE)
