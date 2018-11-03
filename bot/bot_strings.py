@@ -51,8 +51,7 @@ bot_keyboards = {
 
 def bot_profile_to_string(profile):
     profile_string = 'نام: ' + markdown_safe(profile.first_name or '') + ' ' + markdown_safe(profile.last_name or '') + '\n\nبیوگرافی:\n' + markdown_safe(profile.bio or '') + '\n\nمهارتها:\n'
-    profile_string += '، '.join(['#' + markdown_safe(skill.learning_field.title) for skill in profile.skills.all()])
-
+    profile_string += '، '.join(['#' + markdown_safe(skill.learning_field.title) for skill in profile.skills.all()]) + '\n'
     return profile_string
 
 def markdown_safe(string):

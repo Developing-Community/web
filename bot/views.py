@@ -89,7 +89,14 @@ class HandlePVAPIView(APIView):
             telegram_profile.menu_state = MenuState.START
             telegram_profile.save()
 
-        if telegram_profile.menu_state == MenuState.START:
+        if telegram_profile.profile and 'forward_from' in msg:
+            try:
+                message = bot_profile_to_string(Profile.objects.get(telegram_user_id = msg['forward_from']['id']))
+            except:
+                message = "پروفایل این کاربر در سایت ثبت نشده است."
+            keyboard = [[]]
+
+        elif telegram_profile.menu_state == MenuState.START:
             message, keyboard = handle_pv_start(telegram_profile, msg)
 
         elif telegram_profile.menu_state == MenuState.LOGIN_GET_USERNAME:
