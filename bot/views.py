@@ -85,10 +85,6 @@ class HandlePVAPIView(APIView):
             telegram_profile.menu_state = MenuState.START
             telegram_profile.save()
 
-        if telegram_profile.profile == None:
-            telegram_profile.menu_state = MenuState.START
-            telegram_profile.save()
-
         if telegram_profile.profile and 'forward_from' in msg:
             try:
                 message = bot_profile_to_string(Profile.objects.get(telegram_user_id = msg['forward_from']['id']))
