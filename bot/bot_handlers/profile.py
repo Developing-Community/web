@@ -73,7 +73,7 @@ def handle_pv_edit_profile_skills(telegram_profile, msg) :
         p = telegram_profile.profile
 
         skills = list(set(msg['text'].split('\n')))
-
+        p.skills.filter(learning_field=lf).delete()
         for skill in skills:
             if skill == '':
                 continue
@@ -81,15 +81,12 @@ def handle_pv_edit_profile_skills(telegram_profile, msg) :
             lf = Term.objects.filter(title=skill)
             if lf.exists():
                 lf = lf.first()
-                if not p.skills.filter(learning_field = lf).exists():
-                    LearningInfo.objects.create(student = p, learning_field = lf)
             else:
                 lf = Term.objects.create(
                     title = skill,
                     taxonomy_type = TaxonomyType.LEARNING_FIELD
                 )
-                LearningInfo.objects.create(student = p,
-                                            learning_field = lf)
+            LearningInfo.objects.create(student = p, learning_field = lf)
 
     message = bot_profile_to_string(telegram_profile.profile) + '\n\n' + bot_messages['edit_profile']
     keyboard = bot_keyboards['edit_profile']
