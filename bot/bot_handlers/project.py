@@ -44,7 +44,7 @@ def handle_pv_add_project_get_skills(telegram_profile, msg):
                 title = "دعوت به همکاری",
                 draft = True,
                 type = ContentType.PROJECT,
-                content = content
+                content = content.value
             )
 
             skills = list(set(msg['text'].split('\n')))
