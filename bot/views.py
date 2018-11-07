@@ -140,8 +140,8 @@ class HandlePVAPIView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-class HandleGPAPIView(APIView):permission_classes = [AllowAny]
-
+class HandleGPAPIView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request, format=None):
         msg = request.data['msg']
 
