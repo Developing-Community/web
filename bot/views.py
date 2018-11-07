@@ -75,6 +75,9 @@ class HandlePVAPIView(APIView):
             telegram_user_id=telegram_user_id)
         if telegram_profile.exists():
             telegram_profile = telegram_profile.first()
+            if telegram_profile.pv_enabled:
+                telegram_profile.pv_enabled = False
+                telegram_profile.save()
         else:
             telegram_profile = TelegramProfile.objects.create(
                 telegram_user_id=telegram_user_id,
