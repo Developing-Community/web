@@ -76,6 +76,10 @@ class Profile(models.Model):
 
     telegram_user_id = models.IntegerField(blank=True, null=True, unique=True)
 
+    @property
+    def name(self):
+        return self.first_name + " " + self.last_name
+
     def __str__(self):
         return str(self.user)
 

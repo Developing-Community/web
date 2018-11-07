@@ -30,6 +30,8 @@ class ContentType(Enum):  # A subclass of Enum
     COMMENT = "COMMENT"
     STORY = "STORY"
     PROJECT = "PROJECT"
+    EVENT = "EVENT"
+    PARTITIONING = "PARTITIONING"  # parts of a book or tutorial being studied
 
 
 class MainContentType(Enum):
@@ -112,7 +114,5 @@ class ContentTermRelationType(Enum):  # A subclass of Enum
 
 class ContentTermRelation(models.Model):
     content = models.ForeignKey(Content, related_name='contents', on_delete=models.CASCADE)
-    term = models.ForeignKey(Term, related_name= 'terms', on_delete=models.CASCADE)
+    term = models.ForeignKey(Term, related_name='terms', on_delete=models.CASCADE)
     type = EnumField(ContentTermRelationType, max_length=1000)
-
-

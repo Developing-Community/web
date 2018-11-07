@@ -50,7 +50,7 @@ class CampaignCreateAPIView(CreateAPIView):
 
         creator_relation = CampaignPartyRelation(
             campaign=campaign,
-            content_object=user,
+            content_object=user.profile,
             type=CampaignPartyRelationType.CREATOR
         )
         creator_relation.save()
@@ -90,8 +90,8 @@ class CampaignRequestEnrollmentAPIView(CreateAPIView):
 
         if (CampaignPartyRelation.objects.filter(
                 campaign=obj,
-                content_type=ContentType.objects.get(model="user"),
-                object_id=user.id
+                content_type=ContentType.objects.get(model="profile"),
+                object_id=user.profile.id
         ).exists()):
             raise ValidationError("Already a member")
         if (CampaignEnrollmentRequest.objects.filter(

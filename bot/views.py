@@ -77,7 +77,8 @@ class HandlePVAPIView(APIView):
             telegram_profile = telegram_profile.first()
         else:
             telegram_profile = TelegramProfile.objects.create(
-                telegram_user_id=telegram_user_id)
+                telegram_user_id=telegram_user_id,
+                pv_enabled=True)
 
         if msg['text'] == 'خروج':
             telegram_profile.profile = None
@@ -138,6 +139,28 @@ class HandlePVAPIView(APIView):
             "keyboard": keyboard,
         }, status=status.HTTP_200_OK)
 
+
+class HandleGPAPIView(APIView):permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        msg = request.data['msg']
+
+        telegram_user_id = msg['from']['id']
+        telegram_profile = TelegramProfile.objects.filter(
+            telegram_user_id=telegram_user_id)
+        if telegram_profile.exists():
+            telegram_profile = telegram_profile.first()
+        else:
+            telegram_profile = TelegramProfile.objects.create(
+                telegram_user_id=telegram_user_id,
+                pv_enabled=False)
+        if 'new_chat_member' in msg:
+            if not TelegramProfile.objects.filter(
+            telegram_user_id=msg['new_chat_member']['id']).exists():
+                TelegramProfile.objects.create(
+                telegram_user_id=msg['new_chat_member']['id'],
+                pv_enabled=False)
+        return Response({"result" : "ok"}, status=status.HTTP_200_OK)
 
 class TelegramTokenVerificationAPIView(APIView):
     queryset = TelegramProfile.objects.all()

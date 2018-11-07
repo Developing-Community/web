@@ -26,6 +26,9 @@ class CampaignType(Enum):
     MENTORING = "MENTORING"
     STUDY = "STUDY"
     SALES = "SALES"
+    WORKSHOP = "WORKSHOP"
+    PRESENTATION = "PRESENTATION"
+    EVENT = "EVENT"
 
 
 class Campaign(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
@@ -48,11 +51,16 @@ class Campaign(models.Model):  # We want comment to have a foreign key to all co
     width_field = models.IntegerField(default=0)
     description = models.TextField()
 
-    start_time = models.DateField(auto_now=False, auto_now_add=False)
-    end_time = models.DateField(auto_now=False, auto_now_add=False)
+    start_time = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    end_time = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    duration_days = models.IntegerField(blank=True, null=True)
+
+    @property
+    def name(self):
+        return self.title
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class CampaignPartyRelationType(Enum):  # A subclass of Enum
@@ -110,6 +118,7 @@ class CampaignTermRelation(models.Model):
 
 
 class CampaignEnrollmentRequest(models.Model):
+    #TODO: convert to profile
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     campaign = models.ForeignKey(Campaign, related_name='request_campaign', on_delete=models.CASCADE)
     note = models.TextField(blank=True, null=True)

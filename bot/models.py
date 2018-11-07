@@ -43,3 +43,4 @@ class TelegramProfile(models.Model):
     verify_token = models.UUIDField(default=uuid.uuid4, editable=False)
     menu_state = EnumField(MenuState, default=MenuState.START, max_length=1000)
     user_input = models.ManyToManyField(to=TelegramUserInput, related_name='user_input', blank=False)
+    pv_enabled = models.BooleanField()
