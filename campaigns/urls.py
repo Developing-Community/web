@@ -15,7 +15,9 @@ urlpatterns = [
     path('<int:pk>/cancel-request/', CampaignCancelRequestEnrollmentAPIView.as_view(), name='cancel-request'),
     path('<int:pk>/image/',CampaignImageAPIView.as_view()),
 
-    path('<int:campaign_pk>/questions/', CampaignContentListAPIView.as_view(), {'type': ContentType.QUESTION}, name='questions-create'),
+    path('<int:campaign_pk>/questions/', CampaignContentListAPIView.as_view(), {'type': ContentType.QUESTION}, name='campaign-questions'),
+    path('<int:campaign_pk>/partitions/', CampaignContentListAPIView.as_view(), {'type': ContentType.PARTITIONING}, name='campaign-partitions'),
+
     path('<int:campaign_pk>/questions/create/', CampaignContentCreateAPIView.as_view(), {'type': ContentType.QUESTION}, name='questions-create'),
 
     path('study/', CampaignListAPIView.as_view(), {'type': CampaignType.STUDY}, name='study-list'),

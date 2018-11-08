@@ -87,11 +87,10 @@ class CampaignRequestEnrollmentAPIView(CreateAPIView):
             obj = Campaign.objects.get(pk=self.kwargs['pk'])
         except Campaign.DoesNotExist:
             raise Http404
-
         if (CampaignPartyRelation.objects.filter(
                 campaign=obj,
                 content_type=ContentType.objects.get(model="profile"),
-                object_id=user.profile.id
+                object_id=user.profile.first().id
         ).exists()):
             raise ValidationError("Already a member")
         if (CampaignEnrollmentRequest.objects.filter(
@@ -106,7 +105,7 @@ class CampaignRequestEnrollmentAPIView(CreateAPIView):
 
 
 class CampaignCancelRequestEnrollmentAPIView(APIView):
-    def get(self, request, pk):
+    def post(self, request, pk):
         CampaignEnrollmentRequest.objects.filter(
             campaign=Campaign.objects.get(pk=pk),
             user=request.user,
