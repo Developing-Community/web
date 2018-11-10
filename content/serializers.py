@@ -26,7 +26,6 @@ class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer)
             'visibility',
             'author',
             'slug',
-            'subject',
             'image',
             'height_field',
             'width_field',
@@ -35,7 +34,6 @@ class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer)
             'publish',
             'updated',
             'timestamp',
-            'terms',
             'up_voters',
             'down_voters'
             ]
@@ -47,5 +45,4 @@ class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer)
             'height_field',
             'width_field'
             ,'up_voters',
-            'down_voters',
-            'terms')
+            'down_voters')

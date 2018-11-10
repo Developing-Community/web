@@ -47,8 +47,17 @@ class Campaign(models.Model):  # We want comment to have a foreign key to all co
                               blank=True,
                               width_field="width_field",
                               height_field="height_field")
-    height_field = models.IntegerField(default=0)
+
+    banner_image = models.ImageField(upload_to=campaign_image_upload_location,
+                              null=True,
+                              blank=True,
+                              width_field="banner_width_field",
+                              height_field="banner_height_field")
+
     width_field = models.IntegerField(default=0)
+    height_field = models.IntegerField(default=0)
+    banner_width_field = models.IntegerField(default=0)
+    banner_height_field = models.IntegerField(default=0)
     description = models.TextField()
 
     start_time = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
@@ -97,7 +106,7 @@ class CampaignContentRelation(models.Model):
     type = EnumField(CampaignContentRelationType, default=CampaignContentRelationType.CREATED_ON ,max_length=1000)
 
     def __str__(self):
-        return self.content.title + " | " + self.campaign.title
+        return str(self.content) + " | " + self.campaign.title
 
 
 class CampaignTermRealtionType(Enum):

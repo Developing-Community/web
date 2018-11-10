@@ -1,9 +1,8 @@
 from django.db import models
 from django.utils import timezone
-
-from enumfields import EnumField
 from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
-from companions.models import Application
+from enumfields import EnumField
+
 from taxonomy.models import Term
 from web import settings
 
@@ -62,7 +61,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
 
     # no api
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(blank=True, null=True)
 
     # foriegn api
     # subject = models.ForeignKey(Term, related_name="subject", blank=True, null=True, on_delete=models.SET_NULL)
@@ -79,7 +78,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     height_field = models.IntegerField(default=0)
     # no api
     width_field = models.IntegerField(default=0)
-    content = models.TextField()
+    content = models.TextField(null= True, blank=True)
     flash_note = models.TextField(blank=True, null=True)
     draft = models.BooleanField(default=False)
     publish = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
@@ -95,7 +94,10 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     down_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="down_voters", blank=True)
 
     def __str__(self):
-        return self.title
+        if self.title:
+            return self.title
+        else:
+            return self.content[:20]
 
 
 class ContentRealtionType(Enum):  # A subclass of Enum
