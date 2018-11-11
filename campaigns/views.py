@@ -218,10 +218,10 @@ class CampaignContentListAPIView(ListAPIView):
         This view should return a list of all the purchases
         for the currently authenticated user.
         """
-        user = self.request.user
+        # user = self.request.user
         campaign = Campaign.objects.filter(pk=self.kwargs['campaign_pk'])
         if not campaign.exists():
             raise ParseError("Campaign doesn't exist")
         campaign = campaign.first()
-        list_of_ids =  [content.id for content in Content.objects.all() if CampaignContentRelation.objects.filter(campaign = campaign, content = content).exists()]
+        list_of_ids =  [content.id for content in Content.objects.all() if CampaignContentRelation.objects.filter(campaign = campaign, content = content).exists() and content.type == self.kwargs['type']]
         return Content.objects.filter(pk__in=list_of_ids)
