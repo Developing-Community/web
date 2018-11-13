@@ -41,6 +41,7 @@ from .serializers import (
 
 User = get_user_model()
 
+
 class CampaignCreateAPIView(CreateAPIView):
     serializer_class = CampaignCreateSerializer
 
@@ -183,8 +184,9 @@ class ProductListAPIView(ListAPIView):
 class CampaignContentCreateAPIView(CreateAPIView):
     serializer_class = ContentCreateSerializer
     permission_classes = [AllowAny]
+
     def perform_create(self, serializer):
-        current_user = User.objects.all().first() #self.request.user
+        current_user = User.objects.all().first()  # self.request.user
         subject_str = serializer.validated_data['subject']
         campaign = Campaign.objects.filter(pk=self.kwargs['campaign_pk'])
         if campaign.exists():
@@ -198,7 +200,8 @@ class CampaignContentCreateAPIView(CreateAPIView):
             subject = Term(title=subject_str)
             subject.save()
         content = serializer.save(author=current_user, subject=subject, type=self.kwargs['type'])
-        CampaignContentRelation.objects.create(content = content, campaign = campaign)
+        CampaignContentRelation.objects.create(content=content, campaign=campaign)
+
 
 class CampaignContentListAPIView(ListAPIView):
     serializer_class = ContentSerializer
@@ -212,7 +215,6 @@ class CampaignContentListAPIView(ListAPIView):
     pagination_class = CampaignPageNumberPagination  # PageNumberPagination
     ordering = ['-id']
 
-
     def get_queryset(self):
         """
         This view should return a list of all the purchases
@@ -223,5 +225,8 @@ class CampaignContentListAPIView(ListAPIView):
         if not campaign.exists():
             raise ParseError("Campaign doesn't exist")
         campaign = campaign.first()
-        list_of_ids =  [content.id for content in Content.objects.all() if CampaignContentRelation.objects.filter(campaign = campaign, content = content).exists() and content.type == self.kwargs['type']]
+        list_of_ids = [content.id for content in Content.objects.all() if
+                       CampaignContentRelation.objects.filter(campaign=campaign,
+                                                              content=content).exists() and content.type == self.kwargs[
+                           'type']]
         return Content.objects.filter(pk__in=list_of_ids)

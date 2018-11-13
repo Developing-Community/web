@@ -3,7 +3,6 @@ from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 from enumfields import EnumField
 
 from users.models import Profile
-from web import settings
 
 
 class Team(models.Model):

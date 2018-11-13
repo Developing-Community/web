@@ -1,5 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
+from sorl_thumbnail_serializer.fields import HyperlinkedSorlImageField
+
 from web.utils import RequiredValidator
 from rest_framework.serializers import (
   CharField,
@@ -77,6 +79,17 @@ class UserCreateSerializer(ModelSerializer):
     return validated_data
 
 class ProfileRetrieveUpdateSerializer(ModelSerializer):
+  # A thumbnail image, sorl options and read-only
+  thumbnail = HyperlinkedSorlImageField(
+    '50x50',
+    options={"crop": "center"},
+    source='profile_image',
+    read_only=True
+  )
+
+  # A larger version of the image, allows writing
+  # profile_image = HyperlinkedSorlImageField('1024')
+
   class Meta:
     model = Profile
     fields = [
@@ -84,11 +97,13 @@ class ProfileRetrieveUpdateSerializer(ModelSerializer):
       'first_name',
       'last_name',
       'bio',
+      'thumbnail',
       'profile_image',
       'width_field',
       'height_field',
     ]
     read_only_fields = [
+      'thumbnail',
       'profile_image',
       'width_field',
       'height_field',

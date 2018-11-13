@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 from companions.models import Application
 
+from sorl.thumbnail import ImageField
 
 def profile_image_upload_location(instance, filename):
     return "user/%s/profile/%s" % (instance.user.id, filename)
@@ -63,7 +64,7 @@ class Profile(models.Model):
 
     bio = models.TextField(blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
-    profile_image = models.ImageField(upload_to=profile_image_upload_location,
+    profile_image = ImageField(upload_to=profile_image_upload_location,
                                       null=True,
                                       blank=True,
                                       width_field="width_field",

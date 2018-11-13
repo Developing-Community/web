@@ -46,7 +46,7 @@ class ContentVisibility(Enum):  # A subclass of Enum
 
 
 class Content(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
-    title = models.CharField(max_length=1000)
+    title = models.CharField(max_length=1000, blank= True, null= True)
 
     type = EnumField(ContentType, default=ContentType.ARTICLE, max_length=1000)
     main_type = EnumField(MainContentType, default=MainContentType.TEXT, max_length=1000)
@@ -97,7 +97,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
         if self.title:
             return self.title
         else:
-            return self.content[:20]
+            return self.content[:20] + "..."
 
 
 class ContentRealtionType(Enum):  # A subclass of Enum
