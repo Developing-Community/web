@@ -67,6 +67,8 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'corsheaders',
 
+    'sorl.thumbnail',
+    'sorl_thumbnail_serializer',
     'learning',
     'taxonomy',
     'content',
