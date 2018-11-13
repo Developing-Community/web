@@ -46,7 +46,7 @@ class ContentVisibility(Enum):  # A subclass of Enum
 
 
 class Content(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
-    title = models.CharField(max_length=1000, blank= True, null= True)
+    title = models.CharField(max_length=1000, blank=True, null=True)
 
     type = EnumField(ContentType, default=ContentType.ARTICLE, max_length=1000)
     main_type = EnumField(MainContentType, default=MainContentType.TEXT, max_length=1000)
@@ -78,7 +78,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     height_field = models.IntegerField(default=0)
     # no api
     width_field = models.IntegerField(default=0)
-    content = models.TextField(null= True, blank=True)
+    content = models.TextField(null=True, blank=True)
     flash_note = models.TextField(blank=True, null=True)
     draft = models.BooleanField(default=False)
     publish = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)

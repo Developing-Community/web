@@ -1,6 +1,7 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
-from .models import CampaignPartyRelation, CampaignPartyRelationType
 from django.contrib.contenttypes.models import ContentType
+from rest_framework.permissions import BasePermission, SAFE_METHODS
+
+from .models import CampaignPartyRelation, CampaignPartyRelationType
 
 
 class IsOwner(BasePermission):

@@ -6,4 +6,5 @@ def XForwardedForMiddleware(get_response):
             request.META["REMOTE_ADDR"] = parts[0]
         response = get_response(request)
         return response
+
     return middleware

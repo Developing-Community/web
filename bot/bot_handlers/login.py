@@ -7,8 +7,8 @@ from web import settings
 
 User = get_user_model()
 
-def handle_pv_login_get_username(telegram_profile, msg):
 
+def handle_pv_login_get_username(telegram_profile, msg):
     if msg['text'] == bot_commands['return']:
         message = bot_messages['start_msg'] % (settings.HOST_URL, telegram_profile.verify_token)
         keyboard = [[bot_commands['login'], bot_commands['register']]]
@@ -35,7 +35,6 @@ def handle_pv_login_get_username(telegram_profile, msg):
 
 
 def handle_pv_login_get_password(telegram_profile, msg):
-
     if msg['text'] == bot_commands['return']:
         telegram_profile.user_input.all().delete()
         message = bot_messages['login_get_username_or_email']

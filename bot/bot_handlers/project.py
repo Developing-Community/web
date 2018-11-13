@@ -41,10 +41,10 @@ def handle_pv_add_project_get_skills(telegram_profile, msg):
             message, keyboard = handle_pv_add_project(telegram_profile, msg)
         else:
             c = Content.objects.create(
-                title = "دعوت به همکاری",
-                draft = True,
-                type = ContentType.PROJECT,
-                content = content.value
+                title="دعوت به همکاری",
+                draft=True,
+                type=ContentType.PROJECT,
+                content=content.value
             )
 
             skills = list(set(msg['text'].split('\n')))
@@ -62,9 +62,9 @@ def handle_pv_add_project_get_skills(telegram_profile, msg):
                         taxonomy_type=TaxonomyType.LEARNING_FIELD
                     )
                 ContentTermRelation.objects.create(
-                    content = c,
-                    term = lf,
-                    type = ContentTermRelationType.SKILLS_NEEDED
+                    content=c,
+                    term=lf,
+                    type=ContentTermRelationType.SKILLS_NEEDED
                 )
 
             telegram_profile.menu_state = MenuState.START
@@ -72,6 +72,5 @@ def handle_pv_add_project_get_skills(telegram_profile, msg):
             telegram_profile.save()
             message = bot_messages['add_project_success']
             keyboard = bot_keyboards['main_menu']
-
 
     return message, keyboard

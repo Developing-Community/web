@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -6,12 +5,9 @@ from django.utils import timezone
 from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 from enumfields import EnumField
 
-from companions.models import Application
 from content.models import Content
 from taxonomy.models import Term
 from team.models import Team
-
-
 # Create your models here.
 from web import settings
 
@@ -49,10 +45,10 @@ class Campaign(models.Model):  # We want comment to have a foreign key to all co
                               height_field="height_field")
 
     banner_image = models.ImageField(upload_to=campaign_image_upload_location,
-                              null=True,
-                              blank=True,
-                              width_field="banner_width_field",
-                              height_field="banner_height_field")
+                                     null=True,
+                                     blank=True,
+                                     width_field="banner_width_field",
+                                     height_field="banner_height_field")
 
     width_field = models.IntegerField(default=0)
     height_field = models.IntegerField(default=0)
@@ -100,10 +96,11 @@ class CampaignPartyRelation(models.Model):
 class CampaignContentRelationType(Enum):  # A subclass of Enum
     CREATED_ON = "CREATED_ON"
 
+
 class CampaignContentRelation(models.Model):
     campaign = models.ForeignKey(Campaign, related_name='rel_campaign', on_delete=models.CASCADE)
     content = models.ForeignKey(Content, related_name='rel_content', on_delete=models.CASCADE)
-    type = EnumField(CampaignContentRelationType, default=CampaignContentRelationType.CREATED_ON ,max_length=1000)
+    type = EnumField(CampaignContentRelationType, default=CampaignContentRelationType.CREATED_ON, max_length=1000)
 
     def __str__(self):
         return str(self.content) + " | " + self.campaign.title
@@ -125,9 +122,8 @@ class CampaignTermRelation(models.Model):
     type = EnumField(CampaignTermRealtionType, max_length=1000)
 
 
-
 class CampaignEnrollmentRequest(models.Model):
-    #TODO: convert to profile
+    # TODO: convert to profile
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
     campaign = models.ForeignKey(Campaign, related_name='request_campaign', on_delete=models.CASCADE)
     note = models.TextField(blank=True, null=True)

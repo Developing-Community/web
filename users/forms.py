@@ -2,8 +2,6 @@ from django import forms
 from django.contrib.auth import (
     authenticate,
     get_user_model,
-    login,
-    logout,
 )
 
 from users.models import Profile
@@ -13,7 +11,7 @@ User = get_user_model()
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(label='نام کاربری')
-    password = forms.CharField(widget=forms.PasswordInput,label='کلمه عبور')
+    password = forms.CharField(widget=forms.PasswordInput, label='کلمه عبور')
 
     def clean(self, *args, **kwargs):
         username = self.cleaned_data.get("username")
@@ -56,21 +54,20 @@ class UserRegisterForm(forms.ModelForm):
         ]
 
         labels = {
-            'username' : 'نام کاربری',
-            'email' : 'ایمیل',
-            'password' : 'کلمه عبور',
-            'first_name' : 'نام',
-            'last_name' : 'نام خانوادگی',
+            'username': 'نام کاربری',
+            'email': 'ایمیل',
+            'password': 'کلمه عبور',
+            'first_name': 'نام',
+            'last_name': 'نام خانوادگی',
         }
 
         help_texts = {
             'username': None,
         }
 
+
 class UserProfileForm(forms.ModelForm):
-
     telegram_id = forms.CharField(label='آیدی تلگرام')
-
 
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
@@ -87,23 +84,8 @@ class UserProfileForm(forms.ModelForm):
         ]
 
         labels = {
-            'profile_image' : 'تصویر پروفایل',
-            'bio' : 'بیوگرافی',
-            'email_publicity' : 'نمایش ایمیل در پروفایل',
-            'subscribe_to_newsletter' : 'عضویت در خبرنامه',
+            'profile_image': 'تصویر پروفایل',
+            'bio': 'بیوگرافی',
+            'email_publicity': 'نمایش ایمیل در پروفایل',
+            'subscribe_to_newsletter': 'عضویت در خبرنامه',
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

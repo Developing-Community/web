@@ -1,5 +1,4 @@
 from taxonomy.models import Term, TaxonomyType
-from django.contrib import messages
 
 try:
     from urllib import quote_plus  # python 2
@@ -12,13 +11,8 @@ except:
     pass
 
 from django.contrib import messages
-from django.contrib.contenttypes.models import ContentType
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
+from django.shortcuts import render
 
 from .forms import MentoringInfoForm
 from .models import MentoringInfo
@@ -39,24 +33,24 @@ def add_mentoring(request):
                     mentoring_info.save()
         else:
             mentoring_field = Term(
-                title = mentoring_field_title,
-                title_fa = mentoring_field_title,
-                taxonomy_type = TaxonomyType.LEARNING_FIELD
+                title=mentoring_field_title,
+                title_fa=mentoring_field_title,
+                taxonomy_type=TaxonomyType.LEARNING_FIELD
             )
             mentoring_field.save()
         if not found:
             instance = MentoringInfo(
-                mentor = request.user,
-                mentoring_field = mentoring_field,
-                road_map = form.cleaned_data.get('road_map')
+                mentor=request.user,
+                mentoring_field=mentoring_field,
+                road_map=form.cleaned_data.get('road_map')
             )
             instance.save()
         messages.success(request, "فرم با موفقیت ثبت شد", extra_tags='html_safe')
 
     context = {
         "form": form,
-        "title" : 'ثبت منتورینگ',
-        "form_description" : 'اگر تمایل دارید در حوزه ای راهنمای دیگران باشید از این فرم استفاده کنید. از کسانی که به عنوان راهنما ثبت نام می کنند انتظار می رود در صورت لزوم روی گزارش های مربوط اعضای کامیونیتی کامنت بگذارند و راهنمایی کنند و به سوالاتشان پاسخ دهند. در صورتی که نقشه راه یا برنامه مطالعاتی خاصی برای این حوزه دارید در فیلد پایین بنویسید. این اطلاعات بعدا قابل ویرایش است'
+        "title": 'ثبت منتورینگ',
+        "form_description": 'اگر تمایل دارید در حوزه ای راهنمای دیگران باشید از این فرم استفاده کنید. از کسانی که به عنوان راهنما ثبت نام می کنند انتظار می رود در صورت لزوم روی گزارش های مربوط اعضای کامیونیتی کامنت بگذارند و راهنمایی کنند و به سوالاتشان پاسخ دهند. در صورتی که نقشه راه یا برنامه مطالعاتی خاصی برای این حوزه دارید در فیلد پایین بنویسید. این اطلاعات بعدا قابل ویرایش است'
     }
     return render(request, "default_restricted_form.html", context)
 

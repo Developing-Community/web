@@ -157,6 +157,3 @@ class ProfileUpdateAPIView(UpdateAPIView):
     permission_classes = [IsOwner]
     lookup_field = 'id'
     queryset = Profile.objects.all()
-
-
-

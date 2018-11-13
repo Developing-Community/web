@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
+from django.http import Http404
 from rest_framework import status
 from rest_framework.exceptions import ValidationError, ParseError
 from rest_framework.filters import (
@@ -17,12 +19,10 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import (
     AllowAny,
 )
-from django.http import Http404
-from django.contrib.contenttypes.models import ContentType
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from campaigns.models import Campaign, CampaignPartyRelation, CampaignPartyRelationType, Product, CampaignType, \
+from campaigns.models import Campaign, CampaignPartyRelation, CampaignPartyRelationType, Product, \
     CampaignEnrollmentRequest, CampaignContentRelation
 from content.models import Content
 from content.serializers import ContentCreateSerializer, ContentSerializer

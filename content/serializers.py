@@ -1,9 +1,12 @@
-from rest_framework import serializers
-from .models import Content
 from enumfields.drf.serializers import EnumSupportSerializerMixin
+from rest_framework import serializers
+
+from .models import Content
+
 
 class ContentCreateSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer):
     subject = serializers.CharField(max_length=255)
+
     class Meta:
         model = Content
         fields = [
@@ -15,7 +18,9 @@ class ContentCreateSerializer(EnumSupportSerializerMixin, serializers.ModelSeria
             'content',
             'draft',
             'publish',
-            ]
+        ]
+
+
 class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Content
@@ -36,7 +41,7 @@ class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer)
             'timestamp',
             'up_voters',
             'down_voters'
-            ]
+        ]
         read_only_fields = (
             'pk',
             'author',
@@ -44,5 +49,5 @@ class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer)
             'timestamp',
             'height_field',
             'width_field'
-            ,'up_voters',
+            , 'up_voters',
             'down_voters')

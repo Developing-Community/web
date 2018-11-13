@@ -1,15 +1,12 @@
-from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
-from enumfields.drf.serializers import EnumSupportSerializerMixin
-from rest_framework.exceptions import ValidationError
-from rest_framework.fields import SerializerMethodField, UUIDField
-from rest_framework.relations import HyperlinkedIdentityField
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import (
     ModelSerializer
 )
-from web.settings import HOST_URL
+
 from bot.models import TelegramProfile
 from users.models import Profile
+from web.settings import HOST_URL
 
 
 class TelegramTokenSerializer(ModelSerializer):
@@ -23,6 +20,7 @@ class TelegramTokenSerializer(ModelSerializer):
 
 class BotProfileSerializer(ModelSerializer):
     link = SerializerMethodField()
+
     class Meta:
         model = Profile
         fields = [
@@ -30,5 +28,6 @@ class BotProfileSerializer(ModelSerializer):
             'link',
             'telegram_user_id'
         ]
+
     def get_link(self, obj):
-        return HOST_URL + reverse("users:view-profile", kwargs={'id':obj.id})
+        return HOST_URL + reverse("users:view-profile", kwargs={'id': obj.id})

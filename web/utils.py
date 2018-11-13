@@ -1,7 +1,8 @@
 from django.utils.translation import ugettext_lazy as _
+from rest_framework.compat import unicode_to_repr
 from rest_framework.exceptions import ValidationError
 from rest_framework.utils.representation import smart_repr
-from rest_framework.compat import unicode_to_repr
+
 
 class RequiredValidator(object):
     missing_message = _('This field is required')
@@ -10,7 +11,6 @@ class RequiredValidator(object):
         self.fields = fields
 
     def enforce_required_fields(self, attrs):
-
         missing = dict([
             (field_name, self.missing_message)
             for field_name in self.fields

@@ -1,12 +1,10 @@
-from enum import Enum
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
-from django.dispatch import receiver
+from sorl.thumbnail import ImageField
 
 from companions.models import Application
 
-from sorl.thumbnail import ImageField
 
 def profile_image_upload_location(instance, filename):
     return "user/%s/profile/%s" % (instance.user.id, filename)
@@ -65,10 +63,10 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
     profile_image = ImageField(upload_to=profile_image_upload_location,
-                                      null=True,
-                                      blank=True,
-                                      width_field="width_field",
-                                      height_field="height_field")
+                               null=True,
+                               blank=True,
+                               width_field="width_field",
+                               height_field="height_field")
     height_field = models.IntegerField(default=0, null=True)
     width_field = models.IntegerField(default=0, null=True)
     subscribe_to_newsletter = models.BooleanField(default=True)

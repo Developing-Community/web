@@ -4,7 +4,6 @@ from bot.bot_strings import bot_commands, bot_messages, bot_keyboards
 from bot.models import TelegramUserInputKeys, TelegramUserInput, MenuState
 from web import settings
 
-
 User = get_user_model()
 
 
@@ -32,8 +31,8 @@ def handle_pv_register_get_email(telegram_profile, msg):
 
     return message, keyboard
 
-def handle_pv_register_get_username(telegram_profile, msg):
 
+def handle_pv_register_get_username(telegram_profile, msg):
     if msg['text'] == bot_commands['return']:
         message = bot_messages['register_get_email']
         keyboard = bot_keyboards['return']
@@ -65,8 +64,8 @@ def handle_pv_register_get_username(telegram_profile, msg):
 
     return message, keyboard
 
-def handle_pv_register_get_password(telegram_profile, msg):
 
+def handle_pv_register_get_password(telegram_profile, msg):
     if msg['text'] == bot_commands['return']:
         message = bot_messages['register_get_username']
         keyboard = bot_keyboards['return']

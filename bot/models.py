@@ -1,12 +1,10 @@
-from django.db import models
-
 import uuid
 
+from django.db import models
 from enumfields import Enum, EnumField
 
 # Create your models here.
 from users.models import Profile
-from web import settings
 
 
 class MenuState(Enum):
@@ -23,6 +21,7 @@ class MenuState(Enum):
     EDIT_PROFILE_NAME = "EDIT_PROFILE_NAME"
     EDIT_PROFILE_BIO = "EDIT_PROFILE_BIO"
     EDIT_PROFILE_SKILLS = "EDIT_PROFILE_SKILLS"
+
 
 class TelegramUserInputKeys(Enum):
     USERNAME_OR_EMAIL = 'USERNAME_OR_EMAIL'

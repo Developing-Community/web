@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('taxonomy', '0003_remove_term_title_fa'),
     ]

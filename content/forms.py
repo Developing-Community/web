@@ -6,6 +6,7 @@ from .models import Content
 
 class ArticleForm(forms.ModelForm):
     subject_title = forms.CharField(label='موضوع')
+
     # publish = forms.DateField(widget=forms.SelectDateWidget, label='تاریخ انتشار')
 
     class Meta:
@@ -24,6 +25,7 @@ class ArticleForm(forms.ModelForm):
             # 'image' : 'تصویر',
             'content': 'متن',
         }
+
 
 class ReportForm(forms.ModelForm):
     subject_title = forms.CharField(label='موضوع')
@@ -48,5 +50,5 @@ class ReportForm(forms.ModelForm):
         }
 
         help_texts = {
-            'note' : 'اگر تمایل داشتید نکاتی درباره چیزهایی که یاد گرفتید بنویسید'
+            'note': 'اگر تمایل داشتید نکاتی درباره چیزهایی که یاد گرفتید بنویسید'
         }

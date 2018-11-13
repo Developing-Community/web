@@ -1,30 +1,14 @@
 from django.contrib import messages
-from django.urls import reverse
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import authentication
-from django.contrib.auth.models import User
+from django.shortcuts import render
 from rest_framework.permissions import (
-    AllowAny,
     IsAuthenticated,
-    IsAdminUser,
-    IsAuthenticatedOrReadOnly,
-
 )
-
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from users.forms import UserRegisterForm
-from django.contrib.auth import (
-    authenticate,
-    get_user_model,
-    login,
-    logout,
-)
-
-from django.shortcuts import render, redirect
-
 from web.forms import SharifSummerMarketProfileTempForm
+
 
 class TelegramGroupsAPIView(APIView):
     """
@@ -51,7 +35,6 @@ class TelegramGroupsAPIView(APIView):
 
 
 def index_view(request):
-
     # # TODO: Bring register form here
     # form = UserRegisterForm(request.POST or None)
     # if form.is_valid():
@@ -70,10 +53,9 @@ def index_view(request):
     context = {}
     return render(request, "learn-index.html", context)
 
+
 def groups_view(request):
     return render(request, 'groups.html', {})
-
-
 
 
 def sharif_summer_market_temp_view(request):

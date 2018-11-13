@@ -1,24 +1,18 @@
-from django.utils import timezone
-from rest_framework.permissions import AllowAny
-
-from taxonomy.models import Term, TaxonomyType
 from django.contrib import messages
-from django.shortcuts import render
-
-from .forms import ArticleForm, ReportForm
-from .models import Content, ContentType, ContentRelation, ContentRealtionType
-
-from .serializers import ContentSerializer, ContentCreateSerializer
-from .models import Content
-from rest_framework import viewsets
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, RetrieveDestroyAPIView, GenericAPIView
-from taxonomy.models import Term
-from django.contrib.auth.models import AnonymousUser as NOT_LOGGED_IN
-from django.http import HttpResponse
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
+from django.utils import timezone
+from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+
+from taxonomy.models import TaxonomyType
+from taxonomy.models import Term
+from .forms import ArticleForm, ReportForm
+from .models import Content
+from .models import ContentType
+from .serializers import ContentSerializer, ContentCreateSerializer
 
 
 class ContentListView(ListAPIView):
@@ -109,6 +103,7 @@ def add_article(request):
         # "form_description" : ''
     }
     return render(request, "default_restricted_form.html", context)
+
 
 ### Old template view functions
 

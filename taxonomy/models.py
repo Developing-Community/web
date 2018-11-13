@@ -1,6 +1,6 @@
-from enumfields import EnumField
-from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 from django.db import models
+from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
+from enumfields import EnumField
 
 
 class TaxonomyType(Enum):
@@ -10,7 +10,7 @@ class TaxonomyType(Enum):
 
 class Term(models.Model):
     title = models.CharField(max_length=255, unique=True)
-    taxonomy_type = EnumField(TaxonomyType, default=TaxonomyType.SUBJECT,max_length=1000)
+    taxonomy_type = EnumField(TaxonomyType, default=TaxonomyType.SUBJECT, max_length=1000)
 
     class Meta:
         ordering = ['title']
@@ -27,8 +27,10 @@ class Term(models.Model):
     def __str__(self):
         return self.title
 
-class TermRealtionType(Enum):   # A subclass of Enum
+
+class TermRealtionType(Enum):  # A subclass of Enum
     CHILD_OF = "CHILD_OF"
+
 
 class TermRelation(models.Model):
     content = models.ForeignKey(Term, related_name='source', on_delete=models.CASCADE)

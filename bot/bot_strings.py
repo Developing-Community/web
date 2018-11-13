@@ -1,5 +1,5 @@
 bot_commands = {
-    'login' : 'ورود',
+    'login': 'ورود',
     'register': 'ثبت نام',
     'return': 'بازگشت',
     'exit': 'خروج',
@@ -12,7 +12,7 @@ bot_commands = {
 }
 
 bot_messages = {
-    'start_msg' :'''
+    'start_msg': '''
 خوش آمدید 🙂✋️
 برای اتصال بات به پروفایلتان در سایت، لینک زیر را باز کنید. 👇
 %s/verify-token?token=%s
@@ -20,13 +20,13 @@ bot_messages = {
 یا برای ورود از طریق بات، کلیدهای ثبت نام یا ورود را فشار دهید''',
     'register_get_email': 'لطفا ایمیلتان را وارد کنید',
     'register_email_exists_err': 'این ایمیل از قبل وجود دارد. لطفا ایمیل دیگری وارد کنید. اگر رمزتان را گم کردید از طریق این آدرس پسووردتان را ریست کنید.\nhttps://dev-community.ir/account/reset-password',
-    'register_get_username' : 'لطفا نام کاربری دلخواهتان را وارد کنید',
-    'register_username_exists_err' : 'این نام از قبل وجود دارد. لطفا نام دیگری را وارد کنید. اگر رمزتان را گم کردید از طریق این آدرس پسووردتان را ریست کنید.\nhttps://dev-community.ir/account/reset-password',
-    'register_get_password' : 'لطفا کلمه عبور دلخواهتان را وارد کنید (برای حفظ امنیت پیامتان را بعد از ارسال حتما پاک کنید)',
-    'login_get_username_or_email' : 'لطفا ایمیل یا نام کاربری خود را وارد کنید',
-    'login_get_username_or_email_err' : 'نام کاربری یا ایمیل وارد شده وجود ندارد. لطفا ایمیل یا نام کاربری خود را وارد کنید',
-    'login_get_password_err' : 'کلمه عبور اشتباه است. لطفا مجددا وارد کنید',
-    'login_get_password' : 'لطفا کلمه عبورتان را وارد کنید (برای حفظ امنیت پیامتان را بعد از ارسال حتما پاک کنید)',
+    'register_get_username': 'لطفا نام کاربری دلخواهتان را وارد کنید',
+    'register_username_exists_err': 'این نام از قبل وجود دارد. لطفا نام دیگری را وارد کنید. اگر رمزتان را گم کردید از طریق این آدرس پسووردتان را ریست کنید.\nhttps://dev-community.ir/account/reset-password',
+    'register_get_password': 'لطفا کلمه عبور دلخواهتان را وارد کنید (برای حفظ امنیت پیامتان را بعد از ارسال حتما پاک کنید)',
+    'login_get_username_or_email': 'لطفا ایمیل یا نام کاربری خود را وارد کنید',
+    'login_get_username_or_email_err': 'نام کاربری یا ایمیل وارد شده وجود ندارد. لطفا ایمیل یا نام کاربری خود را وارد کنید',
+    'login_get_password_err': 'کلمه عبور اشتباه است. لطفا مجددا وارد کنید',
+    'login_get_password': 'لطفا کلمه عبورتان را وارد کنید (برای حفظ امنیت پیامتان را بعد از ارسال حتما پاک کنید)',
     'login_success': 'ورود با موفقیت انجام شد. لطفا گزینه مورد نظرتان را از منوی بات انتخاب کنید.',
     'register_success': 'ثبت نام با موفقیت انجام شد. لطفا گزینه مورد نظرتان را از منوی بات انتخاب کنید.',
     'add_project_get_content': 'لطفا متن آگهی خود را وارد کنید',
@@ -41,18 +41,22 @@ bot_messages = {
     'verified': 'تلگرام شما با موفقیت تایید شد.',
 }
 
-
 bot_keyboards = {
     'return': [[bot_commands['return']]],
     'login_or_register': [[bot_commands['login'], bot_commands['register']]],
     'main_menu': [[bot_commands['add_project']], [bot_commands['edit_profile']], [bot_commands['exit']]],
-    'edit_profile': [[bot_commands['edit_skills'],bot_commands['edit_bio'],bot_commands['edit_name']], [bot_commands['return']]]
+    'edit_profile': [[bot_commands['edit_skills'], bot_commands['edit_bio'], bot_commands['edit_name']],
+                     [bot_commands['return']]]
 }
 
+
 def bot_profile_to_string(profile):
-    profile_string = 'نام: ' + markdown_safe(profile.first_name or '') + ' ' + markdown_safe(profile.last_name or '') + '\n\nبیوگرافی:\n' + markdown_safe(profile.bio or '') + '\n\nمهارتها:\n'
-    profile_string += '، '.join(['#' + markdown_safe(skill.learning_field.title) for skill in profile.skills.all()]) + '\n'
+    profile_string = 'نام: ' + markdown_safe(profile.first_name or '') + ' ' + markdown_safe(
+        profile.last_name or '') + '\n\nبیوگرافی:\n' + markdown_safe(profile.bio or '') + '\n\nمهارتها:\n'
+    profile_string += '، '.join(
+        ['#' + markdown_safe(skill.learning_field.title) for skill in profile.skills.all()]) + '\n'
     return profile_string
 
+
 def markdown_safe(string):
-    return string.replace('_','\_').replace('*', '\*')
+    return string.replace('_', '\_').replace('*', '\*')

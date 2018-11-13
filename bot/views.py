@@ -1,25 +1,23 @@
 import uuid
 
-import requests
 from django.contrib.auth import get_user_model
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import (
     AllowAny,
 )
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.views import APIView
 
-from bot.bot_handlers.project import handle_pv_add_project, handle_pv_add_project_get_skills
-from bot.bot_utils import bot_send_message
-from bot.models import TelegramProfile, MenuState
-
 from bot.bot_handlers.login import handle_pv_login_get_password, handle_pv_login_get_username
+from bot.bot_handlers.profile import handle_pv_edit_profile_name, handle_pv_edit_profile_bio, \
+    handle_pv_edit_profile_skills, handle_pv_edit_profile
+from bot.bot_handlers.project import handle_pv_add_project, handle_pv_add_project_get_skills
 from bot.bot_handlers.register import handle_pv_register_get_email, handle_pv_register_get_password, \
     handle_pv_register_get_username
 from bot.bot_strings import bot_commands, bot_messages, bot_keyboards, bot_profile_to_string
-from bot.bot_handlers.profile import handle_pv_edit_profile_name, handle_pv_edit_profile_bio, \
-    handle_pv_edit_profile_skills, handle_pv_edit_profile
+from bot.bot_utils import bot_send_message
+from bot.models import TelegramProfile, MenuState
 from bot.serializers import TelegramTokenSerializer
 from users.models import Profile
 from web import settings
@@ -91,7 +89,7 @@ class HandlePVAPIView(APIView):
 
         if telegram_profile.profile and 'forward_from' in msg:
             try:
-                message = bot_profile_to_string(Profile.objects.get(telegram_user_id = msg['forward_from']['id']))
+                message = bot_profile_to_string(Profile.objects.get(telegram_user_id=msg['forward_from']['id']))
             except:
                 message = "پروفایل این کاربر در سایت ثبت نشده است."
             keyboard = [[]]
@@ -145,6 +143,7 @@ class HandlePVAPIView(APIView):
 
 class HandleGPAPIView(APIView):
     permission_classes = [AllowAny]
+
     def post(self, request, format=None):
         msg = request.data['msg']
 
@@ -159,11 +158,12 @@ class HandleGPAPIView(APIView):
                 pv_enabled=False)
         if 'new_chat_member' in msg:
             if not TelegramProfile.objects.filter(
-            telegram_user_id=msg['new_chat_member']['id']).exists():
+                    telegram_user_id=msg['new_chat_member']['id']).exists():
                 TelegramProfile.objects.create(
-                telegram_user_id=msg['new_chat_member']['id'],
-                pv_enabled=False)
-        return Response({"result" : "ok"}, status=status.HTTP_200_OK)
+                    telegram_user_id=msg['new_chat_member']['id'],
+                    pv_enabled=False)
+        return Response({"result": "ok"}, status=status.HTTP_200_OK)
+
 
 class TelegramTokenVerificationAPIView(APIView):
     queryset = TelegramProfile.objects.all()

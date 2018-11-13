@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('taxonomy', '0002_auto_20181102_1358'),
     ]

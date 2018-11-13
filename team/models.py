@@ -7,10 +7,12 @@ from users.models import Profile
 
 class Team(models.Model):
     name = models.CharField(max_length=255)
+
     # user = models.ManyToManyField(Profile, on_delete=models.CASCADE, related_name="")
 
     def __str__(self):
         return self.name
+
 
 class TeamUserRelationType(Enum):  # A subclass of Enum
     CREATOR = "CREATOR"

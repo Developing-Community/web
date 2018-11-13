@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from enumfields.drf.serializers import EnumSupportSerializerMixin
 from rest_framework.fields import SerializerMethodField
@@ -8,8 +9,6 @@ from rest_framework.serializers import (
 from campaigns.models import Product, Campaign, CampaignPartyRelation, CampaignPartyRelationType, \
     CampaignEnrollmentRequest
 from team.serializers import TeamListSerializer
-
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
