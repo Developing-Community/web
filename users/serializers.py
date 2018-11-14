@@ -64,7 +64,7 @@ class UserCreateSerializer(ModelSerializer):
 class ProfileRetrieveUpdateSerializer(ModelSerializer):
     # A thumbnail image, sorl options and read-only
     thumbnail = HyperlinkedSorlImageField(
-        '50x50',
+        '100x100',
         options={"crop": "center"},
         source='profile_image',
         read_only=True
@@ -79,6 +79,7 @@ class ProfileRetrieveUpdateSerializer(ModelSerializer):
             'id',
             'first_name',
             'last_name',
+            'name',
             'bio',
             'thumbnail',
             'profile_image',
@@ -88,6 +89,7 @@ class ProfileRetrieveUpdateSerializer(ModelSerializer):
         read_only_fields = [
             'thumbnail',
             'profile_image',
+            'name',
             'width_field',
             'height_field',
         ]

@@ -4,6 +4,7 @@ from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 from enumfields import EnumField
 
 from taxonomy.models import Term
+from users.models import Profile
 from web import settings
 
 
@@ -48,17 +49,17 @@ class ContentVisibility(Enum):  # A subclass of Enum
 class Content(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
     title = models.CharField(max_length=1000, blank=True, null=True)
 
-    type = EnumField(ContentType, default=ContentType.ARTICLE, max_length=1000)
+    type = EnumField(ContentType, default=ContentType.ARTICLE, blank=True, max_length=1000)
     main_type = EnumField(MainContentType, default=MainContentType.TEXT, max_length=1000)
 
     # no api
-    visibility = EnumField(ContentVisibility, default=ContentVisibility.PUBLIC, max_length=1000)
+    visibility = EnumField(ContentVisibility, default=ContentVisibility.PUBLIC, blank=True, max_length=1000)
 
     # no api
     # application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
 
     # comes from logged in user
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+    author = models.ForeignKey(Profile, default=1, on_delete=models.CASCADE)
 
     # no api
     slug = models.SlugField(blank=True, null=True)
@@ -81,7 +82,7 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     content = models.TextField(null=True, blank=True)
     flash_note = models.TextField(blank=True, null=True)
     draft = models.BooleanField(default=False)
-    publish = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
+    publish = models.DateField(auto_now=False, auto_now_add=False, default=timezone.now, blank=True)
     # read_time = models.IntegerField(default=0)  # models.TimeField(null=True, blank=True) #assume minutes
     # no api
     updated = models.DateTimeField(auto_now=True, auto_now_add=False)

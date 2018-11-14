@@ -31,7 +31,7 @@ class ContentCreateView(CreateAPIView):
     serializer_class = ContentCreateSerializer
 
     def perform_create(self, serializer):
-        current_user = self.request.user
+        current_user_profile = self.request.user.profile.first()
         # subject_str = serializer.validated_data['subject']
         #
         # # get subject
@@ -41,7 +41,7 @@ class ContentCreateView(CreateAPIView):
         #     subject = Term(title=subject_str)
         #     subject.save()
         # serializer.save(author=current_user,subject=subject)
-        serializer.save(author=current_user)
+        serializer.save(author=current_user_profile)
 
 
 @api_view(['PUT'])

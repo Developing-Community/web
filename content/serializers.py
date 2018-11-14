@@ -1,11 +1,11 @@
 from enumfields.drf.serializers import EnumSupportSerializerMixin
 from rest_framework import serializers
 
+from users.serializers import ProfileRetrieveUpdateSerializer
 from .models import Content
 
 
 class ContentCreateSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer):
-    subject = serializers.CharField(max_length=255)
 
     class Meta:
         model = Content
@@ -13,7 +13,6 @@ class ContentCreateSerializer(EnumSupportSerializerMixin, serializers.ModelSeria
             'title',
             'type',
             'visibility',
-            'subject',
             'image',
             'content',
             'draft',
@@ -22,6 +21,7 @@ class ContentCreateSerializer(EnumSupportSerializerMixin, serializers.ModelSeria
 
 
 class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer):
+    author = ProfileRetrieveUpdateSerializer()
     class Meta:
         model = Content
         fields = [
