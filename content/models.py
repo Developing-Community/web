@@ -46,6 +46,12 @@ class ContentVisibility(Enum):  # A subclass of Enum
     PRIVATE = "PRIVATE"
 
 
+
+class ContentRelationType(Enum):  # A subclass of Enum
+    COMMENTED_ON = "COMMENTED_ON"
+    ANSWERED_TO = "ANSWERED_TO"
+    REPLIED_TO = "REPLIED_TO"
+
 class Content(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
     title = models.CharField(max_length=1000, blank=True, null=True)
 
@@ -94,6 +100,18 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
     up_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="up_voters", blank=True)
     down_voters = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="down_voters", blank=True)
 
+    @property
+    def answers(self):
+        return [rel.source for rel in ContentRelation.objects.filter(type=ContentRelationType.ANSWERED_TO, destination=self)]
+
+    @property
+    def comments(self):
+        return [rel.source for rel in ContentRelation.objects.filter(type=ContentRelationType.COMMENTED_ON, destination=self)]
+
+    @property
+    def replies(self):
+        return [rel.source for rel in ContentRelation.objects.filter(type=ContentRelationType.REPLIED_TO, destination=self)]
+
     def __str__(self):
         if self.title:
             return self.title
@@ -104,14 +122,10 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
         unique_together = ("slug", "type")
 
 
-class ContentRealtionType(Enum):  # A subclass of Enum
-    COMMENTED_ON = "COMMENTED_ON"
-
-
 class ContentRelation(models.Model):
     source = models.ForeignKey(Content, related_name='source', on_delete=models.CASCADE)
     destination = models.ForeignKey(Content, related_name='destination', on_delete=models.CASCADE)
-    type = EnumField(ContentRealtionType, default=ContentRealtionType.COMMENTED_ON, max_length=1000)
+    type = EnumField(ContentRelationType, default=ContentRelationType.COMMENTED_ON, max_length=1000)
 
 
 class ContentTermRelationType(Enum):  # A subclass of Enum

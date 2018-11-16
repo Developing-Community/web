@@ -6,7 +6,6 @@ from .models import Content
 
 
 class ContentCreateSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer):
-
     class Meta:
         model = Content
         fields = [
@@ -22,6 +21,7 @@ class ContentCreateSerializer(EnumSupportSerializerMixin, serializers.ModelSeria
 
 class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer):
     author = ProfileRetrieveUpdateSerializer()
+
     class Meta:
         model = Content
         fields = [
@@ -40,14 +40,28 @@ class ContentSerializer(EnumSupportSerializerMixin, serializers.ModelSerializer)
             'updated',
             'timestamp',
             'up_voters',
-            'down_voters'
+            'down_voters',
+            'answers',
+            'comments',
+            'replies',
         ]
-        read_only_fields = (
+        read_only_fields = [
             'pk',
             'author',
             'slug',
             'timestamp',
             'height_field',
-            'width_field'
-            , 'up_voters',
-            'down_voters')
+            'width_field',
+            'up_voters',
+            'down_voters',
+            'answers',
+            'comments',
+            'replies',
+        ]
+
+    def get_fields(self):
+        fields = super(ContentSerializer, self).get_fields()
+        fields['answers'] = ContentSerializer(many=True)
+        fields['comments'] = ContentSerializer(many=True)
+        fields['replies'] = ContentSerializer(many=True)
+        return fields

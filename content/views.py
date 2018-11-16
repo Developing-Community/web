@@ -1,11 +1,13 @@
 from django.contrib import messages
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from taxonomy.models import TaxonomyType
 from taxonomy.models import Term
@@ -25,6 +27,18 @@ class ContentRetrieveView(RetrieveAPIView):
     serializer_class = ContentSerializer
     permission_classes = [AllowAny]
     queryset = Content.objects.all()
+
+
+class ContentSlugRetrieveView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, slug=None, type=None, format=None):
+        if not type in ContentType.__dict__.keys():
+            raise Http404
+        lookup = {'slug': slug, 'type': type}
+        vessel = get_object_or_404(Content, **lookup)
+        serializer = ContentSerializer(vessel, context={'request': request})
+        return Response(serializer.data)
 
 
 class ContentCreateView(CreateAPIView):
