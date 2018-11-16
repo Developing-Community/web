@@ -100,6 +100,9 @@ class Content(models.Model):  # We want comment to have a foreign key to all con
         else:
             return self.content[:20] + "..."
 
+    class Meta:
+        unique_together = ("slug", "type")
+
 
 class ContentRealtionType(Enum):  # A subclass of Enum
     COMMENTED_ON = "COMMENTED_ON"
