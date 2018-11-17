@@ -127,6 +127,9 @@ class ContentRelation(models.Model):
     destination = models.ForeignKey(Content, related_name='destination', on_delete=models.CASCADE)
     type = EnumField(ContentRelationType, default=ContentRelationType.COMMENTED_ON, max_length=1000)
 
+    def __str__(self):
+        return str(self.source) + " | " + str(self.type) + " | " + str(self.destination)
+
 
 class ContentTermRelationType(Enum):  # A subclass of Enum
     SKILLS_NEEDED = "SKILLS_NEEDED"
