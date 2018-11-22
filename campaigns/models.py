@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from enumfields import Enum  # Uses Ethan Furman's "enum34" backport
 from enumfields import EnumField
+from sorl.thumbnail import ImageField
 
 from content.models import Content
 from taxonomy.models import Term
@@ -18,13 +19,19 @@ def campaign_image_upload_location(instance, filename):
 
 
 class CampaignType(Enum):
-    WORK = "WORK"
-    MENTORING = "MENTORING"
-    STUDY = "STUDY"
-    SALES = "SALES"
-    WORKSHOP = "WORKSHOP"
-    PRESENTATION = "PRESENTATION"
-    EVENT = "EVENT"
+    WORK_OLD = "WORK"
+    MENTORING_OLD = "MENTORING"
+    STUDY_OLD = "STUDY"
+    SALES_OLD = "SALES"
+    WORKSHOP_OLD = "WORKSHOP"
+    PRESENTATION_OLD = "PRESENTATION"
+    EVENT_OLD = "EVENT"
+    MENTORING = "mentoring"
+    STUDY = "study"
+    SALES = "sales"
+    WORKSHOP = "workshop"
+    PRESENTATION = "presentation"
+    EVENT = "event"
 
 
 class Campaign(models.Model):  # We want comment to have a foreign key to all contents so we use all of them as one
@@ -35,7 +42,7 @@ class Campaign(models.Model):  # We want comment to have a foreign key to all co
 
     slug = models.SlugField(blank=True, null=True)
     # application = models.ForeignKey(Application, default=1, null=True, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=campaign_image_upload_location,
+    image = ImageField(upload_to=campaign_image_upload_location,
                               null=True,
                               blank=True,
                               width_field="width_field",

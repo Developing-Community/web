@@ -5,6 +5,7 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import (
     ModelSerializer
 )
+from sorl_thumbnail_serializer.fields import HyperlinkedSorlImageField
 
 from campaigns.models import Product, Campaign, CampaignPartyRelation, CampaignPartyRelationType, \
     CampaignEnrollmentRequest
@@ -28,6 +29,15 @@ class CampaignCreateSerializer(EnumSupportSerializerMixin, ModelSerializer):
 class CampaignListSerializer(EnumSupportSerializerMixin, ModelSerializer):
     creator = SerializerMethodField()
 
+    # A thumbnail image, sorl options and read-only
+    thumbnail = HyperlinkedSorlImageField(
+        '500x500',
+        options={"crop": "center"},
+        source='image',
+        read_only=True
+    )
+
+
     class Meta:
         model = Campaign
         fields = [
@@ -37,12 +47,14 @@ class CampaignListSerializer(EnumSupportSerializerMixin, ModelSerializer):
             'start_time',
             'end_time',
             'description',
+            'thumbnail',
             'image',
             'width_field',
             'height_field',
         ]
 
     read_only_fields = [
+        'thumbnail',
         'image',
         'width_field',
         'height_field',
@@ -72,6 +84,16 @@ class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
     creator = SerializerMethodField()
     requested = SerializerMethodField()
     enrolled = SerializerMethodField()
+    # A thumbnail image, sorl options and read-only
+    thumbnail = HyperlinkedSorlImageField(
+        '500x500',
+        options={"crop": "center"},
+        source='profile_image',
+        read_only=True
+    )
+
+    # A larger version of the image, allows writing
+    # profile_image = HyperlinkedSorlImageField('1024')
 
     class Meta:
         model = Campaign
@@ -86,12 +108,14 @@ class CampaignDetailSerializer(EnumSupportSerializerMixin, ModelSerializer):
             'accessable',
             'requested',
             'enrolled',
+            'thumbnail',
             'image',
             'width_field',
             'height_field',
         ]
 
     read_only_fields = [
+            'thumbnail',
         'image',
         'width_field',
         'height_field',

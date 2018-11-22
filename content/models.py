@@ -19,19 +19,32 @@ def content_attachment_upload_location(instance, filename):
 
 
 class ContentType(Enum):  # A subclass of Enum
-    ARTICLE = "ARTICLE"
-    ASSIGNMENT = "ASSIGNMENT"
-    ANNOUNCEMENT = "ANNOUNCEMENT"
-    REPORT = "REPORT"
-    PROBLEM = "PROBLEM"
-    SOLUTION = "SOLUTION"
-    QUESTION = "QUESTION"
-    ANSWER = "ANSWER"
-    COMMENT = "COMMENT"
-    STORY = "STORY"
-    PROJECT = "PROJECT"
-    EVENT = "EVENT"
-    PARTITIONING = "PARTITIONING"  # parts of a book or tutorial being studied
+    ARTICLE_OLD = "ARTICLE"
+    ASSIGNMENT_OLD = "ASSIGNMENT"
+    ANNOUNCEMENT_OLD = "ANNOUNCEMENT"
+    REPORT_OLD = "REPORT"
+    PROBLEM_OLD = "PROBLEM"
+    SOLUTION_OLD = "SOLUTION"
+    QUESTION_OLD = "QUESTION"
+    ANSWER_OLD = "ANSWER"
+    COMMENT_OLD = "COMMENT"
+    STORY_OLD = "STORY"
+    PROJECT_OLD = "PROJECT"
+    EVENT_OLD = "EVENT"
+    PARTITIONING_OLD = "PARTITIONING"  # parts of a book or tutorial being studied    ARTICLE = "ARTICLE"
+    ARTICLE = "article"
+    ASSIGNMENT = "assignment"
+    ANNOUNCEMENT = "announcement"
+    REPORT = "report"
+    PROBLEM = "problem"
+    SOLUTION = "solution"
+    QUESTION = "question"
+    ANSWER = "answer"
+    COMMENT = "comment"
+    STORY = "story"
+    PROJECT = "project"
+    EVENT = "event"
+    PARTITIONING = "partitioning"  # parts of a book or tutorial being studied
 
 
 class MainContentType(Enum):
